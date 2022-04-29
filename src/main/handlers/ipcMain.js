@@ -40,6 +40,28 @@ module.exports = (ipcMain) => {
       return config.debug;
     });
 
+    ipcMain.handle('maximizeAppToggle', async () => {
+      const mainWindow = require('../mainWindow');
+      await config.toggleMaximize();
+      if (config.maximize) {
+        mainWindow.maximize();
+      } else {
+        mainWindow.unmaximize();
+      }
+      return config.maximize;
+    });
+
+    ipcMain.handle('minimizeAppToggle', async () => {
+      const mainWindow = require('../mainWindow');
+      mainWindow.minimize();
+    });
+
+    ipcMain.handle('EXIT_APPLICATION', async () => {
+      const mainWindow = require('../mainWindow');
+      mainWindow.close();
+    });
+
+
     return true;
 
   } catch (error) {

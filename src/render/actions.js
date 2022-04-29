@@ -78,6 +78,22 @@ const actions = {
     await actions.listBackendTasks();
   },
 
+
+  maximizeAppToggle: async () => {
+    const response = await ipcRenderer.invoke('maximizeAppToggle');
+    log('maximizeAppToggle', response);
+    await dataCache.set('maximizeAppToggle', response);
+  },
+
+  exitApplication: async () => {
+    await ipcRenderer.invoke('EXIT_APPLICATION');
+  },
+
+  minimizeAppToggle: async () => {
+    const response = await ipcRenderer.invoke('minimizeAppToggle');
+    log('minimizeAppToggle', response);
+    await dataCache.set('minimizeAppToggle', response);
+  }
 };
 
 module.exports = actions;

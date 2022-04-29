@@ -23,6 +23,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   if (config.debug) mainWindow.webContents.openDevTools();
+  if (config.maximize) mainWindow.maximize();
 };
 
 // This method will be called when Electron has finished

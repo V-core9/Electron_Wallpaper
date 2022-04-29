@@ -92,7 +92,6 @@ const listBackendTasks = async () => {
 
   return `<tasks_listing>
             <actions>
-              <button action='toggleDebug'>Toggle Debug</button>
               <button action='listBackendTasks'>Refresh List</button>
               <button action='endAllTasks'>End All</button>
             </actions>
@@ -121,6 +120,23 @@ const listBackendAllCache = async () => {
           </cache_actions>`;
 };
 
+const application_header = async () => {
+  return `<app_head>
+            <group>
+              <button action='toggleDebug'>Toggle Debug</button>
+            </group>
+            <info>
+              <h2>${await dataCache.get('application_title')} : Version: ${await dataCache.get('application_version')}</h2>
+            </info>
+            <group>
+              <button action='minimizeAppToggle'>🔻</button>
+              <button action='maximizeAppToggle'>💢</button>
+              <button action='exitApplication'>❌</button>
+            </group>
+          </app_head>`;
+};
+
+
 const app_test_actions = async () => {
   return `${await testBackendPing()}
           ${await listBackendTasks()}
@@ -128,7 +144,8 @@ const app_test_actions = async () => {
 };
 
 const renderApp = async () => {
-  return `${await cache_stats_box("dataCache", dataCache)}
+  return `${await application_header()}
+          ${await cache_stats_box("dataCache", dataCache)}
           ${await cache_stats_box("renderCache", renderCache)}
           ${await change_title_form()}
           ${await change_version_form()}

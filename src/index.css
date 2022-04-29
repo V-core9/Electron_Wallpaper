@@ -140,3 +140,42 @@ group item {
   background: #ffffff12;
   padding: 0.25em;
 }
+
+
+
+
+
+app_head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+app_head info {
+  -webkit-app-region: drag;
+}
+
+app_head group {
+  display: flex;
+  flex-direction: row;
+  flex: 0;
+  gap: 0;
+}
+
+app_head info {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1em;
+}
+
+app_head info {
+  font-size: .65em;
+  display: flex;
+}
+
+app_head button {
+  background: transparent;
+  box-shadow: none;
+}

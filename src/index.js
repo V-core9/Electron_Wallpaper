@@ -11,6 +11,7 @@ if (require('electron-squirrel-startup')) {
 require('./main/handlers/ipcMain')(ipcMain);
 const config = require('./helpers/config');
 
+require('./main/core/init')();
 
 
 

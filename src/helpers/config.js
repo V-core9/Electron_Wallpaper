@@ -4,11 +4,16 @@ let app_debug = false;
 let maximize = true;
 let app_version = '0.0.0';
 let app_title = 'Electron Wallpaper';
+let app_description = 'Electron Wallpaper is a desktop wallpaper manager for Windows, Mac and Linux.';
 
 
 
 const setAppTitle = async (val) => {
   if (await v_rifier.name(val) === true) app_title = val;
+};
+
+const setAppDescription = async (val) => {
+  if (await v_rifier.text(val) === true) app_title = val;
 };
 
 const setAppVersion = async (val) => {
@@ -56,6 +61,15 @@ const config = {
 
   get title() {
     return app_title;
+  },
+
+  //? Application Title
+  set description(val) {
+    setAppTitle(val);
+  },
+
+  get description() {
+    return app_description;
   },
 
   //? Version

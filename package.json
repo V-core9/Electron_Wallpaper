@@ -47,7 +47,7 @@
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "v_core_cache": "^1.0.8",
-    "v_core_timers": "^0.0.1"
+    "v_core_timers": "^0.0.2"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",

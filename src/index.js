@@ -8,9 +8,7 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-require('./core');
-
-require('./handlers/ipcMain')(ipcMain);
+require('./main/handlers/ipcMain')(ipcMain);
 
 
 

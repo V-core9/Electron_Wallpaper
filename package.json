@@ -9,8 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "setup": "npm i && sed -i -e 's/\"type\": \"module\"/\"type\": \"commonjs\"/g' node_modules/canvg/package.json "
+    "lint": "echo \"No linting configured\""
   },
   "keywords": [],
   "author": {
@@ -46,9 +45,12 @@
     }
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.5",
     "electron-squirrel-startup": "^1.0.0",
+    "image-to-base64": "^2.2.0",
     "lzma-native": "^8.0.6",
     "screenshot-desktop": "^1.12.7",
+    "svg2png": "^4.1.1",
     "v_core_cache": "^1.0.8",
     "v_core_timers": "^0.0.2",
     "v_file_system": "^1.0.5",

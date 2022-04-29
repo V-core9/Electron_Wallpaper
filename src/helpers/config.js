@@ -1,11 +1,12 @@
 
-let app_debug = process.env.NODE_ENV === 'developement';
+let app_debug = false;
 
 
 const config = {
 
   set debug(value) {
     if (typeof value === 'boolean') app_debug = value;
+    
   },
 
   get debug() {
@@ -18,7 +19,7 @@ const config = {
   }
 
 
-  
+
 };
 
 module.exports = config;

@@ -29,7 +29,16 @@ module.exports = (ipcMain) => {
 
     ipcMain.handle('endAllTasks', async () => await watch.end());
 
-    ipcMain.handle('toggleDebug', async () => await config.toggleDebug());
+    ipcMain.handle('toggleDebug', async () => {
+      const mainWindow = require('../mainWindow');
+      await config.toggleDebug();
+      if (config.debug) {
+        mainWindow.webContents.openDevTools();
+      } else {
+        mainWindow.webContents.closeDevTools();
+      }
+      return config.debug;
+    });
 
     return true;
 

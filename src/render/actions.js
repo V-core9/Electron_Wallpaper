@@ -71,7 +71,7 @@ const actions = {
     await actions.listBackendTasks();
   },
 
-  toggleDebug : async () => {
+  toggleDebug: async () => {
     const response = await ipcRenderer.invoke('toggleDebug');
     log('toggleDebug', response);
     config.debug = response;

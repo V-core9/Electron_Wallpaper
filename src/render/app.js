@@ -120,8 +120,15 @@ const listBackendAllCache = async () => {
           </cache_actions>`;
 };
 
-const application_header = async () => {
-  return `<app_head>
+
+const app_test_actions = async () => {
+  return `${await testBackendPing()}
+          ${await listBackendTasks()}
+          ${await listBackendAllCache()}`;
+};
+
+const _header = async () => {
+  return `<header>
             <group>
               <button action='toggleDebug'>Toggle Debug</button>
             </group>
@@ -133,25 +140,35 @@ const application_header = async () => {
               <button action='maximizeAppToggle'>💢</button>
               <button action='exitApplication'>❌</button>
             </group>
-          </app_head>`;
+          </header>`;
 };
 
+const _footer = async () => {
+  return `<footer>
+            <group>
+              ${await app_info()}
+            </group>
+            <group>
+              ${await app_info()}
+            </group>
+          </footer>`;
+};
 
-const app_test_actions = async () => {
-  return `${await testBackendPing()}
-          ${await listBackendTasks()}
-          ${await listBackendAllCache()}`;
+const _content = async () => {
+  return `<content>
+            ${await cache_stats_box("dataCache", dataCache)}
+            ${await cache_stats_box("renderCache", renderCache)}
+            ${await change_title_form()}
+            ${await change_version_form()}
+            ${await cache_actions()}
+            ${await app_test_actions()}
+          </content>`;
 };
 
 const renderApp = async () => {
-  return `${await application_header()}
-          ${await cache_stats_box("dataCache", dataCache)}
-          ${await cache_stats_box("renderCache", renderCache)}
-          ${await change_title_form()}
-          ${await change_version_form()}
-          ${await cache_actions()}
-          ${await app_test_actions()}
-          ${await app_info()}`;
+  return `${await _header()}
+          ${await _content()}
+          ${await _footer()}`;
 };
 
 module.exports = {

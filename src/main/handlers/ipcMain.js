@@ -8,6 +8,18 @@ module.exports = (ipcMain) => {
 
     ipcMain.handle('ping', async () => Date.now());
 
+    ipcMain.handle('setAppTitle', async (event, arg) => {
+      log("Setting App Title From " + config.appTitle + " TO " + arg);
+      config.appTitle = arg;
+      return config.appTitle;
+    });
+
+    ipcMain.handle('setAppVersion', async (event, arg) => {
+      log("Setting App Version From " + config.version + " TO " + arg);
+      config.version = arg;
+      return config.appTitle;
+    });
+
     ipcMain.handle('listBackendTasks', async (event, arg) => {
       log(event);
       log(arg);

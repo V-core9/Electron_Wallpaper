@@ -12,10 +12,9 @@ body {
 v_app {
   display: flex;
   flex-direction: column;
-  gap: 1em;
   background: #263238;
-  min-height: calc(100vh - 2px);
-  border: 1px dotted #364045;
+  height: 100vh;
+  overflow: hidden;
 }
 
 cache_stats_box {
@@ -69,8 +68,7 @@ tasks_listing {
 }
 
 app_info {
-  margin: 1em;
-  padding: 1em;
+  padding: .25em;
 }
 
 app_info h1 {
@@ -143,26 +141,25 @@ group item {
 
 
 
-
-
-app_head {
+header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  background: #0000002e;
 }
 
-app_head info {
+header info {
   -webkit-app-region: drag;
 }
 
-app_head group {
+header group {
   display: flex;
   flex-direction: row;
   flex: 0;
   gap: 0;
 }
 
-app_head info {
+header info {
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -170,12 +167,43 @@ app_head info {
   padding: 1em;
 }
 
-app_head info {
+header info {
   font-size: .65em;
   display: flex;
 }
 
-app_head button {
+header button {
   background: transparent;
   box-shadow: none;
+}
+
+header button:hover {
+  border-radius: 0;
+}
+
+
+
+content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  gap: 1em;
+  overflow: auto;
+}
+
+
+footer {
+  display: flex;
+  flex-direction: row;
+  border-top: 1px solid black;
+  background: #0000002e;
+}
+
+
+footer app_info {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  gap: 1em;
 }

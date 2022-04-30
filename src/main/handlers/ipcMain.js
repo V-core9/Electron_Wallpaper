@@ -2,7 +2,7 @@ const { watch, cache } = require('../core');
 const log = require('../../helpers/log');
 const config = require('../../helpers/config');
 
-
+const tasks = require('../tasks');
 
 module.exports = (ipcMain) => {
 
@@ -50,6 +50,9 @@ module.exports = (ipcMain) => {
     });
 
 
+    //? Available Tasks
+    ipcMain.handle('listAvailableTasks', async () => Object.keys(tasks));
+
     //? Window Maximize Toggle
     ipcMain.handle('maximizeAppToggle', async () => {
       const mainWindow = require('../mainWindow');
@@ -71,6 +74,7 @@ module.exports = (ipcMain) => {
 
     //? Exit Application Handle
     ipcMain.handle('EXIT_APPLICATION', async () => require('../mainWindow').close());
+
 
     return true;
 

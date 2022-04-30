@@ -29,6 +29,7 @@ const _cache = async (cacheName, cacheList = {}) => {
           </cache_listing>`;
 };
 
+
 const cache_stats_box = async (title, vCache) => {
   let stats = await vCache.stats();
   return `<cache_stats_box>
@@ -52,6 +53,7 @@ const cache_stats_box = async (title, vCache) => {
           </cache_stats_box>`;
 };
 
+
 const cache_actions = async () => {
   return `<cache_actions>
             <h3>Cache Actions:</h3>
@@ -64,6 +66,29 @@ const cache_actions = async () => {
             </form_group>
           </cache_actions>`;
 };
+
+
+const listAvailableTasks = async () => {
+  let tasksList = await dataCache.get('listAvailableTasks') || {};
+
+  let response = '';
+
+  for (let key in tasksList) {
+
+    response += `<item>${key}: ${JSON.stringify(tasksList[key])}</item>`;
+  }
+
+  return `<cache_listing>
+            <actions>
+              <h2>Available Tasks List</h2>
+              <button action='listAvailableTasks'>Refresh List</button>
+            </actions>
+            <group>
+              ${response}
+            </group>
+          </cache_listing>`;
+};
+
 
 const listBackendAllCache = async () => {
   let backCache = await dataCache.get('listBackendAllCache') || {};
@@ -152,6 +177,7 @@ const listBackendTasks = async () => {
 
 const app_test_actions = async () => {
   return `${await testBackendPing()}
+          ${await listAvailableTasks()}
           ${await listBackendTasks()}
           ${await listBackendAllCache()}`;
 };

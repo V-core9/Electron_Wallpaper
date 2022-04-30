@@ -23,6 +23,7 @@ const actions = {
     return false;
   },
 
+
   changeAppTitle: async () => {
     const val = document.querySelector('#customTitle').value;
 
@@ -36,15 +37,21 @@ const actions = {
     return false;
   },
 
+
   logStats: async () => log(await dataCache.stats()),
+
 
   purgeCache: async () => await dataCache.purge(),
 
+
   purgeCacheStats: async () => await dataCache.purgeStats(),
+
 
   logAllCache: async () => log(await dataCache.getAll()),
 
+
   logUndefinedItem: async () => log(await dataCache.get('logUndefinedItem')),
+
 
   testBackendPing: async () => {
     const beforeTime = Date.now();
@@ -54,18 +61,25 @@ const actions = {
     await dataCache.set('testBackendPing', { fb: rez - beforeTime, bf: afterTime - rez });
   },
 
+
+  listAvailableTasks: async () => await dataCache.set('listAvailableTasks', await ipcRenderer.invoke('listAvailableTasks')),
+
+
   listBackendTasks: async () => {
     await dataCache.set('listBackendTasks', JSON.parse(await ipcRenderer.invoke('listBackendTasks')));
   },
+
 
   listBackendAllCache: async () => {
     await dataCache.set('listBackendAllCache', JSON.parse(await ipcRenderer.invoke('listBackendAllCache')));
   },
 
+
   purgeBackendCache: async () => {
     await dataCache.set('purgeBackendCache', JSON.parse(await ipcRenderer.invoke('purgeBackendCache')));
     await actions.listBackendAllCache();
   },
+
 
   startSpecificTask: async (event) => {
     const taskName = event.target.parentElement.parentElement.getAttribute('taskName');
@@ -77,6 +91,7 @@ const actions = {
     await actions.listBackendTasks();
   },
 
+
   stopSpecificTask: async (event) => {
     const taskName = event.target.parentElement.parentElement.getAttribute('taskName');
 
@@ -86,6 +101,7 @@ const actions = {
     log('STOPPING a task', taskName);
     await actions.listBackendTasks();
   },
+
 
   deleteSpecificTask: async (event) => {
     const taskName = event.target.parentElement.parentElement.getAttribute('taskName');
@@ -97,11 +113,13 @@ const actions = {
     await actions.listBackendTasks();
   },
 
+
   endAllTasks: async () => {
     const response = await ipcRenderer.invoke('endAllTasks');
     log('ENDING ALL TASKS', response);
     await actions.listBackendTasks();
   },
+
 
   toggleDebug: async () => {
     const response = await ipcRenderer.invoke('toggleDebug');
@@ -117,15 +135,18 @@ const actions = {
     await dataCache.set('maximizeAppToggle', response);
   },
 
+
   exitApplication: async () => {
     await ipcRenderer.invoke('EXIT_APPLICATION');
   },
+
 
   minimizeAppToggle: async () => {
     const response = await ipcRenderer.invoke('minimizeAppToggle');
     log('minimizeAppToggle', response);
     await dataCache.set('minimizeAppToggle', response);
   }
+
 
 };
 

@@ -1,6 +1,6 @@
 const { vTime } = require('v_core_timers');
 const { watch, cache } = require('.');
-const { screenshotDesktop, clock, wallpaper, systemInfoStats, vWatchDBG, weatherApi } = require('../actions');
+const { screenshotDesktop, clock, wallpaper, systemInfoStats, vWatchDBG, weatherApi } = require('../tasks');
 const config = require('../../helpers/config');
 
 module.exports = async () => {
@@ -17,10 +17,6 @@ module.exports = async () => {
 
   // WALLPAPER TASK
   await watch.new("wallpaper_render", await vTime.seconds(1), async () => wallpaper.render(), config.backgroundUpdates);
-
-  let wallpaperTask = await watch.get("wallpaper_render");
-  wallpaperTask.on('run', wallpaper.set);
-
   await watch.run("wallpaper_render");
 
 

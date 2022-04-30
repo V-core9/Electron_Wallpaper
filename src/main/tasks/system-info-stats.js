@@ -11,7 +11,7 @@ module.exports = async () => {
   const result = {
 
     ram: {
-      freememproc: v_os.freememproc(),
+      freememproc: await v_os.freememproc(),
 
       freemem: roundNumber(byteSizer.byteToGiga(v_os.freemem()), 2),
 

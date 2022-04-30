@@ -217,3 +217,25 @@ cache_listing group {
   padding: 1em;
   border: 1px solid #3f51b5;
 }
+
+
+section {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff10;
+  border: 1px solid #1d262b;
+}
+
+content item {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: #ffffff14;
+  align-items: center;
+  padding: 0.25em;
+}
+
+item header {
+  background: none;
+}

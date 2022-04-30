@@ -19,20 +19,20 @@ const _cache = async (cacheName, cacheList = {}) => {
     response += `<item>${key}: ${JSON.stringify(cacheList[key])}</item>`;
   }
 
-  return `<cache_listing name="${cacheName}">
+  return `<section name="${cacheName}">
             <actions>
               <button action='listCache'>Refresh</button>
             </actions>
             <group>
               ${response}
             </group>
-          </cache_listing>`;
+          </section>`;
 };
 
 
 const cache_stats_box = async (title, vCache) => {
   let stats = await vCache.stats();
-  return `<cache_stats_box>
+  return `<section>
             <h3>${title}:</h3>
             <div>
               <h5>Hits:</h5>
@@ -50,21 +50,23 @@ const cache_stats_box = async (title, vCache) => {
               <h5>Size:</h5>
               <p>${stats.size}</p>
             </div>
-          </cache_stats_box>`;
+          </section>`;
 };
 
 
 const cache_actions = async () => {
-  return `<cache_actions>
-            <h3>Cache Actions:</h3>
-            <form_group>
-              <button action='logUndefinedItem'>Log undefined Item</button>
-              <button action='logAllCache'>Log All Cache</button>
-              <button action='logStats'>Log Cache Stats</button>
-              <button action='purgeCacheStats'>Purge Stats</button>
-              <button action='purgeCache'>Purge Cache</button>
-            </form_group>
-          </cache_actions>`;
+  return `<section>
+            <header>
+              <h3>Cache Actions:</h3>
+              <actions>
+                <button action='logUndefinedItem'>Log undefined Item</button>
+                <button action='logAllCache'>Log All Cache</button>
+                <button action='logStats'>Log Cache Stats</button>
+                <button action='purgeCacheStats'>Purge Stats</button>
+                <button action='purgeCache'>Purge Cache</button>
+              </actions>
+            </header>
+          </section>`;
 };
 
 
@@ -78,15 +80,15 @@ const listAvailableTasks = async () => {
     response += `<item>${key}: ${JSON.stringify(tasksList[key])}</item>`;
   }
 
-  return `<cache_listing>
-            <actions>
+  return `<section>
+            <header>
               <h2>Available Tasks List</h2>
               <button action='listAvailableTasks'>Refresh List</button>
-            </actions>
-            <group>
+            </header>
+            <content>
               ${response}
-            </group>
-          </cache_listing>`;
+            </content>
+          </section>`;
 };
 
 
@@ -100,50 +102,53 @@ const listBackendAllCache = async () => {
     response += `<item>${key}: ${JSON.stringify(backCache[key])}</item>`;
   }
 
-  return `<cache_listing>
-            <actions>
+  return `<section>
+            <header>
+              <h2>Backend Cache Stats:</h2>
               <button action='listBackendAllCache'>list Backend All Cache</button>
               <button action='purgeBackendCache'>purgeBackendCache</button>
-            </actions>
-            <group>
+            </header>
+            <content>
               ${response}
-            </group>
-          </cache_listing>`;
+            </content>
+          </section>`;
 };
 
 
 
 const change_title_form = async () => {
-  return `<change_title_form>
+  return `<section>
             <h3>Change Application Title:</h3>
             <form_group>
               <input type='text' id='customTitle' placeholder='Change Title to Something' value='${await dataCache.get('application_title')}' />
               <button action='changeAppTitle'>Change</button>
             </form_group>
-          </change_title_form>`;
+          </section>`;
 };
 
 
 const change_version_form = async () => {
-  return `<change_version_form>
-            <h3>Change Application Version:</h3>
-            <form_group>
-              <input type='text' id='customVersion' placeholder='Change Title to Something' value='${await dataCache.get('application_version')}' />
-              <button action='changeAppVersion'>Change</button>
-            </form_group>
-          </change_version_form>`;
+  return `<section>
+            <header>
+              <h3>Change Application Version:</h3>
+              <form_group>
+                <input type='text' id='customVersion' placeholder='Change Title to Something' value='${await dataCache.get('application_version')}' />
+                <button action='changeAppVersion'>Change</button>
+              </form_group>
+            </header>
+          </section>`;
 };
 
 
 
 const testBackendPing = async () => {
   let backPing = await dataCache.get('testBackendPing') || { fb: 0, bf: 0 };
-  return `<cache_actions>
+  return `<section>
             <h3>Application Test Actions: [ fb:${backPing.fb}, bf:${backPing.bf} ]</h3>
             <form_group>
               <button action='testBackendPing'>Test Backend Ping</button>
             </form_group>
-          </cache_actions>`;
+          </section>`;
 };
 
 
@@ -154,7 +159,9 @@ const listBackendTasks = async () => {
 
   for (let key in tasks) {
     response += `<item taskName='${tasks[key]}'>
-                    <h4>${tasks[key]}</h4>
+                    <header>
+                      <h4>${tasks[key]}</h4>
+                    </header>
                     <actions>
                       <button action='startSpecificTask'>Start</button>
                       <button action='stopSpecificTask'>Stop</button>
@@ -163,15 +170,16 @@ const listBackendTasks = async () => {
                   </item>`;
   }
 
-  return `<tasks_listing>
-            <actions>
+  return `<section>
+            <header>
+              <h2>Watch Tasks:</h2>
               <button action='listBackendTasks'>Refresh List</button>
               <button action='endAllTasks'>End All</button>
-            </actions>
-            <group>
+            </header>
+            <content>
               ${response}
-            </group>
-          </tasks_listing>`;
+            </content>
+          </section>`;
 };
 
 

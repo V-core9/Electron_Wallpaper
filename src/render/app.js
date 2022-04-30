@@ -240,4 +240,17 @@ const renderApp = async () => {
 };
 
 
-module.exports = { renderApp };
+const app = async (data) => {
+  let startTime = Date.now();
+  let happened = 'App Render Cache Update';
+  if (data.key === 'appRender') {
+    happened = 'App DOM Update';
+    document.querySelector('v_app').innerHTML = await renderCache.get("appRender");
+  } else {
+    await renderCache.set("appRender", await renderApp(), 16);
+  }
+  let endTime = Date.now() - startTime;
+  log(`${happened} in ${endTime}ms`);
+};
+
+module.exports = { app };

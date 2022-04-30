@@ -50,4 +50,9 @@ const app = async (data) => {
 
   log("Data Cache: ", await dataCache.getAll());
   log("Render Cache: ", await renderCache.getAll());
+
+  actions.listAvailableTasks();
+  actions.listBackendTasks();
+  actions.listBackendAllCache();
+
 })();

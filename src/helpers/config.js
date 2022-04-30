@@ -1,7 +1,7 @@
 const v_rifier = require('v_rifier');
 
 let app_debug = false;
-let maximize = true;
+let maximize = false;
 let app_version = '0.0.0';
 let app_title = 'Electron Wallpaper';
 let app_description = 'Electron Wallpaper is a desktop wallpaper manager for Windows, Mac and Linux.';

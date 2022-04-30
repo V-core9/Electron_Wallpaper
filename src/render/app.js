@@ -1,5 +1,32 @@
 const { renderCache, dataCache } = require('./caches');
 
+// Basic Use
+const app_info = async () => {
+  return `<app_info>
+            <h1>${await dataCache.get('application_title')}</h1>
+            <h2>Version: ${await dataCache.get('application_version')}</h2>
+          </app_info>`;
+};
+
+// Cache with stats
+
+const _cache = async (cacheName, cacheList = {}) => {
+  let response = '';
+
+  for (let key in cacheList) {
+    response += `<item>${key}: ${JSON.stringify(cacheList[key])}</item>`;
+  }
+
+  return `<cache_listing name="${cacheName}">
+            <actions>
+              <button action='listCache'>Refresh</button>
+            </actions>
+            <group>
+              ${response}
+            </group>
+          </cache_listing>`;
+};
+
 const cache_stats_box = async (title, vCache) => {
   let stats = await vCache.stats();
   return `<cache_stats_box>
@@ -23,13 +50,38 @@ const cache_stats_box = async (title, vCache) => {
           </cache_stats_box>`;
 };
 
-
-const app_info = async () => {
-  return `<app_info>
-            <h1>${await dataCache.get('application_title')}</h1>
-            <h2>Version: ${await dataCache.get('application_version')}</h2>
-          </app_info>`;
+const cache_actions = async () => {
+  return `<cache_actions>
+            <h3>Cache Actions:</h3>
+            <form_group>
+              <button action='logUndefinedItem'>Log undefined Item</button>
+              <button action='logAllCache'>Log All Cache</button>
+              <button action='logStats'>Log Cache Stats</button>
+              <button action='purgeCacheStats'>Purge Stats</button>
+              <button action='purgeCache'>Purge Cache</button>
+            </form_group>
+          </cache_actions>`;
 };
+
+const listBackendAllCache = async () => {
+  let backCache = await dataCache.get('listBackendAllCache') || {};
+
+  let response = '';
+
+  for (let key in backCache) {
+
+    response += `<item>${key}: ${JSON.stringify(backCache[key])}</item>`;
+  }
+
+  return `<cache_actions>
+            <button action='listBackendAllCache'>list Backend All Cache</button>
+            <button action='purgeBackendCache'>purgeBackendCache</button>
+            <group>
+              ${response}
+            </group>
+          </cache_actions>`;
+};
+
 
 const change_title_form = async () => {
   return `<change_title_form>
@@ -49,19 +101,6 @@ const change_version_form = async () => {
               <button action='changeAppVersion'>Change</button>
             </form_group>
           </change_version_form>`;
-};
-
-const cache_actions = async () => {
-  return `<cache_actions>
-            <h3>Cache Actions:</h3>
-            <form_group>
-              <button action='logUndefinedItem'>Log undefined Item</button>
-              <button action='logAllCache'>Log All Cache</button>
-              <button action='logStats'>Log Cache Stats</button>
-              <button action='purgeCacheStats'>Purge Stats</button>
-              <button action='purgeCache'>Purge Cache</button>
-            </form_group>
-          </cache_actions>`;
 };
 
 const testBackendPing = async () => {
@@ -101,31 +140,14 @@ const listBackendTasks = async () => {
           </tasks_listing>`;
 };
 
-const listBackendAllCache = async () => {
-  let backCache = await dataCache.get('listBackendAllCache') || {};
-
-  let response = '';
-
-  for (let key in backCache) {
-
-    response += `<item>${key}: ${JSON.stringify(backCache[key])}</item>`;
-  }
-
-  return `<cache_actions>
-            <button action='listBackendAllCache'>list Backend All Cache</button>
-            <button action='purgeBackendCache'>purgeBackendCache</button>
-            <group>
-              ${response}
-            </group>
-          </cache_actions>`;
-};
-
 
 const app_test_actions = async () => {
   return `${await testBackendPing()}
           ${await listBackendTasks()}
           ${await listBackendAllCache()}`;
 };
+
+
 
 const _header = async () => {
   return `<header>
@@ -165,22 +187,12 @@ const _content = async () => {
           </content>`;
 };
 
+
+
 const renderApp = async () => {
   return `${await _header()}
           ${await _content()}
           ${await _footer()}`;
 };
 
-module.exports = {
-  renderApp,
-  app_test_actions,
-  app_info,
-  change_title_form,
-  change_version_form,
-  cache_actions,
-  cache_stats_box,
-  listBackendTasks,
-  listBackendAllCache,
-  testBackendPing,
-
-};
+module.exports = { renderApp };

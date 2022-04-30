@@ -18,7 +18,7 @@ const mainWindow = new BrowserWindow({
   movable: true,
   resizable: true,
   closable: true,
-  //frame: false,
+  frame: false,
   titleBarStyle: "hidden",
 
   fullScreen: false,

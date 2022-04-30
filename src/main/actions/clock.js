@@ -2,6 +2,8 @@ const { cache } = require('../core');
 
 module.exports = clockUpdate = async () => {
 
+  console.log("clockUpdate");
+
   var date = new Date();
   var hours = date.getHours();
   var minutes = date.getMinutes();

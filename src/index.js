@@ -9,6 +9,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 require('./main/handlers/ipcMain')(ipcMain);
+
 const config = require('./helpers/config');
 
 require('./main/core/init')();
@@ -27,10 +28,12 @@ const createWindow = () => {
   if (config.maximize) mainWindow.maximize();
 };
 
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -40,6 +43,7 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the

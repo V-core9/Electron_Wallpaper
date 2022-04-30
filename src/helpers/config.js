@@ -1,13 +1,21 @@
+const path = require('path');
+const v_fs = require('v_file_system');
 const v_rifier = require('v_rifier');
 
+
+//? SETTINGS
 let app_debug = false;
 let maximize = false;
 let app_version = '0.0.0';
 let app_title = 'Electron Wallpaper';
 let app_description = 'Electron Wallpaper is a desktop wallpaper manager for Windows, Mac and Linux.';
+let weatherApiKey = v_fs.readSy(path.join(__dirname, "openweather_api_key.txt")) || '';
+let weatherCity = 'Kljajicevo';
+let weatherUnits = 'metric';
 
 
 
+//? SETTERS VALIDATION
 const setAppTitle = async (val) => {
   if (await v_rifier.name(val) === true) app_title = val;
 };
@@ -26,7 +34,9 @@ const setAppVersion = async (val) => {
 
 
 
+//? CONFIG Object
 const config = {
+
 
   set debug(value) {
     if (typeof value === 'boolean') app_debug = value;
@@ -41,6 +51,9 @@ const config = {
     return this.debug;
   },
 
+
+
+  //* Maximize SET/GET/Toggle
   set maximize(value) {
     if (typeof value === 'boolean') maximize = value;
   },
@@ -54,7 +67,9 @@ const config = {
     return this.maximize;
   },
 
-  //? Application Title
+
+
+  //* Application Title
   set title(val) {
     setAppTitle(val);
   },
@@ -63,7 +78,9 @@ const config = {
     return app_title;
   },
 
-  //? Application Title
+
+
+  //* Application Description
   set description(val) {
     setAppTitle(val);
   },
@@ -72,7 +89,9 @@ const config = {
     return app_description;
   },
 
-  //? Version
+
+
+  //* Version SET/GET
   set version(val) {
     setAppVersion(val);
   },
@@ -81,7 +100,39 @@ const config = {
     return app_version;
   },
 
+
+  //? WEATHER SETTINGS
+  //* API Key SET/GET
+  set weatherApiKey(val) {
+    weatherApiKey = val;
+  },
+
+  get weatherApiKey() {
+    return weatherApiKey;
+  },
+
+  //* City SET/GET
+  set weatherCity(val) {
+    weatherCity = val;
+  },
+
+  get weatherCity() {
+    return weatherCity;
+  },
+
+  //* Units SET/GET
+  set weatherUnits(val) {
+    weatherUnits = val;
+  },
+
+  get weatherUnits() {
+    return weatherUnits;
+  }
+
+
+
 };
+
 
 
 module.exports = config;

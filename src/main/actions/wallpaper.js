@@ -24,32 +24,12 @@ module.exports = {
     const { width, height } = primaryDisplay.workAreaSize;
     console.timeEnd('Screen Sizes');
 
-    console.time('SVG Render');
-    const renderResult = await baseTemplate.render();
-    console.timeEnd('SVG Render');
-
-    console.time('SVG Save');
-    await v_fs.write(svgFilePath, renderResult);
-    console.timeEnd('SVG Save');
-
-    console.time('SVG Read');
-    const svgData = await v_fs.read(svgFilePath);
-    console.timeEnd('SVG Read');
-
-    console.time('SVG 2 PNG');
-    const svgPng = await svg2png(svgData, { width: width, height: height });
-    console.timeEnd('SVG 2 PNG');
-
     console.time('PNG Save');
-    await v_fs.write(filePath, svgPng);
+    await v_fs.write(filePath, await svg2png(await baseTemplate.render(), { width: width, height: height }));
     console.timeEnd('PNG Save');
 
   },
 
-  set: async () => {
-    console.time('Setting Wallpaper...');
-    await wallpaper.set(filePath);
-    console.timeEnd('Setting Wallpaper...');
-  },
+  set: async () => wallpaper.set(filePath),
 
 };

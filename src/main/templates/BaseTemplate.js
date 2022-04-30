@@ -1,6 +1,6 @@
 
 const config = require('../../helpers/config');
-const { cache } = require('../core');
+const { cache, watch } = require('../core');
 
 
 const draw = {
@@ -84,20 +84,17 @@ module.exports = function BaseTemplate(data = {}) {
       system: await cache.get('system') || { cpu: {}, ram: {}, deviceUserInfo: {} },
       netSpeed: await cache.get('netSpeed') || { external_ip: "0.0.0.0", latency: 0, download: 0, upload: 0 },
       svgStats: await cache.get('svgStats') || { lastExecTimeVal: 0, totalUpdates: 0, scale: 1, running: false, quality: 75 },
-      vWatch: (config.debug && await cache.has("vWatchDBG")) ? await cache.get("vWatchDBG") : {},
     };
 
     if (config.debug) console.log(this.cacheData);
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.helperWidth} ${this.helperHeight}"  height="${this.helperHeight}" width="${this.helperWidth}" class="${this.name}"  shape-rendering="geometricPrecision" font-family="monospace" >
-              ${(!config.exiting) ?
-        `${await this.bckLayer()}
+              ${await this.bckLayer()}
                 ${await this.printOsInfo()}
                 ${await this.printBotStats()}
                 ${await this.printClock()}
-                ${(config.extendedInfo) ? await this.extendedInfoPanel() : ''}
+                ${await this.extendedInfoPanel()}
                 ${(config.debug) ? await this.debug() : `${await draw.text(1125, 25, `<text fill="${this.main}">${this.cacheData.svgStats.lastExecTimeVal}</text>ms | ${this.cacheData.svgStats.totalUpdates}`, this.white, this.normalFontSize)}`}
-                ` : await this.offlineNotice()}
             </svg>`;
 
   };
@@ -150,7 +147,7 @@ module.exports = function BaseTemplate(data = {}) {
   this.placeholder = async () => {
     let taskVIEW = "";
 
-    let tasks = this.cacheData.vWatch.tasks || {};
+    let tasks = await watch.getAll();
 
     let taskNames = Object.keys(tasks);
 
@@ -169,29 +166,19 @@ module.exports = function BaseTemplate(data = {}) {
 
 
   this.vWatchDBG = async () => {
+    const stats = await watch.stats();
+
     return `<path d="M ${this.helpDim.X} ${this.debugY + 320} l 460 0 10 10 0 230 -10 10 -460 0 -10 -10  0 -230 10 -10" stroke="${this.main}" stroke-width="1" fill="#203040" ></path>
             ${await draw.text(this.helpDim.X, this.helpDim.Y + 312.5, "vWatch Tasks Runner:", this.main, this.subFontSize)}
 
-            ${await draw.text(this.helpDim.X, this.helpDim.Y + 330, "Running Status", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 330, `[ ${(this.cacheData.vWatch.status || "0") ? '<text fill="' + this.mainSuccess + '">ACTIVE</text>' : '<text fill="' + this.mainWarn + '">STOPPED</text>'} ]`, this.white, this.normalFontSize)}
-
             ${await draw.text(this.helpDim.X, this.helpDim.Y + 345, "Total Tasks Count", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 345, `[ <text fill="${this.main}">${this.cacheData.vWatch.totalTasksCount || "0"}</text> ]`, this.white, this.normalFontSize)}
+            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 345, stats.totalTasksCount, this.white, this.normalFontSize)}
 
             ${await draw.text(this.helpDim.X, this.helpDim.Y + 360, "Active Tasks ", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 360, `[ <text fill="${this.mainAlt}">${this.cacheData.vWatch.activeTasksCount || "0"}</text> ]`, this.white, this.normalFontSize)}
+            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 360, stats.activeTasksCount, this.white, this.normalFontSize)}
 
             ${await draw.text(this.helpDim.X, this.helpDim.Y + 375, "Disabled Tasks ", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 375, `[ ${this.cacheData.vWatch.disabledTasksCount || "0"} ]`, this.white, this.normalFontSize)}
-
-            ${await draw.text(this.helpDim.X, this.helpDim.Y + 390, "Tick Interval ", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 390, `[ ${this.cacheData.vWatch.interval || "0"}ms ]`, this.white, this.normalFontSize)}
-
-            ${await draw.text(this.helpDim.X, this.helpDim.Y + 405, "Tick Frequency ", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 405, `[ ${this.cacheData.vWatch.frequency || "0"}Hz ]`, this.white, this.normalFontSize)}
-
-            ${await draw.text(this.helpDim.X, this.helpDim.Y + 420, "AutoStart Option ", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 420, `[ ${this.cacheData.vWatch.autoStart || "0"} ]`, this.white, this.normalFontSize)}`;
+            ${await draw.text(this.helpDim.X300, this.helpDim.Y + 375, stats.disabledTasksCount, this.white, this.normalFontSize)}`;
   };
 
 
@@ -203,13 +190,13 @@ module.exports = function BaseTemplate(data = {}) {
             ${await draw.text(this.helpDim.X500, this.helpDim.Y + 42.5, "cache Info Stats:", this.main, this.subFontSize)}
 
             ${await draw.text(this.helpDim.X500, this.helpDim.Y60, "Items in Cache", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X840, this.helpDim.Y60, `[ <text fill="${this.main}">${stats.size}</text> ]`, this.white, this.normalFontSize)}
+            ${await draw.text(this.helpDim.X840, this.helpDim.Y60, stats.count, this.white, this.normalFontSize)}
 
             ${await draw.text(this.helpDim.X500, this.helpDim.Y75, "Hits Count", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X840, this.helpDim.Y75, `[ <text fill="${this.main}">${stats.hits}</text> ]`, this.white, this.normalFontSize)}
+            ${await draw.text(this.helpDim.X840, this.helpDim.Y75, stats.hits, this.white, this.normalFontSize)}
 
             ${await draw.text(this.helpDim.X500, this.helpDim.Y90, "Misses Count:", this.white, this.normalFontSize)}
-            ${await draw.text(this.helpDim.X840, this.helpDim.Y90, `[ <text fill="${this.main}">${stats.misses}</text> ]`, this.white, this.normalFontSize)}`;
+            ${await draw.text(this.helpDim.X840, this.helpDim.Y90, stats.misses, this.white, this.normalFontSize)}`;
 
   };
 
@@ -283,6 +270,10 @@ module.exports = function BaseTemplate(data = {}) {
     let wthWindSpeed = weatherApi.wind.speed || 0;
 
 
+    /*`<path d="M 1135 705 l 110 0   20 -20   0 -110 -20 -20 -130 130  20 20 " stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
+    ${await draw.text(1140, 695, "📏 " + screenInfo.width + "x" + screenInfo.height + "px", this.white, this.normalFontSize)}
+    ${await draw.text(1150, 680, "🔍 " + screenInfo.dpiScale + "dpi", this.white, this.normalFontSize)}`*/
+
     return `
               <path d="M 35 15 l 110 0  20 20   -130 130  -20 -20  0 -110  20 -20" stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
               ${await draw.text(35, 40, "💻 EIP#1", this.white, this.subFontSize)}
@@ -295,9 +286,7 @@ module.exports = function BaseTemplate(data = {}) {
               <path d="M 1135 15 l 110 0   20 20   0 110   -20 20   -130 -130  20 -20" stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
               ${await draw.text(1140, 40, "💹 " + await cache.get('npmTotalDownloads'), this.white, this.subFontSize)}
 
-              <path d="M 1135 705 l 110 0   20 -20   0 -110 -20 -20 -130 130  20 20 " stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
-              ${await draw.text(1140, 695, "📏 " + screenInfo.width + "x" + screenInfo.height + "px", this.white, this.normalFontSize)}
-              ${await draw.text(1150, 680, "🔍 " + screenInfo.dpiScale + "dpi", this.white, this.normalFontSize)}
+              
 
               <path d="M 5 145 l   25 25   0 380   -25 25   0 -430  " stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
               ${await draw.text(10, 185, "🆒", this.main, this.normalFontSize)}

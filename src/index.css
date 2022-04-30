@@ -53,16 +53,12 @@ input:hover {
   background: #384c57;
 }
 
-change_title_form,
-change_version_form,
-cache_actions,
-tasks_listing {
+change_title_form, change_version_form, cache_actions, tasks_listing {
   display: flex;
   justify-content: space-between;
   padding: 1em;
   align-items: center;
   background: #8080802e;
-  margin: 0 1em;
   gap: 1em;
   flex-flow: wrap;
 }
@@ -87,9 +83,7 @@ form_group {
   flex-flow: wrap;
 }
 
-change_title_form h3,
-change_version_form h3,
-cache_actions h3 {
+change_title_form h3, change_version_form h3, cache_actions h3 {
   flex: 1;
 }
 
@@ -120,6 +114,7 @@ cache_actions form_group {
 tasks_listing {
   flex-direction: column;
   align-items: stretch;
+  border: 1px solid #3f51b5;
 }
 
 group {
@@ -138,8 +133,6 @@ group item {
   background: #ffffff12;
   padding: 0.25em;
 }
-
-
 
 header {
   display: flex;
@@ -181,8 +174,6 @@ header button:hover {
   border-radius: 0;
 }
 
-
-
 content {
   flex: 1;
   display: flex;
@@ -192,7 +183,6 @@ content {
   overflow: auto;
 }
 
-
 footer {
   display: flex;
   flex-direction: row;
@@ -200,10 +190,30 @@ footer {
   background: #0000002e;
 }
 
-
 footer app_info {
   flex-direction: row;
   display: flex;
   align-items: center;
   gap: 1em;
+}
+
+cache_listing {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff0f;
+}
+
+cache_listing group item {
+  padding: 1em;
+  word-break: break-word;
+}
+
+cache_listing actions {
+  padding: .5em;
+  border: 1px solid #3f51b5;
+}
+
+cache_listing group {
+  padding: 1em;
+  border: 1px solid #3f51b5;
 }

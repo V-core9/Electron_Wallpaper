@@ -1,5 +1,6 @@
 const { renderCache, dataCache } = require('./caches');
 
+
 // Basic Use
 const app_info = async () => {
   return `<app_info>
@@ -7,6 +8,7 @@ const app_info = async () => {
             <h2>Version: ${await dataCache.get('application_version')}</h2>
           </app_info>`;
 };
+
 
 // Cache with stats
 
@@ -73,14 +75,17 @@ const listBackendAllCache = async () => {
     response += `<item>${key}: ${JSON.stringify(backCache[key])}</item>`;
   }
 
-  return `<cache_actions>
-            <button action='listBackendAllCache'>list Backend All Cache</button>
-            <button action='purgeBackendCache'>purgeBackendCache</button>
+  return `<cache_listing>
+            <actions>
+              <button action='listBackendAllCache'>list Backend All Cache</button>
+              <button action='purgeBackendCache'>purgeBackendCache</button>
+            </actions>
             <group>
               ${response}
             </group>
-          </cache_actions>`;
+          </cache_listing>`;
 };
+
 
 
 const change_title_form = async () => {
@@ -93,6 +98,7 @@ const change_title_form = async () => {
           </change_title_form>`;
 };
 
+
 const change_version_form = async () => {
   return `<change_version_form>
             <h3>Change Application Version:</h3>
@@ -103,6 +109,8 @@ const change_version_form = async () => {
           </change_version_form>`;
 };
 
+
+
 const testBackendPing = async () => {
   let backPing = await dataCache.get('testBackendPing') || { fb: 0, bf: 0 };
   return `<cache_actions>
@@ -112,6 +120,7 @@ const testBackendPing = async () => {
             </form_group>
           </cache_actions>`;
 };
+
 
 const listBackendTasks = async () => {
   let tasks = await dataCache.get('listBackendTasks') || {};
@@ -189,10 +198,12 @@ const _content = async () => {
 
 
 
+
 const renderApp = async () => {
   return `${await _header()}
           ${await _content()}
           ${await _footer()}`;
 };
+
 
 module.exports = { renderApp };

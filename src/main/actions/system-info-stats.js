@@ -27,6 +27,6 @@ module.exports = async () => {
 
   };
 
-  await cache.set("system", result);
+  cache.set("system", result);
 
 };

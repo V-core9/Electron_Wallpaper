@@ -17,17 +17,17 @@ let weatherUnits = 'metric';
 
 //? SETTERS VALIDATION
 const setAppTitle = async (val) => {
-  if (await v_rifier.name(val) === true) app_title = val;
+  if (await v_rifier.isName(val) === true) app_title = val;
 };
 
 const setAppDescription = async (val) => {
-  if (await v_rifier.text(val) === true) app_title = val;
+  if (await v_rifier.isText(val) === true) app_title = val;
 };
 
 const setAppVersion = async (val) => {
   const parts = val.split('.');
 
-  if ((parts.length === 3) && (await v_rifier.integer(parts[0]) === true) && (await v_rifier.integer(parts[1]) === true) && (await v_rifier.integer(parts[2]) === true)) {
+  if ((parts.length === 3) && (await v_rifier.isInteger(parts[0]) === true) && (await v_rifier.isInteger(parts[1]) === true) && (await v_rifier.isInteger(parts[2]) === true)) {
     app_version = val;
   }
 };

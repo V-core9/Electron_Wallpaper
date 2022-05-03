@@ -54,7 +54,7 @@
     "v_core_cache": "^1.0.8",
     "v_core_timers": "^0.0.2",
     "v_file_system": "^1.0.5",
-    "v_rifier": "^0.0.10",
+    "v_rifier": "^0.1.1",
     "wallpaper": "^5.0.1"
   },
   "devDependencies": {

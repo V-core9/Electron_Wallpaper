@@ -1,4 +1,6 @@
 const v_rifier = require('v_rifier');
+v_rifier.loadBuiltIns();
+
 const { ipcRenderer } = require('electron');
 const { dataCache } = require('./caches');
 const log = require('../helpers/log');
@@ -14,7 +16,7 @@ const actions = {
 
     const parts = val.split('.');
 
-    if ((parts.length === 3) && (await v_rifier.integer(parts[0]) === true) && (await v_rifier.integer(parts[1]) === true) && (await v_rifier.integer(parts[2]) === true)) {
+    if ((parts.length === 3) && (await v_rifier.isInteger(parts[0]) === true) && (await v_rifier.isInteger(parts[1]) === true) && (await v_rifier.isInteger(parts[2]) === true)) {
       const rez = await ipcRenderer.invoke('setAppTitle', val);
       await dataCache.set('application_version', rez);
       return true;
@@ -27,7 +29,7 @@ const actions = {
   changeAppTitle: async () => {
     const val = document.querySelector('#customTitle').value;
 
-    const verification = await v_rifier.name(val);
+    const verification = await v_rifier.isName(val);
     if (verification === true) {
       const rez = await ipcRenderer.invoke('setAppTitle', val);
       await dataCache.set('application_title', rez);

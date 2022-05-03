@@ -27,9 +27,14 @@ const { app } = require('./render/app');
 
   window.onclick = async (event) => {
     let action = event.target.getAttribute('action');
+    if (action === undefined) return false;
+
     if (actions[action] !== undefined) {
       await actions[action](event);
+      return true;
     }
+
+    return false;
   };
 
 

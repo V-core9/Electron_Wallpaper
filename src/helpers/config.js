@@ -1,7 +1,8 @@
 const path = require('path');
 const v_fs = require('v_file_system');
-const v_rifier = require('v_rifier');
 
+const v_rifier = require('v_rifier');
+v_rifier.loadBuiltIns();
 
 //? SETTINGS
 let app_debug = false;

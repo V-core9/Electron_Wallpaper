@@ -1,0 +1,1 @@
+document.querySelector('v_app').innerHTML = 'Welcome to V_App';

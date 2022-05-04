@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 
 
@@ -8,18 +8,24 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+require('./main/handlers/ipcMain')(ipcMain);
+
+const config = require('./helpers/config');
+
+require('./main/core/init')();
+
 
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = require('./process/config/mainWindow');
+  const mainWindow = require('./main/mainWindow');
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Open the DevTools.
-  //if (config.debug) mainWindow.webContents.openDevTools();
-  //if (config.maximize) mainWindow.maximize();
+  if (config.debug) mainWindow.webContents.openDevTools();
+  if (config.maximize) mainWindow.maximize();
 };
 
 

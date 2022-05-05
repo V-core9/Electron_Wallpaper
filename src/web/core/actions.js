@@ -10,29 +10,15 @@ const config = require('../../config');
 const actions = {
 
 
-  changeAppVersion: async () => {
-    const val = document.querySelector('#customVersion').value;
-
-    if (await verify.isNpmVersion(val)) {
-      const rez = await ipcRenderer.invoke('setAppTitle', val);
-      await dataCache.set('application_version', rez);
-      return true;
-    }
-    log('Invalid version number format.');
-    return false;
-  },
-
-
   changeAppTitle: async () => {
     const val = document.querySelector('#customTitle').value;
 
-    const verification = await v_rifier.isName(val);
-    if (verification === true) {
+    if (await verify.isName(val)) {
       const rez = await ipcRenderer.invoke('setAppTitle', val);
-      await dataCache.set('application_title', rez);
+      await config.set('title', rez);
       return true;
     }
-    log('Invalid title: ', verification);
+    log('Invalid title: ', val);
     return false;
   },
 
@@ -124,6 +110,7 @@ const actions = {
     const response = await ipcRenderer.invoke('toggleDebug');
     log('toggleDebug', response);
     await config.set('debug', response);
+    if (await config.get('debug') === false && await dataCache.get('currentPage') === 'debug') await dataCache.set('currentPage', 'home');
     await actions.listBackendTasks();
   },
 
@@ -144,9 +131,12 @@ const actions = {
     const response = await ipcRenderer.invoke('minimizeAppToggle');
     log('minimizeAppToggle', response);
     await dataCache.set('minimizeAppToggle', response);
+  },
+
+  openPage: async (event) => {
+    const page = event.target.getAttribute('page');
+    await dataCache.set('currentPage', page);
   }
-
-
 };
 
 module.exports = actions;

@@ -74,7 +74,7 @@ module.exports = (ipcMain) => {
 
 
     //? Exit Application Handle
-    ipcMain.handle('EXIT_APPLICATION', async () => require('../mainWindow').close());
+    ipcMain.handle('EXIT_APPLICATION', async () => require('../mainWindow').hide());
 
 
     return true;

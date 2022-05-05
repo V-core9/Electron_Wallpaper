@@ -6,8 +6,8 @@ const config = require('../../config');
 // Basic Use
 const app_info = async () => {
   return `<app_info>
-            <h1>${await dataCache.get('application_title')}</h1>
-            <h2>Version: ${await dataCache.get('application_version')}</h2>
+            <h1>${await config.get('title')}</h1>
+            <h2>Version: 00.00.00</h2>
           </app_info>`;
 };
 
@@ -122,24 +122,13 @@ const change_title_form = async () => {
   return `<section>
             <h3>Change Application Title:</h3>
             <form_group>
-              <input type='text' id='customTitle' placeholder='Change Title to Something' value='${await dataCache.get('application_title')}' />
+              <input type='text' id='customTitle' placeholder='Change Title to Something' value='${await config.get('title')}' />
               <button action='changeAppTitle'>Change</button>
             </form_group>
           </section>`;
 };
 
 
-const change_version_form = async () => {
-  return `<section>
-            <header>
-              <h3>Change Application Version:</h3>
-              <form_group>
-                <input type='text' id='customVersion' placeholder='Change Title to Something' value='${await dataCache.get('application_version')}' />
-                <button action='changeAppVersion'>Change</button>
-              </form_group>
-            </header>
-          </section>`;
-};
 
 
 
@@ -192,17 +181,43 @@ const app_test_actions = async () => {
           ${await listBackendAllCache()}`;
 };
 
+const pages = {
+  home: async () => {
+    return `Welcome, this is just a placeholder for a ROOT App Page.`;
+  },
+  device: async () => {
+    return `Welcome, this is just a placeholder for a DEVICE Info Page.`;
+  },
+  account: async () => {
+    return `Welcome, this is just a placeholder for a ACCOUNT Info Page.`;
+  },
+  settings: async () => {
+    return `${await change_title_form()}`;
+  },
+  debug: async () => {
+    return `${await cache_stats_box("dataCache", dataCache)}
+            ${await cache_stats_box("renderCache", renderCache)}
+            ${await change_title_form()}
+            ${await cache_actions()}
+            ${await app_test_actions()}`;
+  },
+};
+
+
+const renderCurrentPage = async (key) => await pages[key]();
 
 
 const _header = async () => {
   return `<header>
             <group>
-              <button action='#'>Device</button>
-              <button action='#'>Account</button>
-              <button action='#'>Settings</button>
+              <button action='openPage' page='home'>Home</button>
+              <button action='openPage' page='device'>Device</button>
+              <button action='openPage' page='account'>Account</button>
+              <button action='openPage' page='settings'>Settings</button>
+              ${await config.get('debug') ? "<button action='openPage' page='debug'>DebugPage</button>" : ''}
             </group>
             <info>
-              <h2>${await dataCache.get('application_title')} : Version: ${await dataCache.get('application_version')}</h2>
+              <h2>${await config.get('title')}</h2>
             </info>
             <group>
               <button action='minimizeAppToggle'>🔻</button>
@@ -225,12 +240,7 @@ const _footer = async () => {
 
 const _content = async () => {
   return `<content>
-            ${await cache_stats_box("dataCache", dataCache)}
-            ${await cache_stats_box("renderCache", renderCache)}
-            ${await change_title_form()}
-            ${await change_version_form()}
-            ${await cache_actions()}
-            ${await app_test_actions()}
+            ${await renderCurrentPage(await dataCache.get('currentPage') || 'home')}
           </content>`;
 };
 

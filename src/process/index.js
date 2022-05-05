@@ -1,5 +1,21 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Notification } = require('electron');
 const path = require('path');
+
+const config = require('../config');
+
+
+
+//! BASIC NOTIFICATION
+
+const NOTIFICATION_TITLE = 'Basic Notification';
+const NOTIFICATION_BODY = 'Notification from the Main process';
+
+function showNotification() {
+  new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show();
+}
+
+//! NOTIFICATION DEMO
+
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -10,16 +26,18 @@ if (require('electron-squirrel-startup')) {
 
 
 
-const createWindow = () => {
+const createWindow = async () => {
   // Create the browser window.
-  const mainWindow = require('./process/config/mainWindow');
+  const mainWindow = require('./config/mainWindow');
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, '../web/index.html'));
 
   // Open the DevTools.
-  //if (config.debug) mainWindow.webContents.openDevTools();
-  //if (config.maximize) mainWindow.maximize();
+  if (await config.get('debug')) mainWindow.webContents.openDevTools();
+  if (await config.get('maximized')) mainWindow.maximize();
+
+  showNotification();
 };
 
 
@@ -39,11 +57,11 @@ app.on('window-all-closed', () => {
 });
 
 
-app.on('activate', () => {
+app.on('activate', async () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    await createWindow();
   }
 });
 

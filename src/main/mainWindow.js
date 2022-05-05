@@ -1,6 +1,6 @@
 const { BrowserWindow } = require('electron');
 
-const cfg = require('../../config');
+const cfg = require('../config');
 
 const mainWindow = new BrowserWindow({
   title: cfg.title,

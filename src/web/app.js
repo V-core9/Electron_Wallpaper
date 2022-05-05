@@ -4,6 +4,7 @@ const { dataCache, renderCache } = require('./core/caches');
 const actions = require('./core/actions');
 
 const { app } = require('./core/renders');
+const config = require('../config');
 
 
 
@@ -50,15 +51,12 @@ const { app } = require('./core/renders');
 
   window.addEventListener('resize', async (event) => {
     log('Resize Event', event);
+    await actions.isMaximized();
   });
 
-  window.addEventListener('blur', async (event) => {
-    warn('Blur Event', event);
-  });
+  window.addEventListener('blur', actions.windowBlur);
 
-  window.addEventListener('focus', async (event) => {
-    info('Focus Event', event);
-  });
+  window.addEventListener('focus', actions.windowFocus);
 
   window.addEventListener('beforeunload', async (event) => {
     warn('Yea BeforeUnload Alert', event);

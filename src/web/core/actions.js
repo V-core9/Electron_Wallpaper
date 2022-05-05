@@ -6,6 +6,14 @@ const { log } = require('../../helpers/logger');
 
 const config = require('../../config');
 
+
+
+
+ipcRenderer.on('context-menu-command', (e, command) => {
+  // ...
+  log(e, command);
+});
+
 // Example Application
 const actions = {
 
@@ -117,8 +125,8 @@ const actions = {
 
   maximizeAppToggle: async () => {
     const response = await ipcRenderer.invoke('maximizeAppToggle');
-    log('maximizeAppToggle', response);
-    await dataCache.set('maximizeAppToggle', response);
+    log('maximize', response);
+    await config.set('maximized', response);
   },
 
 
@@ -136,7 +144,26 @@ const actions = {
   openPage: async (event) => {
     const page = event.target.getAttribute('page');
     await dataCache.set('currentPage', page);
-  }
+  },
+
+
+  windowBlur: async (event) => {
+    const response = await ipcRenderer.invoke('windowBlur');
+    log('windowBlur', response);
+    await dataCache.set('windowBlur', response);
+  },
+
+  windowFocus: async (event) => {
+    const response = await ipcRenderer.invoke('windowFocus');
+    log('windowFocus', response);
+    await dataCache.set('windowFocus', response);
+  },
+
+  isMaximized: async (event) => {
+    const response = await ipcRenderer.invoke('isMaximized');
+    await config.set('maximized', response);
+    await dataCache.set('isMaximized', response);
+  },
 };
 
 module.exports = actions;

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Notification, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 
 const path = require('path');
 
@@ -6,16 +6,7 @@ const config = require('../config');
 
 const tray = require('./tray');
 
-//! BASIC NOTIFICATION
-
-const NOTIFICATION_TITLE = 'Basic Notification';
-const NOTIFICATION_BODY = 'Notification from the Main process';
-
-function showNotification() {
-  new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show();
-}
-
-//! NOTIFICATION DEMO
+const notify = require('./notify');
 
 
 
@@ -42,7 +33,7 @@ const createWindow = async () => {
   if (await config.get('debug')) mainWindow.webContents.openDevTools();
   if (await config.get('maximized')) mainWindow.maximize();
 
-  showNotification();
+  notify.exampleNotification();
 };
 
 

@@ -1,6 +1,6 @@
 const { app, Tray, Menu, nativeImage } = require('electron');
 const config = require('../config');
-
+  
 
 module.exports = tray = async () => {
   let tray
@@ -9,22 +9,31 @@ module.exports = tray = async () => {
 
   let contextMenu = async () => {
     return Menu.buildFromTemplate([
-      { label: 'Item1', type: 'radio' },
-      { label: 'Item2', type: 'radio' },
-      { label: 'Item3', type: 'radio', checked: true },
       {
-        label: (await config.get('debug') ? 'Disable Debug' : 'Enable Debug'),
-        click: async () => {
-          await config.set('debug', !await config.get('debug'));
-          tray.setContextMenu(await contextMenu());
+        label: 'App',
+        click: () => {
+          console.log('Showing App Window');
+          require('./mainWindow').show();
         }
       },
       {
-        label: 'CLICK ME',
+        label: 'Actions',
         click: () => {
           console.log('CLICKED THIS ITEM IN MENU');
-        }
+        },
+        submenu: [
+          { role: 'reload' },
+          { role: 'forceReload' },
+          { role: 'toggleDevTools' },
+          { type: 'separator' },
+          { role: 'resetZoom' },
+          { role: 'zoomIn' },
+          { role: 'zoomOut' },
+          { type: 'separator' },
+          { role: 'togglefullscreen' }
+        ]
       },
+      { type: 'separator' },
       {
         label: 'Close App',
         click: () => {

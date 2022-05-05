@@ -221,7 +221,7 @@ const _header = async () => {
             </info>
             <group>
               <button action='minimizeAppToggle'>🔻</button>
-              <button action='maximizeAppToggle'>💢</button>
+              <button action='maximizeAppToggle'>${await config.get('maximized') ? '🔸' : '💢'}</button>
               <button action='exitApplication'>❌</button>
             </group>
           </header>`;

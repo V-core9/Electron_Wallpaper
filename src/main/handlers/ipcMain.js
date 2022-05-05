@@ -57,13 +57,15 @@ module.exports = (ipcMain) => {
     //? Window Maximize Toggle
     ipcMain.handle('maximizeAppToggle', async () => {
       const mainWindow = require('../mainWindow');
-      await config.toggleMaximize();
-      if (config.maximize) {
+      await config.set('maximized', !await config.get('maximized'));
+
+      const status = await config.get('maximized');
+      if (status) {
         mainWindow.maximize();
       } else {
         mainWindow.unmaximize();
       }
-      return config.maximize;
+      return status;
     });
 
     //? Window Minimize Toggle
@@ -72,9 +74,20 @@ module.exports = (ipcMain) => {
       mainWindow.minimize();
     });
 
+    ipcMain.handle('isMaximized', async () => require('../mainWindow').isMaximized());
+
 
     //? Exit Application Handle
     ipcMain.handle('EXIT_APPLICATION', async () => require('../mainWindow').hide());
+
+
+    ipcMain.handle('windowBlur', async () => {
+      log('windowBlur Event');
+    });
+
+    ipcMain.handle('windowFocus', async () => {
+      log('windowFocus Event');
+    });
 
 
     return true;

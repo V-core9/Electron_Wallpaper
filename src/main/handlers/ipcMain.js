@@ -81,7 +81,10 @@ module.exports = (ipcMain) => {
 
 
     //? Exit Application Handle
-    ipcMain.handle('EXIT_APPLICATION', async () => require('../mainWindow').hide());
+    ipcMain.handle('EXIT_APPLICATION', async () => {
+      require('../mainWindow').hide();
+      require('../tray').recreateMainMenu();
+    });
 
 
     ipcMain.handle('windowBlur', async () => {

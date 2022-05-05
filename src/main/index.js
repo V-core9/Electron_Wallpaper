@@ -24,7 +24,7 @@ const createWindow = async () => {
   // Create the browser window.
   const mainWindow = require('./mainWindow');
 
-  const tray = require('./tray');
+  const { tray } = require('./tray');
   tray();
 
   // and load the index.html of the app.

@@ -89,23 +89,26 @@ module.exports = function BaseTemplate(data = {}) {
     if (await config.get('debug')) console.log(this.cacheData);
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.helperWidth} ${this.helperHeight}"  height="${this.helperHeight}" width="${this.helperWidth}" class="${this.name}"  shape-rendering="geometricPrecision" font-family="monospace" >
-              ${await this.bckLayer()}
-                ${await this.printOsInfo()}
-                ${await this.printBotStats()}
-                ${await this.printClock()}
-                ${await this.extendedInfoPanel()}
-                ${(await config.get('debug')) ? await this.debug() : `${await draw.text(1125, 25, `<text fill="${this.main}">${this.cacheData.svgStats.lastExecTimeVal}</text>ms | ${this.cacheData.svgStats.totalUpdates}`, this.white, this.normalFontSize)}`}
+              ${(await config.get('exiting') === false) ? await this._render() : await this.offlineNotice()}
             </svg>`;
 
   };
 
-
+  this._render = async () => {
+    return `${await this.bckLayer()}
+            ${await this.printOsInfo()}
+            ${await this.printBotStats()}
+            ${await this.printClock()}
+            ${await this.extendedInfoPanel()}
+            ${(await config.get('debug')) ? await this.debug() : `${await draw.text(1125, 25, `<text fill="${this.main}">${this.cacheData.svgStats.lastExecTimeVal}</text>ms | ${this.cacheData.svgStats.totalUpdates}`, this.white, this.normalFontSize)}`}`;
+  };
 
   this.offlineNotice = async () => {
     return `<path d="M 170 697.5 l ${(this.helperWidth - 340)}  0 5 5 0 10 -5 5 ${-(this.helperWidth - 340)}  0 -5 -5 0 -10 5 -5" stroke="${this.main}80" stroke-width="1" fill="${this.main}50" ></path>
-            ${await draw.text(180, 710, `V_WATCH: [OFFLINE]`, "#000000", this.normalFontSize)}
+            ${await draw.text(180, 710, `${await config.get('title')}: [OFFLINE]`, "#000000", this.normalFontSize)}
             ${await draw.text(640, 710, `Restart application to get it running`, "#000000", this.normalFontSize)}
-            ${await draw.image(1080, 520, 200, 200, await cache.get("PICKLE_BASE64"))}`;
+            `;
+    //           ${await draw.image(1080, 520, 200, 200, await cache.get("PICKLE_BASE64"))}
   };
 
 

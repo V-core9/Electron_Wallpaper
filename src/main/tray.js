@@ -1,6 +1,7 @@
-const { app, Tray, Menu, nativeImage } = require('electron');
+const { Tray, Menu, nativeImage } = require('electron');
 const config = require('../config');
-const mainWindow = require('./mainWindow');
+
+const exiting = require('./handlers/exiting');
 
 let tray;
 
@@ -40,9 +41,9 @@ let contextMenu = async () => {
     { type: 'separator' },
     {
       label: 'Close App',
-      click: () => {
+      click: async () => {
         console.log('CLOSING from TRAY');
-        app.quit();
+        await exiting();
       }
     }
   ]);

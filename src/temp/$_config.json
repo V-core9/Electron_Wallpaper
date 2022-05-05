@@ -1,0 +1,13 @@
+{
+  "debug": false,
+  "exiting": true,
+  "configFilePath": "G:\\my-app\\src\\temp\\$_config.json",
+  "title": "Electron Wallpaper",
+  "accessibleTitle": "Electron Wallpaper",
+  "width": 720,
+  "height": 720,
+  "maximized": false,
+  "notify": false,
+  "backgroundUpdates": true,
+  "weatherApiKey": null
+}

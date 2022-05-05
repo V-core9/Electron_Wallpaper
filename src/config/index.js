@@ -1,4 +1,5 @@
 const verify = require("../helpers/verify");
+const path = require('path');
 
 
 //* Actual Config
@@ -6,14 +7,19 @@ const _config = {
 
   //* Debug level
   debug: true,
+  exiting: false,
+  configFilePath: path.join(__dirname, '../temp/$_config.json'),
 
   //* Electron Window Config
   title: "Electron Wallpaper",
   accessibleTitle: "Electron Wallpaper",
 
+  width: 1280,
+  height: 720,
   maximized: false,
 
   //* STATS
+  notify: true,
   backgroundUpdates: true,
 
   //* API KEYS
@@ -25,6 +31,8 @@ const _config = {
 //? Setters with Verification Methods
 const setters = {
 
+  exiting: async (val) => (await verify.isBool(val)) ? _config.exiting = val : null,
+
   debug: async (val) => (await verify.isBool(val)) ? _config.debug = val : null,
 
   title: async (val) => (await verify.isName(val)) ? _config.title = val : null,
@@ -34,6 +42,12 @@ const setters = {
   weatherApiKey: async (val) => (await verify.isWeatherApiKey(val)) ? _config.weatherApiKey = val : null,
 
   maximized: async (val) => (await verify.isBool(val)) ? _config.maximized = val : null,
+
+  notify: async (val) => (await verify.isBool(val)) ? _config.notify = val : null,
+
+  width: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? _config.width = val : null,
+
+  height: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? _config.width = val : null,
 
 };
 
@@ -67,6 +81,7 @@ const config = {
   }
 
 };
+
 
 
 module.exports = config;

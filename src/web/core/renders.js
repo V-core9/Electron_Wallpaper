@@ -209,50 +209,89 @@ const renderCurrentPage = async (key) => await pages[key]();
 
 const _header = async () => {
   let currentPage = await dataCache.get('currentPage') || 'home';
-  return `<header>
-            <group>
-              <button action='openPage' page='home' class='${currentPage === 'home' ? 'active' : ''}'>Home</button>
-              <button action='openPage' page='device' class='${currentPage === 'device' ? 'active' : ''}'>Device</button>
-              <button action='openPage' page='account' class='${currentPage === 'account' ? 'active' : ''}'>Account</button>
-              <button action='openPage' page='settings' class='${currentPage === 'settings' ? 'active' : ''}'>Settings</button>
-              ${await config.get('debug') ? ("<button action='openPage' page='debug' " + (currentPage === 'debug' ? ' class=\"active\" ' : '') + ">DebugPage</button>") : ''}
-            </group>
-            <info>
-              <h2>${await config.get('title')}</h2>
-            </info>
-            <group>
-              <button action='minimizeAppToggle'>🔻</button>
-              <button action='maximizeAppToggle'>${await config.get('maximized') ? '🔸' : '💢'}</button>
-              <button action='exitApplication'>❌</button>
-            </group>
-          </header>`;
+  return `<group>
+            <button action='openPage' page='home' class='${currentPage === 'home' ? 'active' : ''}'>Home</button>
+            <button action='openPage' page='device' class='${currentPage === 'device' ? 'active' : ''}'>Device</button>
+            <button action='openPage' page='account' class='${currentPage === 'account' ? 'active' : ''}'>Account</button>
+            <button action='openPage' page='settings' class='${currentPage === 'settings' ? 'active' : ''}'>Settings</button>
+            ${await config.get('debug') ? ("<button action='openPage' page='debug' " + (currentPage === 'debug' ? ' class=\"active\" ' : '') + ">DebugPage</button>") : ''}
+          </group>
+          <info>
+            <h2>${await config.get('title')}</h2>
+          </info>
+          <group>
+            <button action='minimizeAppToggle'>🔻</button>
+            <button action='maximizeAppToggle'>${await config.get('maximized') ? '🔸' : '💢'}</button>
+            <button action='exitApplication'>❌</button>
+          </group>`;
 };
 
 const _footer = async () => {
-  return `<footer>
-            <group>
-              <button action='toggleDebug'>${await config.get('debug') ? 'Disable Debug' : 'Enable Debug'}</button>
-            </group>
-            <group>
-              ${await app_info()}
-            </group>
-          </footer>`;
+  return `<group>
+            <button action='toggleDebug'>${await config.get('debug') ? 'Disable Debug' : 'Enable Debug'}</button>
+          </group>
+          <group>
+            ${await app_info()}
+          </group>
+          `;
 };
 
 const _content = async () => {
-  return `<content>
-            ${await renderCurrentPage(await dataCache.get('currentPage') || 'home')}
-          </content>`;
+  return `${await renderCurrentPage(await dataCache.get('currentPage') || 'home')}`;
 };
 
 
 
 const renderApp = async () => {
-  return `${await _header()}
-          ${await _content()}
-          ${await _footer()}`;
+  return `<header>
+            ${await header({})}
+          </header>
+
+          <content>
+            ${await content({})}
+          </content>
+
+          <footer>            
+            ${await footer({})}
+          </footer>`;
 };
 
+
+const header = async (data) => {
+  if (data.key === 'header_render') {
+    document.querySelector('v_app header').innerHTML = await renderCache.get("header_render");
+    log("HEADER DOM Updated.");
+  }
+  
+  if (data.render === true) {
+    await renderCache.set("header_render", await _header(), 16);
+    log("HEADER Rendered into Cache.");
+  }
+};
+
+const content = async (data) => {
+  if (data.key === 'content_render') {
+    document.querySelector('v_app content').innerHTML = await renderCache.get("content_render");
+    log("CONTENT DOM Updated.");
+  } 
+
+  if (data.render === true) {
+    await renderCache.set("content_render", await _content(), 16);
+    log("CONTENT Rendered into Cache.");
+  }
+};
+
+const footer = async (data) => {
+  if (data.key === 'footer_render') {
+    document.querySelector('v_app footer').innerHTML = await renderCache.get("footer_render");
+    log("FOOTER DOM Updated.");
+  }
+  
+  if (data.render === true) {
+    await renderCache.set("footer_render", await _footer(), 16);
+    log("FOOTER Rendered into Cache.");
+  }
+};
 
 const app = async (data) => {
   let startTime = Date.now();
@@ -268,4 +307,4 @@ const app = async (data) => {
 };
 
 
-module.exports = { app };
+module.exports = { app, header, footer, content };

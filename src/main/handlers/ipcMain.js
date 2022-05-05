@@ -11,6 +11,7 @@ module.exports = (ipcMain) => {
 
     ipcMain.handle('ping', async () => Date.now());
 
+    ipcMain.handle('getConfig', async () => await config.all());
 
 
     ipcMain.handle('setAppTitle', async (event, arg) => {

@@ -7,9 +7,8 @@ const sharp = require('sharp');
 // SVG Template To Use
 const { baseTemplate } = require('../templates');
 
-
 // File Paths
-const filePath = path.join(__dirname, '../temp/wallpaper.png');
+const filePath = path.join(__dirname, '../../temp/wallpaper.png');
 
 
 

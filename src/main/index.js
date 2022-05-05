@@ -2,10 +2,6 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 
 const path = require('path');
 
-const config = require('../config');
-
-const notify = require('./notify');
-
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -14,13 +10,22 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-
-require('./handlers/ipcMain')(ipcMain);
-
-require('./core/init')();
-
-
 const createWindow = async () => {
+
+  const config = require('../config');
+
+  const { read } = require('v_file_system');
+
+  const data = JSON.parse(await read(await config.get('configFilePath')));
+  if (data.exiting == true) data.exiting = false;
+  await config.mSet(data);
+
+  const notify = require('./notify');
+
+  require('./handlers/ipcMain')(ipcMain);
+
+  require('./core/init')();
+
   // Create the browser window.
   const mainWindow = require('./mainWindow');
 

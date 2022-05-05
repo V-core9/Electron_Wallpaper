@@ -239,3 +239,7 @@ content item {
 item header {
   background: none;
 }
+
+button.active {
+  background: #3f51b5;
+}

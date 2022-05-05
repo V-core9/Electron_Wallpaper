@@ -9,12 +9,15 @@ const { log } = require('../../helpers/logger');
 })();
 
 module.exports = weatherApi = async () => {
-  weather.setCity(await config.get('weatherCity'));
-  weather.setUnits(await config.get('weatherUnits'));
+  if (await config.get('weatherApiKey') !== null) {
 
-  weather.getAllWeather(async (err, JSONObj) => {
-    log(JSONObj);
-    await cache.set('weatherApi', JSONObj);
-  });
+    weather.setCity(await config.get('weatherCity'));
+    weather.setUnits(await config.get('weatherUnits'));
 
+    weather.getAllWeather(async (err, JSONObj) => {
+      log(JSONObj);
+      await cache.set('weatherApi', JSONObj);
+    });
+
+  }
 };

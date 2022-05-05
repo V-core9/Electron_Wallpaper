@@ -17,6 +17,10 @@ ipcRenderer.on('context-menu-command', (e, command) => {
 // Example Application
 const actions = {
 
+  getConfig: async () => {
+    await config.mSet(await ipcRenderer.invoke('getConfig'));
+    await dataCache.set('application_config', await config.all());
+  },
 
   changeAppTitle: async () => {
     const val = document.querySelector('#customTitle').value;

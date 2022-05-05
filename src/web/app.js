@@ -3,8 +3,7 @@ const { log, info, warn } = require('../helpers/logger');
 const { dataCache, renderCache } = require('./core/caches');
 const actions = require('./core/actions');
 
-const { app } = require('./core/renders');
-const config = require('../config');
+const { header, content, footer, } = require('./core/renders');
 
 
 
@@ -13,13 +12,20 @@ const config = require('../config');
 
   await dataCache.set('currentPage', 'home');
 
-  dataCache.on('set', app);
-  renderCache.on('set', app);
+  dataCache.on('set', (data) => header({ render: true }));
+  dataCache.on('set', (data) => content({ render: true }));
+  dataCache.on('set', (data) => footer({ render: true }));
+
+  renderCache.on('set', header);
+  renderCache.on('set', content);
+  renderCache.on('set', footer);
 
 
   dataCache.on('purge', async () => {
     log('Cache Purged');
-    await app({});
+    await header({ render: true });
+    await content({ render: true });
+    await footer({ render: true });
   });
 
 
@@ -72,9 +78,10 @@ const config = require('../config');
 
 
 
+  actions.getConfig();
+
   actions.listAvailableTasks();
   actions.listBackendTasks();
   actions.listBackendAllCache();
-
 
 })();

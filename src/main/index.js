@@ -4,8 +4,6 @@ const path = require('path');
 
 const config = require('../config');
 
-const tray = require('./tray');
-
 const notify = require('./notify');
 
 
@@ -26,6 +24,9 @@ const createWindow = async () => {
   // Create the browser window.
   const mainWindow = require('./mainWindow');
 
+  const tray = require('./tray');
+  tray();
+
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, '../web/index.html'));
 
@@ -41,7 +42,6 @@ const createWindow = async () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
-app.on('ready', tray);
 
 
 // Quit when all windows are closed, except on macOS. There, it's common

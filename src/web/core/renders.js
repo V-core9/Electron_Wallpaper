@@ -208,13 +208,14 @@ const renderCurrentPage = async (key) => await pages[key]();
 
 
 const _header = async () => {
+  let currentPage = await dataCache.get('currentPage') || 'home';
   return `<header>
             <group>
-              <button action='openPage' page='home'>Home</button>
-              <button action='openPage' page='device'>Device</button>
-              <button action='openPage' page='account'>Account</button>
-              <button action='openPage' page='settings'>Settings</button>
-              ${await config.get('debug') ? "<button action='openPage' page='debug'>DebugPage</button>" : ''}
+              <button action='openPage' page='home' class='${currentPage === 'home' ? 'active' : ''}'>Home</button>
+              <button action='openPage' page='device' class='${currentPage === 'device' ? 'active' : ''}'>Device</button>
+              <button action='openPage' page='account' class='${currentPage === 'account' ? 'active' : ''}'>Account</button>
+              <button action='openPage' page='settings' class='${currentPage === 'settings' ? 'active' : ''}'>Settings</button>
+              ${await config.get('debug') ? ("<button action='openPage' page='debug' " + (currentPage === 'debug' ? ' class=\"active\" ' : '') + ">DebugPage</button>") : ''}
             </group>
             <info>
               <h2>${await config.get('title')}</h2>

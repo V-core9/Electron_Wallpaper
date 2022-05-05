@@ -13,7 +13,10 @@ module.exports = (ipcMain) => {
 
 
 
-    ipcMain.handle('setAppTitle', async (event, arg) => config.appTitle = arg);
+    ipcMain.handle('setAppTitle', async (event, arg) => {
+      await config.set('title', arg);
+      return await config.get('title');
+    });
 
     ipcMain.handle('setAppVersion', async (event, arg) => config.version = arg);
 

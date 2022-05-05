@@ -11,6 +11,8 @@ const config = require('../config');
 // Run the whole thing
 (async () => {
 
+  await dataCache.set('currentPage', 'home');
+
   dataCache.on('set', app);
   renderCache.on('set', app);
 

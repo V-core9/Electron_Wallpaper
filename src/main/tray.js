@@ -16,7 +16,7 @@ let contextMenu = async () => {
       label: require('./mainWindow').isVisible() ? 'Hide App' : 'Show App',
       click: async () => {
         let mainWindow = require('./mainWindow');
-        console.log('Showing App Window');
+        console.log((mainWindow.isVisible() ? 'Hidding' : 'Showing') +' App Window');
         mainWindow[mainWindow.isVisible() ? 'hide' : 'show']();
         await recreateMainMenu();
       }
@@ -27,7 +27,12 @@ let contextMenu = async () => {
         console.log('CLICKED THIS ITEM IN MENU');
       },
       submenu: [
-        { role: 'reload' },
+        {
+          role: 'reload',
+          click: () => {
+            console.log('+> RELOAD');
+          }
+        },
         { role: 'forceReload' },
         { role: 'toggleDevTools' },
         { type: 'separator' },

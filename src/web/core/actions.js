@@ -63,7 +63,9 @@ const actions = {
 
 
   listBackendTasks: async () => {
-    await dataCache.set('listBackendTasks', JSON.parse(await ipcRenderer.invoke('listBackendTasks')));
+    const data = JSON.parse(await ipcRenderer.invoke('listBackendTasks'));
+    log(data);
+    await dataCache.set('listBackendTasks', data);
   },
 
 

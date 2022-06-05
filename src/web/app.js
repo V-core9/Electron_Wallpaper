@@ -44,15 +44,14 @@ const { header, content, footer, } = require('./core/renders');
 
 
   window.addEventListener('click', async (event) => {
-    let action = event.target.getAttribute('action');
-    if (action === undefined) return false;
-
-    if (actions[action] !== undefined) {
-      await actions[action](event);
-      return true;
+    try {
+      const action = event.target.getAttribute('action');
+      if (action) {
+        actions[action](event);
+      }
+    } catch (error) {
+      warn(error);
     }
-
-    return false;
   });
 
 

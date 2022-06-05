@@ -29,7 +29,7 @@ module.exports = (ipcMain) => {
 
 
 
-    ipcMain.handle('listBackendTasks', async (event, arg) => JSON.stringify(await watch.keys()));
+    ipcMain.handle('listBackendTasks', async (event, arg) => JSON.stringify(await watch.getAll()));
 
     ipcMain.handle('startSpecificTask', async (event, arg) => await watch.start(arg));
 

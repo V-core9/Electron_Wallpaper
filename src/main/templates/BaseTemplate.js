@@ -150,7 +150,7 @@ module.exports = function BaseTemplate(data = {}) {
   this.placeholder = async () => {
     let taskVIEW = "";
 
-    let tasks = await watch.getAll();
+    let tasks = await watch.get();
 
     let taskNames = Object.keys(tasks);
 

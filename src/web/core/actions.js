@@ -49,7 +49,6 @@ const actions = {
 
   logUndefinedItem: async () => log(await dataCache.get('logUndefinedItem')),
 
-
   testBackendPing: async () => {
     const beforeTime = Date.now();
     const rez = await ipcRenderer.invoke('ping', beforeTime);

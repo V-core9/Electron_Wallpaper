@@ -53,7 +53,10 @@ input:hover {
   background: #384c57;
 }
 
-change_title_form, change_version_form, cache_actions, tasks_listing {
+change_title_form,
+change_version_form,
+cache_actions,
+tasks_listing {
   display: flex;
   justify-content: space-between;
   padding: 1em;
@@ -83,7 +86,9 @@ form_group {
   flex-flow: wrap;
 }
 
-change_title_form h3, change_version_form h3, cache_actions h3 {
+change_title_form h3,
+change_version_form h3,
+cache_actions h3 {
   flex: 1;
 }
 
@@ -234,6 +239,7 @@ content item {
   background: #ffffff14;
   align-items: center;
   padding: 0.25em;
+  border: 1px solid transparent;
 }
 
 item header {
@@ -242,4 +248,50 @@ item header {
 
 button.active {
   background: #3f51b5;
+}
+
+button:disabled {
+  background: gray;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+section.listBackendTasks>content>item>header {
+  flex: 1;
+}
+
+section.listBackendTasks>content>item>header>* {
+  flex: 1;
+}
+
+v_app>content>section>header {
+  padding: .5em;
+}
+
+content item:hover {
+  border: 1px solid #222434;
+  background: #2f3868;
+}
+
+
+v_app>content>section>footer {
+  justify-content: space-between;
+  align-items: stretch;
+  padding: .35em;
+}
+
+v_app>content>section>footer>* {
+  flex: 1;
+  align-items: center;
+  display: flex;
+  padding: .5em 1em;
 }

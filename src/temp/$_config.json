@@ -1,8 +1,8 @@
 {
-  "debug": true,
+  "debug": false,
   "exiting": true,
   "configFilePath": "G:\\EW2\\src\\temp\\$_config.json",
-  "title": "Wallpaper 123",
+  "title": "YEA APP",
   "accessibleTitle": "Electron Wallpaper",
   "width": 720,
   "height": 720,

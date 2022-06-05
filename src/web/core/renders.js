@@ -35,23 +35,25 @@ const _cache = async (cacheName, cacheList = {}) => {
 const cache_stats_box = async (title, vCache) => {
   let stats = await vCache.stats();
   return `<section>
-            <h3>${title}:</h3>
-            <div>
-              <h5>Hits:</h5>
-              <p>${stats.hits}</p>
-            </div>
-            <div>
-              <h5>Misses:</h5>
-              <p>${stats.misses}</p>
-            </div>
-            <div>
-              <h5>Count:</h5>
-              <p>${stats.count}</p>
-            </div>
-            <div>
-              <h5>Size:</h5>
-              <p>${stats.size}</p>
-            </div>
+            <header>
+              <h3>${title}:</h3>
+              <div>
+                <h5>Hits:</h5>
+                <p>${stats.hits}</p>
+              </div>
+              <div>
+                <h5>Misses:</h5>
+                <p>${stats.misses}</p>
+              </div>
+              <div>
+                <h5>Count:</h5>
+                <p>${stats.count}</p>
+              </div>
+              <div>
+                <h5>Size:</h5>
+                <p>${stats.size}</p>
+              </div>
+            </header>
           </section>`;
 };
 
@@ -120,7 +122,9 @@ const listBackendAllCache = async () => {
 
 const change_title_form = async () => {
   return `<section>
-            <h3>Change Application Title:</h3>
+            <header>
+              <h3>Change Application Title:</h3>
+            </header>
             <form_group>
               <input type='text' id='customTitle' placeholder='Change Title to Something' value='${await config.get('title')}' />
               <button action='changeAppTitle'>Change</button>
@@ -135,7 +139,9 @@ const change_title_form = async () => {
 const testBackendPing = async () => {
   let backPing = await dataCache.get('testBackendPing') || { fb: 0, bf: 0 };
   return `<section>
-            <h3>Application Test Actions: [ fb:${backPing.fb}, bf:${backPing.bf} ]</h3>
+            <header>
+              <h3>Application Test Actions: [ fb:${backPing.fb}, bf:${backPing.bf} ]</h3>
+            </header>
             <form_group>
               <button action='testBackendPing'>Test Backend Ping</button>
             </form_group>
@@ -144,32 +150,42 @@ const testBackendPing = async () => {
 
 
 const listBackendTasks = async () => {
-  let tasks = await dataCache.get('listBackendTasks') || {};
+  let data = await dataCache.get('listBackendTasks') || {};
+  log(data);
 
   let response = '';
 
-  for (let key in tasks) {
-    response += `<item taskName='${tasks[key]}'>
+  let tasks = data.tasks || [];
+
+  tasks.forEach((task) => {
+    response += `<item taskName='${task.name}'>
                     <header>
-                      <h4>${tasks[key]}</h4>
+                      <h4>🆔 ${task.name}</h4>
+                      <h5>🚀 Running: ${(task.active ? '✅' : '🟥')}</h5>
+                      <h5>➰ Interval: ${task.interval}ms</h5>
                     </header>
                     <actions>
-                      <button action='startSpecificTask'>Start</button>
-                      <button action='stopSpecificTask'>Stop</button>
+                      <button action='startSpecificTask' ${(task.active ? 'disabled' : '')}>Start</button>
+                      <button action='stopSpecificTask' ${(!task.active ? 'disabled' : '')}>Stop</button>
                       <button action='deleteSpecificTask'>Delete</button>
                     </actions>
                   </item>`;
-  }
+  });
 
-  return `<section>
+  return `<section class='listBackendTasks'>
             <header>
               <h2>Watch Tasks:</h2>
               <button action='listBackendTasks'>Refresh List</button>
-              <button action='endAllTasks'>End All</button>
             </header>
             <content>
               ${response}
             </content>
+            <footer>
+              <h5>Total Tasks: ${data.totalTasksCount}</h5>
+              <h5>Active Tasks: ${data.activeTasksCount}</h5>
+              <h5>Disabled Tasks: ${data.disabledTasksCount}</h5>
+              <button action='endAllTasks'>End All</button>
+            </footer>
           </section>`;
 };
 
@@ -181,9 +197,14 @@ const app_test_actions = async () => {
           ${await listBackendAllCache()}`;
 };
 
+
+
+/*
+ * Pages
+ */
 const pages = {
   home: async () => {
-    return `Welcome, this is just a placeholder for a ROOT App Page.`;
+    return `${await listBackendTasks()}`;
   },
   device: async () => {
     return `Welcome, this is just a placeholder for a DEVICE Info Page.`;

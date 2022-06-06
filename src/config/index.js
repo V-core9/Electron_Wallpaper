@@ -3,7 +3,7 @@ const path = require('path');
 
 
 //* Actual Config
-const _config = {
+const cfg = {
 
   //* Debug level
   debug: true,
@@ -31,23 +31,23 @@ const _config = {
 //? Setters with Verification Methods
 const setters = {
 
-  exiting: async (val) => (await verify.isBool(val)) ? _config.exiting = val : null,
+  exiting: async (val) => (await verify.isBool(val)) ? cfg.exiting = val : null,
 
-  debug: async (val) => (await verify.isBool(val)) ? _config.debug = val : null,
+  debug: async (val) => (await verify.isBool(val)) ? cfg.debug = val : null,
 
-  title: async (val) => (await verify.isName(val)) ? _config.title = val : null,
+  title: async (val) => (await verify.isName(val)) ? cfg.title = val : null,
 
-  accessibleTitle: async (val) => (await verify.isName(val)) ? _config.accessibleTitle = val : null,
+  accessibleTitle: async (val) => (await verify.isName(val)) ? cfg.accessibleTitle = val : null,
 
-  weatherApiKey: async (val) => (await verify.isWeatherApiKey(val)) ? _config.weatherApiKey = val : null,
+  weatherApiKey: async (val) => (await verify.isWeatherApiKey(val)) ? cfg.weatherApiKey = val : null,
 
-  maximized: async (val) => (await verify.isBool(val)) ? _config.maximized = val : null,
+  maximized: async (val) => (await verify.isBool(val)) ? cfg.maximized = val : null,
 
-  notify: async (val) => (await verify.isBool(val)) ? _config.notify = val : null,
+  notify: async (val) => (await verify.isBool(val)) ? cfg.notify = val : null,
 
-  width: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? _config.width = val : null,
+  width: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? cfg.width = val : null,
 
-  height: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? _config.width = val : null,
+  height: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? cfg.width = val : null,
 
 };
 
@@ -55,13 +55,11 @@ const setters = {
 //! Usable Config
 const config = {
 
-  all: async () => _config,
+  has: async (key) => (cfg[key] !== undefined),
 
-  has: async (key) => (_config[key] !== undefined),
+  get: async (key) => (typeof key !== 'string') ? cfg : cfg[key],
 
-  get: async (key) => _config[key],
-
-  keys: async () => Object.keys(_config),
+  keys: async () => Object.keys(cfg),
 
   set: async (key, val) => {
     if (key in setters) {

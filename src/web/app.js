@@ -1,10 +1,7 @@
 const { log, info, warn } = require('../helpers/logger');
-
 const { dataCache, renderCache } = require('./core/caches');
 const actions = require('./core/actions');
-
-const { header, content, footer, } = require('./core/renders');
-
+const { app, header, content, footer } = require('./core/renders');
 
 
 // Run the whole thing
@@ -23,23 +20,13 @@ const { header, content, footer, } = require('./core/renders');
 
   dataCache.on('purge', async () => {
     log('Cache Purged');
-    await header({ render: true });
-    await content({ render: true });
-    await footer({ render: true });
+    actions.openPage('home');
   });
-
 
   dataCache.on('purge_stats', async (data) => {
     log('purge_stats CB>>', data);
   });
 
-
-
-
-
-  window.onload = async () => {
-    info('Window Loaded');
-  };
 
 
 
@@ -53,8 +40,6 @@ const { header, content, footer, } = require('./core/renders');
       warn(error);
     }
   });
-
-
 
   window.addEventListener('resize', async (event) => {
     log('Resize Event', event);
@@ -73,14 +58,13 @@ const { header, content, footer, } = require('./core/renders');
     warn('Yea Unload Alert', event);
   });
 
+  window.onload = async () => {
+    info('Window Loaded');
 
-
-
-
-  actions.getConfig();
-
-  actions.listAvailableTasks();
-  actions.listBackendTasks();
-  actions.listBackendAllCache();
+    actions.getConfig();
+    actions.listAvailableTasks();
+    actions.listBackendTasks();
+    actions.listBackendAllCache();
+  };
 
 })();

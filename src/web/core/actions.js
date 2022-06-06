@@ -19,7 +19,7 @@ const actions = {
 
   getConfig: async () => {
     await config.mSet(await ipcRenderer.invoke('getConfig'));
-    await dataCache.set('application_config', await config.all());
+    await dataCache.set('application_config', await config.get());
   },
 
   changeAppTitle: async () => {
@@ -147,6 +147,8 @@ const actions = {
   },
 
   openPage: async (event) => {
+    if (typeof event === 'string') return dataCache.set('page', event);
+    
     const page = event.target.getAttribute('page');
     await dataCache.set('currentPage', page);
   },

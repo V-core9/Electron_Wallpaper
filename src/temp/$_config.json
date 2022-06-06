@@ -2,12 +2,12 @@
   "debug": false,
   "exiting": true,
   "configFilePath": "G:\\EW2\\src\\temp\\$_config.json",
-  "title": "YEA APP",
+  "title": "Electron Wallpaper123",
   "accessibleTitle": "Electron Wallpaper",
   "width": 720,
   "height": 720,
   "maximized": false,
-  "notify": false,
+  "notify": true,
   "backgroundUpdates": true,
   "weatherApiKey": null
 }

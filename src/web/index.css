@@ -223,7 +223,6 @@ cache_listing group {
   border: 1px solid #3f51b5;
 }
 
-
 section {
   display: flex;
   flex-direction: column;
@@ -256,15 +255,6 @@ button:disabled {
   pointer-events: none;
 }
 
-
-
-
-
-
-
-
-
-
 section.listBackendTasks>content>item>header {
   flex: 1;
 }
@@ -282,7 +272,6 @@ content item:hover {
   background: #2f3868;
 }
 
-
 v_app>content>section>footer {
   justify-content: space-between;
   align-items: stretch;
@@ -294,4 +283,68 @@ v_app>content>section>footer>* {
   align-items: center;
   display: flex;
   padding: .5em 1em;
+}
+
+modal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+modal overlay {
+  width: 100%;
+  height: 100%;
+  background: #000000bf;
+  display: flex;
+  position: absolute;
+  left: 0;
+  ;
+  top: 0;
+}
+
+modal inner {
+  z-index: 100;
+  flex: 0;
+  display: flex;
+  flex-direction: column;
+  background: slategray;
+}
+
+modal inner header {
+  padding: .5em 1em;
+}
+
+modal inner content form_group {
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.app_debug_toggle content {
+  justify-content: space-between;
+}
+
+modal inner content group p {
+  white-space: nowrap;
+}
+
+select,
+option {
+  font-size: 1em;
+  padding: .5em 1em;
+  color: white;
+  border: none;
+  background: #2b3946;
 }

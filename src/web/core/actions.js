@@ -28,6 +28,7 @@ const actions = {
     if (await verify.isName(val)) {
       const rez = await ipcRenderer.invoke('setAppTitle', val);
       await config.set('title', rez);
+      dataCache.set('appConfig', await config.get());
       return true;
     }
     log('Invalid title: ', val);
@@ -170,6 +171,11 @@ const actions = {
     const response = await ipcRenderer.invoke('isMaximized');
     await config.set('maximized', response);
     await dataCache.set('isMaximized', response);
+  },
+
+
+  toggleNewTaskForm: async () => { 
+    await dataCache.set('newTaskModalShown', !await dataCache.get('newTaskModalShown'));
   },
 };
 

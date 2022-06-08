@@ -91,3 +91,4 @@ out/
 desktop_*.png
 
 openweather_api_key.txt
+src/temp/

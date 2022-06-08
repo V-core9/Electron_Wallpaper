@@ -22,12 +22,13 @@ const actions = {
     await dataCache.set('application_config', await config.get());
   },
 
-  changeAppTitle: async () => {
+  setAppTitle: async () => {
     const val = document.querySelector('#customTitle').value;
 
     if (await verify.isName(val)) {
       const rez = await ipcRenderer.invoke('setAppTitle', val);
       await config.set('title', rez);
+      dataCache.set('appConfig', await config.get());
       return true;
     }
     log('Invalid title: ', val);
@@ -38,7 +39,10 @@ const actions = {
   logStats: async () => log(await dataCache.stats()),
 
 
-  purgeCache: async () => await dataCache.purge(),
+  purgeCache: async () => {
+    await dataCache.purge();
+    await actions.initApp();
+  },
 
 
   purgeCacheStats: async () => await dataCache.purgeStats(),
@@ -148,7 +152,6 @@ const actions = {
 
   openPage: async (event) => {
     if (typeof event === 'string') return dataCache.set('page', event);
-    
     const page = event.target.getAttribute('page');
     await dataCache.set('currentPage', page);
   },
@@ -171,6 +174,44 @@ const actions = {
     await config.set('maximized', response);
     await dataCache.set('isMaximized', response);
   },
+
+
+  toggleNewTaskForm: async () => { 
+    await dataCache.set('newTaskModalShown', !await dataCache.get('newTaskModalShown'));
+  },
+
+  setOpenWeatherSettings: async () => {
+    const key = document.querySelector('#weatherApiKey').value;
+    const city = document.querySelector('#weatherCity').value;
+    const units = document.querySelector('#weatherUnits').value;
+
+    const data = {
+      weatherApiKey : key,
+      weatherCity : city,
+      weatherUnits : units,
+    };
+
+    const response = await ipcRenderer.invoke('setOpenWeatherSettings', data);
+    await config.mSet(response);
+    await dataCache.set('appConfig', await config.get());
+  },
+
+  toggleNotifications: async () => {
+    const response = await ipcRenderer.invoke('toggleNotifications');
+    await config.set('notify', response);
+    await dataCache.set('appConfig', await config.get());
+  },
+
+  initApp: async () => {
+    actions.getConfig();
+    actions.listAvailableTasks();
+    actions.listBackendTasks();
+    actions.listBackendAllCache();
+
+    setTimeout(() => {
+      dataCache.set('app_loaded', true);
+    }, 1000);
+  }
 };
 
 module.exports = actions;

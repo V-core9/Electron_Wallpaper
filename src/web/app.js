@@ -60,11 +60,7 @@ const { app, header, content, footer } = require('./core/renders');
 
   window.onload = async () => {
     info('Window Loaded');
-
-    actions.getConfig();
-    actions.listAvailableTasks();
-    actions.listBackendTasks();
-    actions.listBackendAllCache();
+    actions.initApp();
   };
 
 })();

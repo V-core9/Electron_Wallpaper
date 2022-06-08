@@ -96,9 +96,14 @@ module.exports = (ipcMain) => {
       log('windowFocus Event');
     });
 
-    ipcMain.handle('setWeatherApiKey', async (event, arg) => {
-      await config.set('weatherApiKey', arg);
-      return await config.get('weatherApiKey');
+    ipcMain.handle('setOpenWeatherSettings', async (event, arg) => {
+      await config.mSet(arg);
+      return await config.get();
+    });
+
+    ipcMain.handle('toggleNotifications', async () => { 
+      await config.set('notify', !await config.get('notify'));
+      return await config.get('notify');
     });
 
 

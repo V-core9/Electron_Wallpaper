@@ -2,6 +2,7 @@ const { renderCache, dataCache } = require('./caches');
 
 const appHeader = require('../view/appHeader');
 const appFooter = require('../view/appFooter');
+const loading_modal_overlay = require('../view/loading_modal_overlay');
 
 
 async function toDOM(selector, html) {
@@ -12,34 +13,15 @@ async function toDOM(selector, html) {
   }
 }
 
-
-/*
- * Pages
- */
-const pages = {
-
-  home: async () => `${await require('../page/home')()}`,
-
-  device: async () => {
-    return `Welcome, this is just a placeholder for a DEVICE Info Page.`;
-  },
-
-  account: async () => {
-    return `Welcome, this is just a placeholder for a ACCOUNT Info Page.`;
-  },
-
-  settings: async () => `${await require('../page/settings')()}`,
-
-  debug: async () => `${await require('../page/debug')()}`,
-
-};
+const pages = require('./pages');
 
 
 const renderCurrentPage = async (key) => await pages[key]();
 
 
 const appContent = async () => {
-  return `${await renderCurrentPage(await dataCache.get('currentPage') || 'home')}`;
+  return `${await renderCurrentPage(await dataCache.get('currentPage') || 'home')}
+          ${await dataCache.get('app_loaded') !== true ? await loading_modal_overlay() : ''}`;
 };
 
 
@@ -49,10 +31,10 @@ const renderApp = async () => {
           </header>
 
           <content>
-            ${await content({})}
+            ${await content({})}            
           </content>
 
-          <footer>            
+          <footer>
             ${await footer({})}
           </footer>`;
 };

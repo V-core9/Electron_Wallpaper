@@ -4,6 +4,7 @@ const path = require('path');
 
 //* Actual Config
 const cfg = {
+  version: require('../../package.json').version || '1.0.0',
 
   //* Debug level
   debug: true,
@@ -24,6 +25,8 @@ const cfg = {
 
   //* API KEYS
   weatherApiKey: null,
+  weatherCity: 'Kljajicevo',
+  weatherUnits: 'metric',
 
 };
 
@@ -39,8 +42,6 @@ const setters = {
 
   accessibleTitle: async (val) => (await verify.isName(val)) ? cfg.accessibleTitle = val : null,
 
-  weatherApiKey: async (val) => (await verify.isWeatherApiKey(val)) ? cfg.weatherApiKey = val : null,
-
   maximized: async (val) => (await verify.isBool(val)) ? cfg.maximized = val : null,
 
   notify: async (val) => (await verify.isBool(val)) ? cfg.notify = val : null,
@@ -48,6 +49,12 @@ const setters = {
   width: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? cfg.width = val : null,
 
   height: async (val) => (await verify.isPositiveInteger(val) && val > 320) ? cfg.width = val : null,
+
+
+  weatherApiKey: async (val) => (await verify.isWeatherApiKey(val)) ? cfg.weatherApiKey = val : null,
+  weatherCity: async (val) => (await verify.isName(val)) ? cfg.weatherCity = val : null,
+  weatherUnits: async (val) => (val === 'metric' || val === 'imperial') ? cfg.weatherUnits = val : null,
+
 
 };
 

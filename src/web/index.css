@@ -12,7 +12,7 @@ body {
 v_app {
   display: flex;
   flex-direction: column;
-  background: #263238;
+  background: #37474f;
   height: 100vh;
   overflow: hidden;
 }
@@ -30,12 +30,12 @@ button {
   padding: 0.25em 1em;
   background: #3f51b5;
   border: none;
-  box-shadow: 0 10px 10px -5px black;
+  box-shadow: 0 10px 10px -5px #00000050;
   white-space: nowrap;
 }
 
 button:hover {
-  border-radius: 1em;
+  /* border-radius: 1em; */
   cursor: pointer;
   background: #232d68;
 }
@@ -143,7 +143,7 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: #0000002e;
+  background: #263238;
 }
 
 header info {
@@ -184,15 +184,15 @@ content {
   display: flex;
   flex-direction: column;
   padding: 1em;
-  gap: 1em;
+  gap: .5em;
   overflow: auto;
 }
 
 footer {
   display: flex;
   flex-direction: row;
-  border-top: 1px solid black;
-  background: #0000002e;
+  /* border-top: 1px solid black; */
+  background: #263238;
 }
 
 footer app_info {
@@ -227,7 +227,9 @@ section {
   display: flex;
   flex-direction: column;
   background: #ffffff10;
-  border: 1px solid #1d262b;
+  margin: .25em;
+  border: 3px solid #263238;
+  box-shadow: 0 10px 20px -10px #000000;
 }
 
 content item {
@@ -235,9 +237,9 @@ content item {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: #ffffff14;
+  background: #0000002e;
   align-items: center;
-  padding: 0.25em;
+  padding: 0.25em 1em;
   border: 1px solid transparent;
 }
 

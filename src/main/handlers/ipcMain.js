@@ -96,6 +96,11 @@ module.exports = (ipcMain) => {
       log('windowFocus Event');
     });
 
+    ipcMain.handle('setWeatherApiKey', async (event, arg) => {
+      await config.set('weatherApiKey', arg);
+      return await config.get('weatherApiKey');
+    });
+
 
     return true;
 

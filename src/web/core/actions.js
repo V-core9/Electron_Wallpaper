@@ -177,6 +177,13 @@ const actions = {
   toggleNewTaskForm: async () => { 
     await dataCache.set('newTaskModalShown', !await dataCache.get('newTaskModalShown'));
   },
+
+  setWeatherApiKey: async () => {
+    const key = document.querySelector('#weatherApiKey').value;
+    const response = await ipcRenderer.invoke('setWeatherApiKey', key);
+    await config.set('weatherApiKey', response);
+    await dataCache.set('appConfig', await config.get());
+  }
 };
 
 module.exports = actions;

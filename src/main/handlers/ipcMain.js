@@ -112,11 +112,12 @@ module.exports = (ipcMain) => {
 
     ipcMain.handle('toggleNotifications', async () => { 
       await config.set('notify', !await config.get('notify'));
+      log('notifications set to: ' + await config.get('notify'));
       return await config.get('notify');
     });
 
     ipcMain.handle('createNewTask', async (event, arg) => { 
-      log(arg);
+      log('Create New Task: ' , arg);
       const { name, interval, callback, enabled } = JSON.parse(arg);
       await watch.new(name, interval, tasks[callback], enabled);
       appTasks[name] = { interval, callback, enabled };

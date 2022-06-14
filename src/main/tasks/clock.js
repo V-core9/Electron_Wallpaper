@@ -1,9 +1,6 @@
-const { log } = require('../../helpers/logger');
 const { cache } = require('../core');
 
 module.exports = clockUpdate = async () => {
-
-  log("clockUpdate");
 
   var date = new Date();
   var hours = date.getHours();

@@ -7,8 +7,8 @@ const pages = {
 
   home: async () => `${await require('../page/home')()}`,
 
-  device: async () => {
-    return `Welcome, this is just a placeholder for a DEVICE Info Page.`;
+  theme: async () => {
+    return `Welcome, this is just a placeholder for a WALLPAPER THEME page.`;
   },
 
   account: async () => `${await require('../page/account')()}`,

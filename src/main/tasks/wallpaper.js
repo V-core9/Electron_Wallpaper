@@ -12,9 +12,7 @@ const filePath = path.join(__dirname, '../../temp/wallpaper.png');
 
 
 
-module.exports = {
-
-  render: async () => {
+module.exports = async () => {
     const { screen } = require('electron');
 
     // Create a window that fills the screen's available work area.
@@ -28,6 +26,4 @@ module.exports = {
       .then(
         async () => wallpaper.set(filePath)
       );
-  },
-
-};
+  }

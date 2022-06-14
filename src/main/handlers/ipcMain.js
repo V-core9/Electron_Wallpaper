@@ -3,6 +3,14 @@ const { log } = require('../../helpers/logger');
 const config = require('../../config');
 
 const tasks = require('../tasks');
+let appTasks = require('../core/app-tasks');
+
+watch.on('stop', async (key) => appTasks[key].enabled = false);
+watch.on('start', async (key) => appTasks[key].enabled = true);
+watch.on('delete', async (key) => delete appTasks[key]);
+watch.on('end', async () => { appTasks = {}; });
+
+
 
 module.exports = (ipcMain) => {
 
@@ -83,6 +91,7 @@ module.exports = (ipcMain) => {
 
     //? Exit Application Handle
     ipcMain.handle('EXIT_APPLICATION', async () => {
+      if (await config.get('minimizeToTray') !== true) require('../handlers/exiting')();
       require('../mainWindow').hide();
       require('../tray').recreateMainMenu();
     });
@@ -104,6 +113,20 @@ module.exports = (ipcMain) => {
     ipcMain.handle('toggleNotifications', async () => { 
       await config.set('notify', !await config.get('notify'));
       return await config.get('notify');
+    });
+
+    ipcMain.handle('createNewTask', async (event, arg) => { 
+      log(arg);
+      const { name, interval, callback, enabled } = JSON.parse(arg);
+      await watch.new(name, interval, tasks[callback], enabled);
+      appTasks[name] = { interval, callback, enabled };
+      return await watch.stats();
+    });
+
+    ipcMain.handle('toggleMinimizeToTray', async () => {
+      await config.set('minimizeToTray', !await config.get('minimizeToTray'));
+      log('minimize to tray set to: ' + await config.get('minimizeToTray'));
+      return await config.get('minimizeToTray');
     });
 
 

@@ -35,7 +35,7 @@ const newTaskFormModal = async () => {
 
                 <group class='flex-row'>
                   <p>Enabled:</p>
-                  <input type='checkbox' id='newTaskActive' checked />
+                  <input type='checkbox' id='newTaskEnabled' checked />
                 </group>
 
                 <group class='flex-row'>

@@ -1,4 +1,5 @@
 const { renderCache, dataCache } = require('./caches');
+const pages = require('./pages');
 
 const appHeader = require('../view/appHeader');
 const appFooter = require('../view/appFooter');
@@ -12,8 +13,6 @@ async function toDOM(selector, html) {
     log(error);
   }
 }
-
-const pages = require('./pages');
 
 
 const renderCurrentPage = async (key) => await pages[key]();

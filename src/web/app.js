@@ -1,7 +1,7 @@
 const { log, info, warn } = require('../helpers/logger');
 const { dataCache, renderCache } = require('./core/caches');
 const actions = require('./core/actions');
-const { app, header, content, footer } = require('./core/renders');
+const { header, content, footer } = require('./core/renders');
 
 
 // Run the whole thing

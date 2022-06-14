@@ -86,8 +86,6 @@ module.exports = function BaseTemplate(data = {}) {
       svgStats: await cache.get('svgStats') || { lastExecTimeVal: 0, totalUpdates: 0, scale: 1, running: false, quality: 75 },
     };
 
-    if (await config.get('debug')) console.log(this.cacheData);
-
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.helperWidth} ${this.helperHeight}"  height="${this.helperHeight}" width="${this.helperWidth}" class="${this.name}"  shape-rendering="geometricPrecision" font-family="monospace" >
               ${(await config.get('exiting') === false) ? await this._render() : await this.offlineNotice()}
             </svg>`;

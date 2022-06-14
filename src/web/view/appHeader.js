@@ -5,7 +5,7 @@ module.exports = async () => {
   let currentPage = await dataCache.get('currentPage') || 'home';
   return `<group>
             <button action='openPage' page='home' class='${currentPage === 'home' ? 'active' : ''}'>🚇 Dashboard</button>
-            <button action='openPage' page='device' class='${currentPage === 'device' ? 'active' : ''}'>📑 Device</button>
+            <button action='openPage' page='theme' class='${currentPage === 'theme' ? 'active' : ''}'>🎨 Theme</button>
             <button action='openPage' page='account' class='${currentPage === 'account' ? 'active' : ''}'>👷‍♂️ Account</button>
             ${await config.get('debug') ? ("<button action='openPage' page='debug' " + (currentPage === 'debug' ? ' class=\"active\" ' : '') + ">👨‍💻 Debug</button>") : ''}
           </group>

@@ -10,6 +10,7 @@ const cfg = {
   debug: true,
   exiting: false,
   configFilePath: path.join(__dirname, '../temp/$_config.json'),
+  tasksListFilePath: path.join(__dirname, '../temp/$_tasks.json'),
 
   //* Electron Window Config
   title: "Electron Wallpaper",
@@ -28,6 +29,7 @@ const cfg = {
   weatherCity: 'Kljajicevo',
   weatherUnits: 'metric',
 
+  minimizeToTray: true,
 };
 
 
@@ -55,7 +57,7 @@ const setters = {
   weatherCity: async (val) => (await verify.isName(val)) ? cfg.weatherCity = val : null,
   weatherUnits: async (val) => (val === 'metric' || val === 'imperial') ? cfg.weatherUnits = val : null,
 
-
+  minimizeToTray: async (val) => (await verify.isBool(val)) ? cfg.minimizeToTray = val : null,
 };
 
 
@@ -64,7 +66,10 @@ const config = {
 
   has: async (key) => (cfg[key] !== undefined),
 
-  get: async (key) => (typeof key !== 'string') ? cfg : cfg[key],
+  getSy: (key) => (typeof key !== 'string') ? cfg : cfg[key],
+
+  get: async (key) => config.getSy(key),
+
 
   keys: async () => Object.keys(cfg),
 

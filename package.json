@@ -51,7 +51,7 @@
     "openweather-apis": "^4.4.2",
     "screenshot-desktop": "^1.12.7",
     "sharp": "^0.30.5",
-    "v_core_cache": "^1.0.8",
+    "v_core_cache": "^1.0.9",
     "v_core_timers": "^0.0.3",
     "v_file_system": "^1.0.5",
     "v_rifier": "^0.2.4",

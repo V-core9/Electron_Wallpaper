@@ -211,6 +211,26 @@ const actions = {
     setTimeout(() => {
       dataCache.set('app_loaded', true);
     }, 1000);
+  },
+
+  createNewTask: async (event) => {
+    console.log(event);
+    if (event.isTrusted !== undefined) {
+      event = {
+        name: document.querySelector('#newTaskName').value,
+        interval: document.querySelector('#newTaskInterval').value,
+        callback: document.querySelector('#newTaskFunction').value,
+        enabled: document.querySelector('#newTaskEnabled').checked,
+      };
+    }
+    log(await ipcRenderer.invoke('createNewTask', JSON.stringify(event)));
+    await actions.listBackendTasks();
+  },
+
+  toggleMinimizeToTray: async () => {
+    const response = await ipcRenderer.invoke('toggleMinimizeToTray');
+    await config.set('minimizeToTray', response);
+    await dataCache.set('appConfig', await config.get());
   }
 };
 

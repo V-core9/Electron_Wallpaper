@@ -5,9 +5,11 @@ const v_fs = require('v_file_system');
 const { log, info } = require('../../helpers/logger');
 const { wallpaper } = require('../tasks');
 let appTasks = require('../core/app-tasks');
+let notify = require('../notify');
 
 module.exports = async () => {
   info('[x] App EXITING : ');
+  await notify.appExiting();
 
   log('Setting Cache [exiting] to true');
   await config.set('exiting', true);

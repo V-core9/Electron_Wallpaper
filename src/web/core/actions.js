@@ -73,7 +73,9 @@ const actions = {
 
 
   listBackendAllCache: async () => {
-    await dataCache.set('listBackendAllCache', JSON.parse(await ipcRenderer.invoke('listBackendAllCache')));
+    const resp = await ipcRenderer.invoke('listBackendAllCache');
+    log(resp);
+    await dataCache.set('listBackendAllCache', resp);
   },
 
 

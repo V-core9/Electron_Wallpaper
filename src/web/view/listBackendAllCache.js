@@ -1,14 +1,16 @@
 const { dataCache } = require('../core/caches');
 
 module.exports = async () => {
-  let backCache = await dataCache.get('listBackendAllCache') || {};
+  let backCache = await dataCache.get('listBackendAllCache') || new Map();
 
   let response = '';
 
-  for (let key in backCache) {
-
-    response += `<item>${key}: ${JSON.stringify(backCache[key])}</item>`;
-  }
+  backCache.forEach((value, key) => {
+    response += `<item>
+                  <h3>${key}</h3>
+                  <p>${JSON.stringify(value)}</p>
+                </item>`;
+  });
 
   return `<section>
             <header>

@@ -16,6 +16,6 @@ module.exports = clockUpdate = async () => {
 
   var strTime = hours + ':' + minutes + ':' + seconds;
 
-  await cache.set("clock", { strTime, datePrint });
+  cache.set("clock", { strTime, datePrint });
 
 };

@@ -31,7 +31,7 @@ module.exports = (ipcMain) => {
 
 
 
-    ipcMain.handle('listBackendAllCache', async () => JSON.stringify(await cache.getAll()));
+    ipcMain.handle('listBackendAllCache', async () => await cache.getAll() || new Map());
 
     ipcMain.handle('purgeBackendCache', async () => await cache.purge());
 

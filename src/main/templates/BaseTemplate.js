@@ -2,25 +2,11 @@
 const config = require('../../config');
 const { cache, watch } = require('../core');
 
+const draw = require('./_draw');
 
-const draw = {
-  rect: async (x, y, width, height, color) => `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`,
-  circle: async (x, y, radius, color) => `<circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" />`,
-  text: async (x, y, text, color, size) => `<text x="${x}" y="${y}" fill="${color || this.main}"  text-rendering="geometricPrecision" font-size="${size || this.normalFontSize}">${text}</text>`,
-  line: async (x1, y1, x2, y2, color) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" />`,
-  polygon: async (points, color) => `<polygon points="${points}" fill="${color}" />`,
-  path: async (d, color) => `<path d="${d}" fill="${color}" />`,
-  image: async (x, y, width, height, data) => `<image x="${x}" y="${y}" width="${width}" height="${height}" href="${data}" alt="Description of the image" />`
-};
-
-
-
-
+const { BackgroundLayerBase, BaseClock, BaseOfflineNotice, BaseBottomStats, BaseTopOsInfo, BaseOpenWeather } = require('./components');
 
 module.exports = function BaseTemplate(data = {}) {
-
-
-
 
   this.name = data.name || "customSVGdemoName";
   this.white = data.white || "#ffffff";
@@ -50,12 +36,6 @@ module.exports = function BaseTemplate(data = {}) {
   this.cacheData = {};
 
 
-  this.clock = {
-    posX: 1115,
-    posY: 680
-  };
-
-
   this.helpDim = {
     X: this.debugX + 20,
     X300: this.debugX + 20 + 300,
@@ -80,67 +60,35 @@ module.exports = function BaseTemplate(data = {}) {
   this.render = async () => {
 
     this.cacheData = {
-      clock: await cache.get('clock') || { strTime: "", datePrint: "" },
       system: await cache.get('system') || { cpu: {}, ram: {}, deviceUserInfo: {} },
       netSpeed: await cache.get('netSpeed') || { external_ip: "0.0.0.0", latency: 0, download: 0, upload: 0 },
       svgStats: await cache.get('svgStats') || { lastExecTimeVal: 0, totalUpdates: 0, scale: 1, running: false, quality: 75 },
     };
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.helperWidth} ${this.helperHeight}"  height="${this.helperHeight}" width="${this.helperWidth}" class="${this.name}"  shape-rendering="geometricPrecision" font-family="monospace" >
-              ${(await config.get('exiting') === false) ? await this._render() : await this.offlineNotice()}
+              ${await this._render()}
             </svg>`;
 
   };
 
+
   this._render = async () => {
-    return `${await this.bckLayer()}
-            ${await this.printOsInfo()}
-            ${await this.printBotStats()}
-            ${await this.printClock()}
+    if (await config.get('exiting')) {
+      return await BaseOfflineNotice({ mainText: `${await config.get('title')}: [OFFLINE]`, altText: `Restart application to get it running`, width: this.helperWidth, mainColor: this.main, fontSize: this.normalFontSize });
+    } else {
+      return `${await BackgroundLayerBase({ width: this.helperWidth, height: this.helperHeight, strokeWidth: this.strokeWidth, mainColor: this.main, backColor: this.containerBackground })}
+
+            ${await BaseTopOsInfo({ ...this.cacheData.system, width: this.helperWidth, mainColor: this.main, fontSize: this.normalFontSize })}
+
+            ${await BaseBottomStats({ ...this.cacheData, width: this.helperWidth, mainColor: this.main, fontSize: this.normalFontSize })}
+
+            ${await BaseClock({ ...await cache.get('clock') || { strTime: "", datePrint: "" }, posX: 1115, posY: 680, bigFontSize: this.subFontSize, smallFontSize: this.normalFontSize, altColor: this.backgroundAlt, mainColor: this.main, backColor: this.background })}
+
+            ${await BaseOpenWeather({ whiteColor: this.white, mainColor: this.main, fontSize: this.normalFontSize, bigFontSize: this.subFontSize })};
             ${await this.extendedInfoPanel()}
+
             ${(await config.get('debug')) ? await this.debug() : `${await draw.text(1125, 25, `<text fill="${this.main}">${this.cacheData.svgStats.lastExecTimeVal}</text>ms | ${this.cacheData.svgStats.totalUpdates}`, this.white, this.normalFontSize)}`}`;
-  };
-
-  this.offlineNotice = async () => {
-    return `<path d="M 170 697.5 l ${(this.helperWidth - 340)}  0 5 5 0 10 -5 5 ${-(this.helperWidth - 340)}  0 -5 -5 0 -10 5 -5" stroke="${this.main}80" stroke-width="1" fill="${this.main}50" ></path>
-            ${await draw.text(180, 710, `${await config.get('title')}: [OFFLINE]`, "#000000", this.normalFontSize)}
-            ${await draw.text(640, 710, `Restart application to get it running`, "#000000", this.normalFontSize)}
-            `;
-    //           ${await draw.image(1080, 520, 200, 200, await cache.get("PICKLE_BASE64"))}
-  };
-
-
-  this.printOsInfo = async () => {
-    const cpu = this.cacheData.system.cpu || { usage: -1, count: 0 };
-    const ram = this.cacheData.system.ram;
-    return `<path d="M 170 2.5 l ${(this.helperWidth - 340)}  0 5 5 0 10 -5 5 ${-(this.helperWidth - 340)}  0 -5 -5 0 -10 5 -5" stroke="${this.main}80" stroke-width="1" fill="${this.main}50" ></path>
-              ${await draw.text(180, 15, `CPU: ${cpu.usage}% [Count: ${cpu.count}]`, this.main, this.normalFontSize)}
-              ${await draw.text(640, 15, `RAM: ${ram.freemem}GB (${ram.freememproc}%) [Total: ${ram.totalmem}GB]`, this.main, this.normalFontSize)}`;
-  };
-
-
-
-  this.printBotStats = async () => {
-    let { netSpeed, system } = this.cacheData;
-    return `<path d="M 170 697.5 l ${(this.helperWidth - 340)}  0 5 5 0 10 -5 5 ${-(this.helperWidth - 340)}  0 -5 -5 0 -10 5 -5" stroke="${this.main}80" stroke-width="1" fill="${this.main}50" ></path>
-            ${await draw.text(180, 710, `👤 ${system.deviceUserInfo}`, this.main, this.normalFontSize)}
-            ${await draw.text(640, 710, `🌐 ${netSpeed.external_ip} [ D: ${netSpeed.download} Mbs / U:${netSpeed.upload} Mbs @ ${netSpeed.latency}ms]`, this.main, this.normalFontSize)}`;
-  };
-
-
-
-  this.printClock = async () => {
-    return `<path d="M ${(this.clock.posX)}  ${(this.clock.posY)}  l  20 -20 110 0 20 20 -10 0 -15 -15 -100 0 -15 15 -10 0" stroke="#444" stroke-width="2" fill="${this.background}" ></path>
-            ${await draw.text(this.clock.posX + 25, this.clock.posY + 2.5, this.cacheData.clock.strTime, this.main, this.subFontSize)}
-            ${await draw.text(this.clock.posX + 22.5, this.clock.posY + 15, this.cacheData.clock.datePrint, this.backgroundAlt, this.normalFontSize)}
-            <path d="M ${(this.clock.posX)}  ${(this.clock.posY + 5)}  l  20 20 110 0 20 -20 -10 0 -15 15 -100 0 -15 -15 -10 0" stroke="#444" stroke-width="2"  fill="${this.background}" ></path>`;
-  };
-
-
-
-  this.bckLayer = async () => {
-    return `<path d="M 0 0 l ${this.helperWidth}  0 0 ${this.helperHeight} -${this.helperWidth} 0 -${this.helperWidth} -${this.helperHeight} " stroke="none" stroke-width="${this.strokeWidth}" fill="#000" ></path>
-            <path d="M 30 10 l 120 0 20 20 ${this.helperWidth - 340} 0 20 -20 120 0 20 20 0 120 -20 20 0 ${this.helperHeight - 340} 20 20 0 120 -20 20 -120 0 -20 -20 -${this.helperWidth - 340} 0 -20 20 -120 0 -20 -20 0 -120 20 -20 0 -${this.helperHeight - 340} -20 -20 0 -120 20 -20" stroke="${this.main}50" stroke-width="${this.strokeWidth}" fill="${this.containerBackground}50" ></path>`;
+    }
   };
 
 
@@ -262,32 +210,16 @@ module.exports = function BaseTemplate(data = {}) {
 
 
 
-  this.renderEIP = async () => {
-    let screenInfo = await cache.get("ScreenResolutionInfo") || { width: 0, height: 0, dpiScale: 1 };
-    let weatherApi = await cache.get('weatherApi') || { main: {}, wind: {}, clouds: {}, weather: [{ main: "", description: "" }] };
-    let wthMain = weatherApi.weather[0].main;
-    let wthDescription = weatherApi.weather[0].description;
-    let wthTemp = weatherApi.main.temp || 0;
-    let wthWindSpeed = weatherApi.wind.speed || 0;
-
-
-    /*`<path d="M 1135 705 l 110 0   20 -20   0 -110 -20 -20 -130 130  20 20 " stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
-    ${await draw.text(1140, 695, "📏 " + screenInfo.width + "x" + screenInfo.height + "px", this.white, this.normalFontSize)}
-    ${await draw.text(1150, 680, "🔍 " + screenInfo.dpiScale + "dpi", this.white, this.normalFontSize)}`*/
+  this.renderEIP = async (props) => {
 
     return `
               <path d="M 35 15 l 110 0  20 20   -130 130  -20 -20  0 -110  20 -20" stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
               ${await draw.text(35, 40, "💻 EIP#1", this.white, this.subFontSize)}
 
-              <path d="M 35 705 l 110 0   20 -20   -130 -130  -20 20   0 110   20 20" stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
-              ${await draw.text(35, 695, "😎 " + wthMain, this.white, this.normalFontSize)}
-              ${await draw.text(35, 680, "🔥 " + wthTemp + "°C ", this.white, this.normalFontSize)}
-              ${await draw.text(35, 665, "〰 " + wthWindSpeed + "m/s", this.white, this.normalFontSize)}
 
               <path d="M 1135 15 l 110 0   20 20   0 110   -20 20   -130 -130  20 -20" stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
               ${await draw.text(1140, 40, "💹 " + await cache.get('npmTotalDownloads'), this.white, this.subFontSize)}
 
-              
 
               <path d="M 5 145 l   25 25   0 380   -25 25   0 -430  " stroke="${this.main}" stroke-width="1" fill="#101520" ></path>
               ${await draw.text(10, 185, "🆒", this.main, this.normalFontSize)}
@@ -296,18 +228,16 @@ module.exports = function BaseTemplate(data = {}) {
               ${await draw.text(1255, 545, "🆓", this.main, this.normalFontSize)}
 
         `;
-
   };
 
 
-  this.extendedInfoPanel = async () => {
+  this.extendedInfoPanel = async (props) => {
     if (await cache.has('ExtendedInfoPanel')) return await cache.get('ExtendedInfoPanel');
 
-    item = await this.renderEIP();
+    item = await this.renderEIP(props);
     await cache.set('ExtendedInfoPanel', item, 10000);
 
     return item;
   };
-
 
 };

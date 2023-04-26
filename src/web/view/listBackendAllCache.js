@@ -1,16 +1,7 @@
-const { dataCache } = require('../core/caches');
+const { dataCache } = require("../core/caches");
 
 module.exports = async () => {
-  let backCache = await dataCache.get('listBackendAllCache') || new Map();
-
-  let response = '';
-
-  backCache.forEach((value, key) => {
-    response += `<item>
-                  <h3>${key}</h3>
-                  <p>${JSON.stringify(value)}</p>
-                </item>`;
-  });
+  let backCache = (await dataCache.get("listBackendAllCache")) || new Map();
 
   return `<section>
             <header>
@@ -19,7 +10,14 @@ module.exports = async () => {
               <button action='purgeBackendCache'>purgeBackendCache</button>
             </header>
             <content>
-              ${response}
+              ${backCache
+                .map(
+                  (value, key) => `<item>
+                  <h3>${key}</h3>
+                  <p>${JSON.stringify(value)}</p>
+                </item>`
+                )
+                .join("")}
             </content>
           </section>`;
 };

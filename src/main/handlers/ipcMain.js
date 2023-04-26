@@ -32,10 +32,9 @@ module.exports = (ipcMain) => {
       async (event, arg) => (config.version = arg)
     );
 
-    ipcMain.handle(
-      "listBackendAllCache",
-      async () => (await cache.getAll()) || new Map()
-    );
+    ipcMain.handle("listBackendAllCache", async () => [
+      ...(await cache.getAll()),
+    ]);
 
     ipcMain.handle("purgeBackendCache", async () => await cache.purge());
 

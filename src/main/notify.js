@@ -1,16 +1,17 @@
 const { Notification } = require('electron');
 const config = require('../config');
 
-const NOTIFICATION_TITLE = 'Basic Notification';
-const NOTIFICATION_BODY = 'Notification from the Main process';
+async function maybeNotify(data = {}) {
+  return (await config.get('notify')) ? new Notification({ title: data.title || 'missing title', body: data.body || 'missing body' }).show() : null;
+}
 
 const notify = {
 
-  exampleNotification: async () => (await config.get('notify')) ? new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show() : null,
+  exampleNotification: async () => maybeNotify({ title: 'Basic Notification', body: 'Notification from the Main process' }),
 
-  minimizeToTray: async () => (await config.get('notify')) ? new Notification({ title: "Application To Tray", body: "Why did it not exit?" }).show() : null,
+  minimizeToTray: async () => maybeNotify({ title: "Application To Tray", body: "Why did it not exit?" }),
 
-  appExiting: async () => (await config.get('notify')) ? new Notification({ title: "Application Exiting", body: "Processing Exit Request" }).show() : null,
+  appExiting: async () => maybeNotify({ title: "Application Exiting", body: "Processing Exit Request" }),
 };
 
 module.exports = notify;

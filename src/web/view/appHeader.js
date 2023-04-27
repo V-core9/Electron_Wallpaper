@@ -1,34 +1,13 @@
 const config = require('../../config');
 const { dataCache } = require('../core/caches');
+const  NavMain = require('./NavMain');
 
-
-module.exports = async ({ primary, secondary }) => {
-
-  const prim = [
-    {
-      page: 'home',
-      label: '🚇 Dashboard'
-    },
-    {
-      page: 'theme',
-      label: '🎨 Theme'
-    },
-    {
-      page: 'account',
-      label: '👷‍♂️ Account'
-    },
-    {
-      page: 'domains',
-      label: '📦 Domains'
-    },
-  ]
-
-  if (await config.get('debug')) prim.push({page:'debug', label: '👨‍💻 Debug'})
+module.exports = async () => {
 
   let currentPage = await dataCache.get('currentPage') || 'home';
 
   return `<group>
-            ${prim.map((i) => `<button action='openPage' page='${i.page}' class='${currentPage === i.page ? 'active' : ''}'>${i.label}</button>`).join('')}
+            ${await NavMain()}
           </group>
           <info>
             <h2>${await config.get('title') || 'Missing Application Title'}</h2>

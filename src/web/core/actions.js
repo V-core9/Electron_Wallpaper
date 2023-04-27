@@ -6,8 +6,6 @@ const { log } = require("../../helpers/logger");
 
 const config = require("../../config");
 
-ipcRenderer.invoke("domain/list");
-
 ipcRenderer.on("context-menu-command", (e, command) => {
   // ...
   log(e, command);
@@ -233,7 +231,12 @@ const actions = {
     await config.set("minimizeToTray", response);
     await dataCache.set("appConfig", await config.get());
   },
-
+  
+  domainList: async () => {
+    const data = await ipcRenderer.invoke("domain/list");
+    log(data);
+    await dataCache.set("domain/list", data);
+  },
 };
 
 module.exports = actions;

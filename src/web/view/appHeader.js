@@ -1,16 +1,37 @@
 const config = require('../../config');
 const { dataCache } = require('../core/caches');
 
-module.exports = async () => {
+
+module.exports = async ({ primary, secondary }) => {
+
+  const prim = [
+    {
+      page: 'home',
+      label: '🚇 Dashboard'
+    },
+    {
+      page: 'theme',
+      label: '🎨 Theme'
+    },
+    {
+      page: 'account',
+      label: '👷‍♂️ Account'
+    },
+    {
+      page: 'domains',
+      label: '📦 Domains'
+    },
+  ]
+
+  if (await config.get('debug')) prim.push({page:'debug', label: '👨‍💻 Debug'})
+
   let currentPage = await dataCache.get('currentPage') || 'home';
+
   return `<group>
-            <button action='openPage' page='home' class='${currentPage === 'home' ? 'active' : ''}'>🚇 Dashboard</button>
-            <button action='openPage' page='theme' class='${currentPage === 'theme' ? 'active' : ''}'>🎨 Theme</button>
-            <button action='openPage' page='account' class='${currentPage === 'account' ? 'active' : ''}'>👷‍♂️ Account</button>
-            ${await config.get('debug') ? ("<button action='openPage' page='debug' " + (currentPage === 'debug' ? ' class=\"active\" ' : '') + ">👨‍💻 Debug</button>") : ''}
+            ${prim.map((i) => `<button action='openPage' page='${i.page}' class='${currentPage === i.page ? 'active' : ''}'>${i.label}</button>`).join('')}
           </group>
           <info>
-            <h2>${await config.get('title')}</h2>
+            <h2>${await config.get('title') || 'Missing Application Title'}</h2>
           </info>
           <group>
             <button action='openPage' page='settings' class='${currentPage === 'settings' ? 'active' : ''}'>🔨</button>

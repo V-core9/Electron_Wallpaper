@@ -233,6 +233,7 @@ const actions = {
     await config.set("minimizeToTray", response);
     await dataCache.set("appConfig", await config.get());
   },
+
 };
 
 module.exports = actions;

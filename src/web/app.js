@@ -1,38 +1,24 @@
-const { log, info, warn } = require('../helpers/logger');
-const { dataCache, renderCache } = require('./core/caches');
-const actions = require('./core/actions');
-const { header, content, footer } = require('./core/renders');
-
+const { log, info, warn } = require("../helpers/logger");
+const { dataCache, renderCache } = require("./core/caches");
+const actions = require("./core/actions");
+const { Application } = require("./core/renders");
 
 // Run the whole thing
 (async () => {
+  await dataCache.set("currentPage", "home");
 
-  await dataCache.set('currentPage', 'home');
-
-  dataCache.on('set', (data) => header({ render: true }));
-  dataCache.on('set', (data) => content({ render: true }));
-  dataCache.on('set', (data) => footer({ render: true }));
-
-  renderCache.on('set', header);
-  renderCache.on('set', content);
-  renderCache.on('set', footer);
-
-
-  dataCache.on('purge', async () => {
-    log('Cache Purged');
-    actions.openPage('home');
+  dataCache.on("purge", async () => {
+    log("Cache Purged");
+    actions.openPage("home");
   });
 
-  dataCache.on('purge_stats', async (data) => {
-    log('purge_stats CB>>', data);
+  dataCache.on("purge_stats", async (data) => {
+    log("purge_stats CB>>", data);
   });
 
-
-
-
-  window.addEventListener('click', async (event) => {
+  window.addEventListener("click", async (event) => {
     try {
-      const action = event.target.getAttribute('action');
+      const action = event.target.getAttribute("action");
       if (action) {
         actions[action](event);
       }
@@ -41,26 +27,25 @@ const { header, content, footer } = require('./core/renders');
     }
   });
 
-  window.addEventListener('resize', async (event) => {
-    log('Resize Event', event);
+  window.addEventListener("resize", async (event) => {
+    log("Resize Event", event);
     await actions.isMaximized();
   });
 
-  window.addEventListener('blur', actions.windowBlur);
+  window.addEventListener("blur", actions.windowBlur);
 
-  window.addEventListener('focus', actions.windowFocus);
+  window.addEventListener("focus", actions.windowFocus);
 
-  window.addEventListener('beforeunload', async (event) => {
-    warn('Yea BeforeUnload Alert', event);
+  window.addEventListener("beforeunload", async (event) => {
+    warn("Yea BeforeUnload Alert", event);
   });
 
-  window.addEventListener('unload', async (event) => {
-    warn('Yea Unload Alert', event);
+  window.addEventListener("unload", async (event) => {
+    warn("Yea Unload Alert", event);
   });
 
   window.onload = async () => {
-    info('Window Loaded');
+    info("Window Loaded");
     actions.initApp();
   };
-
 })();

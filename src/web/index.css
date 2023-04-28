@@ -44,7 +44,7 @@ input {
   background: #1d262b;
   border: none;
   border-bottom: 2px dashed #3f51b5;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   flex: 1;
   display: flex;
 }
@@ -67,7 +67,7 @@ tasks_listing {
 }
 
 app_info {
-  padding: .25em;
+  padding: 0.25em;
 }
 
 app_info h1 {
@@ -92,7 +92,7 @@ cache_actions h3 {
   flex: 1;
 }
 
-cache_stats_box>* {
+cache_stats_box > * {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,7 +166,7 @@ header info {
 }
 
 header info {
-  font-size: .65em;
+  font-size: 0.65em;
   display: flex;
 }
 
@@ -184,7 +184,7 @@ content {
   display: flex;
   flex-direction: column;
   padding: 1em;
-  gap: .5em;
+  gap: 0.5em;
   overflow: auto;
 }
 
@@ -214,7 +214,7 @@ cache_listing group item {
 }
 
 cache_listing actions {
-  padding: .5em;
+  padding: 0.5em;
   border: 1px solid #3f51b5;
 }
 
@@ -227,7 +227,7 @@ section {
   display: flex;
   flex-direction: column;
   background: #ffffff10;
-  margin: .25em;
+  margin: 0.25em;
   border: 3px solid #263238;
   box-shadow: 0 10px 20px -10px #000000;
 }
@@ -257,16 +257,16 @@ button:disabled {
   pointer-events: none;
 }
 
-section.listBackendTasks>content>item>header {
+section.listBackendTasks > content > item > header {
   flex: 1;
 }
 
-section.listBackendTasks>content>item>header>* {
+section.listBackendTasks > content > item > header > * {
   flex: 1;
 }
 
-v_app>content>section>header {
-  padding: .5em;
+v_app > content > section > header {
+  padding: 0.5em;
 }
 
 content item:hover {
@@ -274,17 +274,17 @@ content item:hover {
   background: #2f3868;
 }
 
-v_app>content>section>footer {
+v_app > content > section > footer {
   justify-content: space-between;
   align-items: stretch;
-  padding: .35em;
+  padding: 0.35em;
 }
 
-v_app>content>section>footer>* {
+v_app > content > section > footer > * {
   flex: 1;
   align-items: center;
   display: flex;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
 }
 
 modal {
@@ -308,7 +308,6 @@ modal overlay {
   display: flex;
   position: absolute;
   left: 0;
-  ;
   top: 0;
 }
 
@@ -321,7 +320,7 @@ modal inner {
 }
 
 modal inner header {
-  padding: .5em 1em;
+  padding: 0.5em 1em;
 }
 
 modal inner content form_group {
@@ -331,7 +330,13 @@ modal inner content form_group {
 }
 
 .flex-row {
+  display: flex;
   flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .app_debug_toggle content {
@@ -345,8 +350,17 @@ modal inner content group p {
 select,
 option {
   font-size: 1em;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   color: white;
   border: none;
   background: #2b3946;
+}
+
+
+
+.base_dashboard_layout nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #263238;
 }

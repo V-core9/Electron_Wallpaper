@@ -1,10 +1,11 @@
-const { dataCache } = require('../core/caches');
+const { dataCache } = require("../core/caches");
+const Button = require("../components/Button/Button");
 
 const newTaskFormModal = async () => {
-  const availableFunctions = await dataCache.get('listAvailableTasks');
+  const availableFunctions = await dataCache.get("listAvailableTasks");
 
-  let response = '';
-  availableFunctions.forEach(item => {
+  let response = "";
+  availableFunctions.forEach((item) => {
     response += `<option value="${item}">${item}</option>`;
   });
 
@@ -49,36 +50,37 @@ const newTaskFormModal = async () => {
 };
 
 module.exports = async () => {
-  let data = await dataCache.get('listBackendTasks') || {};
-  let newTaskModalShown = await dataCache.get('newTaskModalShown') || false;
+  let data = (await dataCache.get("listBackendTasks")) || {};
+  let newTaskModalShown = (await dataCache.get("newTaskModalShown")) || false;
   log(data);
-
-  let response = '';
 
   let tasks = data.tasks || [];
 
-  tasks.forEach((task) => {
-    response += `<item taskName='${task.name}'>
+  return `<header>
+              <h2>Watch Tasks:</h2>
+              ${await Button({label: `➕ New Task`, action: `toggleNewTaskForm`})}
+            </header>
+            <content>
+              ${tasks
+                .map(
+                  (task) => `<item taskName='${task.name}'>
                     <header>
                       <h4>🆔 ${task.name}</h4>
-                      <h5>${(task.active ? '🚀 Running' : '🟥 Disabled')}</h5>
+                      <h5>${task.active ? "🚀 Running" : "🟥 Disabled"}</h5>
                       <h5>➰ Interval: ${task.interval}ms</h5>
                     </header>
                     <actions>
-                      <button action='startSpecificTask' ${(task.active ? 'disabled' : '')}>🚀 Start</button>
-                      <button action='stopSpecificTask' ${(!task.active ? 'disabled' : '')}>🔻 Stop</button>
+                      <button action='startSpecificTask' ${
+                        task.active ? "disabled" : ""
+                      }>🚀 Start</button>
+                      <button action='stopSpecificTask' ${
+                        !task.active ? "disabled" : ""
+                      }>🔻 Stop</button>
                       <button action='deleteSpecificTask'>❌ Delete</button>
                     </actions>
-                  </item>`;
-  });
-
-  return `<section class='listBackendTasks'>
-            <header>
-              <h2>Watch Tasks:</h2>
-              <button action='toggleNewTaskForm'>➕ New Task</button>
-            </header>
-            <content>
-              ${response}
+                  </item>`
+                )
+                .join("")}
             </content>
             <footer>
               <group class='flex-row'>
@@ -87,10 +89,9 @@ module.exports = async () => {
                 <h5>Disabled Tasks: ${data.disabledTasksCount}</h5>
               </group>
               <group class='flex-row'>
-                <button action='listBackendTasks'>Refresh List</button>
-                <button action='endAllTasks'>End All</button>
+              ${await Button({label: `Refresh List`,action: `listBackendTasks`})}
+              ${await Button({label: `End All`, action: `endAllTasks`})}
               </group>
             </footer>
-          </section>
-          ${newTaskModalShown ? await newTaskFormModal() : ''}`;
+          ${newTaskModalShown ? await newTaskFormModal() : ""}`;
 };

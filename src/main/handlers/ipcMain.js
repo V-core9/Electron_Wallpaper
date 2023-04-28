@@ -1,5 +1,4 @@
 const { PrismaClient } = require("@prisma/client");
-
 const prisma = new PrismaClient();
 
 const { watch, cache } = require("../core");
@@ -15,6 +14,16 @@ watch.on("delete", async (key) => delete appTasks[key]);
 watch.on("end", async () => {
   appTasks = {};
 });
+
+const generatedHandle = (cacheName, taskName) => {
+  return async (evn, arg) => {
+    const cached = await cache.get(cacheName);
+    if (cached) return cached;
+    const data = await tasks[taskName](cacheName);
+    log(`${cacheName} : ${taskName}`, data);
+    return data;
+  };
+};
 
 module.exports = (ipcMain) => {
   try {
@@ -149,6 +158,15 @@ module.exports = (ipcMain) => {
       console.log("domain/list", data);
       return data;
     });
+
+    ipcMain.handle(
+      "ipAddress",
+      generatedHandle("ipAddress", "ipAddress")
+    );
+    ipcMain.handle(
+      "checkLocalPorts",
+      generatedHandle("checkLocalPorts", "checkLocalPorts")
+    );
 
     return true;
   } catch (error) {

@@ -19,11 +19,11 @@ const { Application } = require("./core/renders");
   window.addEventListener("click", async (event) => {
     try {
       const action = event.target.getAttribute("action");
-      if (action) {
-        actions[action](event);
-      }
+      if (!action) return;
+      if (!actions[action]) return log(`⚠ Action not found [ ${action} ]`, event);
+      return actions[action](event);
     } catch (error) {
-      warn(error);
+      warn(error, event);
     }
   });
 

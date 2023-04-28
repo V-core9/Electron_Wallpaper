@@ -1,7 +1,7 @@
 const { dataCache } = require("../core/caches");
 const { domainList } = require("../core/actions");
 
-module.exports = async () => {
+const DomainsPage = async () => {
   if (!(await dataCache.get("domains/list/initLoad"))) {
     await dataCache.set("domains/list/initLoad", true, 1000);
     await domainList();
@@ -12,3 +12,6 @@ module.exports = async () => {
     `;
 };
 
+DomainsPage.layout = `base_dashboard_layout`;
+
+module.exports = DomainsPage;

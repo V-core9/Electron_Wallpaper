@@ -1,4 +1,5 @@
 const { dataCache } = require("../core/caches");
+const Button = require("../components/Button/Button");
 
 const newTaskFormModal = async () => {
   const availableFunctions = await dataCache.get("listAvailableTasks");
@@ -55,10 +56,9 @@ module.exports = async () => {
 
   let tasks = data.tasks || [];
 
-  return `<section class='listBackendTasks'>
-            <header>
+  return `<header>
               <h2>Watch Tasks:</h2>
-              <button action='toggleNewTaskForm'>➕ New Task</button>
+              ${await Button({label: `➕ New Task`, action: `toggleNewTaskForm`})}
             </header>
             <content>
               ${tasks
@@ -89,10 +89,9 @@ module.exports = async () => {
                 <h5>Disabled Tasks: ${data.disabledTasksCount}</h5>
               </group>
               <group class='flex-row'>
-                <button action='listBackendTasks'>Refresh List</button>
-                <button action='endAllTasks'>End All</button>
+              ${await Button({label: `Refresh List`,action: `listBackendTasks`})}
+              ${await Button({label: `End All`, action: `endAllTasks`})}
               </group>
             </footer>
-          </section>
           ${newTaskModalShown ? await newTaskFormModal() : ""}`;
 };

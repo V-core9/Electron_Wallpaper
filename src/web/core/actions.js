@@ -231,12 +231,24 @@ const actions = {
     await config.set("minimizeToTray", response);
     await dataCache.set("appConfig", await config.get());
   },
-  
+
   domainList: async () => {
     const data = await ipcRenderer.invoke("domain/list");
     log(data);
     await dataCache.set("domain/list", data);
   },
+
+  ipAddress: async () => {
+    const data = await ipcRenderer.invoke("ipAddress");
+    log(data);
+    await dataCache.set("device_ip_address", data);
+  },
+
+  checkLocalPorts: async () => {
+    const data = await ipcRenderer.invoke("checkLocalPorts");
+    log(data);
+    await dataCache.set("checkLocalPorts", data);
+  }
 };
 
 module.exports = actions;

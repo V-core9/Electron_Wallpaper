@@ -39,7 +39,10 @@ const toDOM = async (selector, component) => {
     if (!stringToHTML(component)) return Error("Invalid component HTML");
     const parent = document.querySelector(selector);
     if (!parent)
-      return log(`%cNo Parent Element Found, render not added to DOM: ${selector}`, "color:purple");
+      return log(
+        `%cNo Parent Element Found, render not added to DOM: ${selector}`,
+        "color:purple"
+      );
     return (parent.innerHTML = component);
   } catch (error) {
     log(error);
@@ -49,9 +52,6 @@ const toDOM = async (selector, component) => {
 
 let queue_toDOM = []; // To DOM query
 
-// queryToDOM
-// $ -> DOM query selector
-// __ -> html to query
 const queryToDOM = async (selector, component) => {
   try {
     const qtdItem = { selector, component, $ts: Date.now() };
@@ -78,7 +78,8 @@ const queryToDOM = async (selector, component) => {
 // RENDER DOM
 let previousTimeStamp = 0;
 let stopRender = false;
-let minFrameTime = 60;
+let minFrameTime = 1000 / 24;
+let useTimeout = true;
 const renderDOM = async (timestamp) => {
   const elapsed = timestamp - previousTimeStamp;
 
@@ -104,7 +105,11 @@ const renderDOM = async (timestamp) => {
   }
 
   if (!stopRender) {
-    window.requestAnimationFrame(() => renderDOM(Date.now()));
+    if (useTimeout) {
+      setTimeout(async () => await renderDOM(Date.now()), minFrameTime);
+    } else {
+      window.requestAnimationFrame(async () => await renderDOM(Date.now()));
+    }
   }
 };
 
@@ -161,10 +166,16 @@ const createTrackedRender = (
       }
 
       log(`%c${componentName} ▶ queryToDOM.`, "color:orange");
-      return await queryToDOM(
-        domSelector,
-        await renderCache.get(componentName)
-      );
+      const cachedCompVal = await renderCache.get(componentName);
+
+      const notSameCalculated = this.lastRender !== cachedCompVal;
+
+      if (notSameCalculated) {
+        this.lastRender = cachedCompVal;
+        return await queryToDOM(domSelector, cachedCompVal);
+      }
+
+      return;
     }
   };
 

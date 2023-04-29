@@ -16,7 +16,7 @@ const {
 // DOM Parser Validation
 const supportsDOMParser = (function () {
   if (!window.DOMParser) return false;
-  var parser = new DOMParser();
+  const parser = new DOMParser();
   try {
     parser.parseFromString("x", "text/html");
   } catch (err) {
@@ -25,25 +25,23 @@ const supportsDOMParser = (function () {
   return true;
 })();
 
-const stringToHTML = (str) => {
-  // If DOMParser is supported, use it
-  if (supportsDOMParser) {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(str, "text/html");
-    return doc.body;
-  }
-
-  // Otherwise, fallback to old-school method
-  var dom = document.createElement("div");
-  dom.innerHTML = str;
-  return dom;
-};
-
 const removeAllChildNodes = (el) => {
   while (el.firstChild) {
     el.removeChild(el.firstChild);
   }
 };
+const domParserParse = (str) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(str, "text/html");
+  return doc.body;
+}
+const domOldParse = (str) => {
+  const dom = document.createElement("div");
+  dom.innerHTML = str;
+  return dom;
+}
+
+const stringToHTML = (supportsDOMParser) ? domParserParse : domOldParse;
 
 const renderRemoveChildNodes = false;
 // Adding to dom function
@@ -104,13 +102,13 @@ const renderDOM = async (timestamp) => {
     elapsed >= minFrameTime &&
     queue_toDOM.length > 0
   ) {
-    log(
-      `%cRAF >> queue_toDOM: [ ${queue_toDOM
-        ?.map((i) => i.selector)
-        .join(", ")} ]`,
-      "color:cyan"
-    );
-    queue_toDOM = queue_toDOM.sort((a, b) => a.$ts - b.$ts);
+
+    const qApp = queue_toDOM.find(i => i.selector === 'v_app');
+    queue_toDOM = queue_toDOM.sort((a, b) => a.$ts - b.$ts).filter(i => i.selector !== 'v_app');
+
+    log(`%cRAF >> queue_toDOM: [ ${qApp !== undefined ? 'v_app, ' : '' }${queue_toDOM?.map((i) => i.selector).join(", ")} ]`,"color:cyan");
+    
+    if (qApp !== undefined) await toDOM(qApp.selector, qApp.component);
 
     for (let i = 0; i < queue_toDOM.length; i++) {
       const item = queue_toDOM[i];

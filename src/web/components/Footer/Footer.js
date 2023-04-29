@@ -11,7 +11,7 @@ const Footer = async (props = {}) => {
   if (await config.get("debug")) log(`Component [Footer]: `, props);
 
   const { label, children, options } = props;
-  return `${await Style({ cssCode: path.resolve(__dirname, './footer.css') })}
+  return `${await Style({ cssCode: loadStyleCode(path.resolve(__dirname, './footer.css')) })}
             <footer ${propsToAttribute(options)}>
             ${!label ? (!children ? `` : await children()) : label}
           </footer>`;

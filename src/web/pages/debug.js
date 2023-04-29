@@ -1,7 +1,7 @@
 const cache_stats_box = require("../view/cache_stats_box");
 const change_title_form = require("../view/change_title_form");
 const cache_actions = require("../view/cache_actions");
-const listBackendTasks = require("../components/ListBackendTasks/ListBackendTasks");
+const { ListBackendTasks } = require("../components");
 const testBackendPing = require("../view/testBackendPing");
 const listAvailableTasks = require("../view/listAvailableTasks");
 const listBackendAllCache = require("../view/listBackendAllCache");
@@ -19,6 +19,6 @@ module.exports = async () => {
           ${await cache_actions()}
           ${await testBackendPing()}
           ${await listAvailableTasks()}
-          ${await listBackendTasks()}
+          ${await ListBackendTasks()}
           ${await listBackendAllCache()}`;
 };

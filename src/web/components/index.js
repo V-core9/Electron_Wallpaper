@@ -8,5 +8,12 @@ module.exports = {
   Section: require("./Section/Section"),
 
   ListBackendTasks: require("./ListBackendTasks/ListBackendTasks"),
+
+  Header: require("./Header/Header"),
+  Content: require("./Content/Content"),
+  Footer: require("./Footer/Footer"),
+  Nav: require("./Nav/Nav"),
+
+  Style: require("./Style/Style"),
 };
 

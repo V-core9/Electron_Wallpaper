@@ -1,5 +1,6 @@
-const { dataCache } = require("../core/caches");
-const Button = require("../components/Button/Button");
+const { dataCache } = require("../../core/caches");
+const Button = require("../Button/Button");
+const Section = require("../Section/Section");
 
 const newTaskFormModal = async () => {
   const availableFunctions = await dataCache.get("listAvailableTasks");
@@ -49,12 +50,14 @@ const newTaskFormModal = async () => {
           </modal>`;
 };
 
-module.exports = async () => {
+
+const listBackendTasks = async () => {
   let data = (await dataCache.get("listBackendTasks")) || {};
   let newTaskModalShown = (await dataCache.get("newTaskModalShown")) || false;
   log(data);
 
   let tasks = data.tasks || [];
+  
 
   return `<header>
               <h2>Watch Tasks:</h2>
@@ -95,3 +98,19 @@ module.exports = async () => {
             </footer>
           ${newTaskModalShown ? await newTaskFormModal() : ""}`;
 };
+
+const section = {
+  children: async () => {
+    return `${await listBackendTasks()}`;
+  },
+  options: {
+    classes: ["listBackendTasks"],
+    style: "color: orange;",
+  },
+};
+
+const ListBackendTasks = async () => {
+  return `${await Section(section)}`;
+};
+
+module.exports = ListBackendTasks

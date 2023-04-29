@@ -1,4 +1,4 @@
-module.exports = async () => {
+const LoadingOverlay =  async () => {
   return `<modal class='appLoading'>
             <overlay></overlay>
             <inner>
@@ -8,3 +8,5 @@ module.exports = async () => {
             </inner>
           </modal>`;
 };
+
+module.exports = LoadingOverlay;

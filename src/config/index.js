@@ -7,7 +7,7 @@ const cfg = {
   version: require('../../package.json').version || '1.0.0',
 
   //* Debug level
-  debug: true,
+  debug: false,
   exiting: false,
   configFilePath: path.join(__dirname, '../temp/$_config.json'),
   tasksListFilePath: path.join(__dirname, '../temp/$_tasks.json'),

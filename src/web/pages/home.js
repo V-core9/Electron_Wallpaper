@@ -2,22 +2,10 @@
 const createNewPage = require("../utils/createNewPage");
 
 // Components
-const Section = require("../components/Section/Section");
-const listBackendTasks = require("../view/listBackendTasks");
-
-//? PAGE CONTENT
-const section = {
-  children: async () => {
-    return `${await listBackendTasks()}`;
-  },
-  options: {
-    classes: ["listBackendTasks"],
-    style: "color: orange;",
-  },
-};
+const { ListBackendTasks } = require("../components");
 
 const PageRender = async () => {
-  return `${await Section(section)}`;
+  return `${await ListBackendTasks()}`;
 };
 
 // Create Page using PageRender and some config options

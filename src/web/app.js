@@ -1,7 +1,16 @@
 const { log, info, warn } = require("../helpers/logger");
-const { dataCache, renderCache } = require("./core/caches");
+const caches = require("./core/caches");
 const actions = require("./core/actions");
-const { Application } = require("./core/renders");
+const renders = require("./core/renders");
+
+const v9 = {
+  actions,
+  caches,
+  renders,
+  components: require("./components"),
+}
+
+const { dataCache, renderCache } = caches;
 
 // Run the whole thing
 (async () => {
@@ -46,6 +55,10 @@ const { Application } = require("./core/renders");
 
   window.onload = async () => {
     info("Window Loaded");
+    window.requestAnimationFrame(() => renders.renderDOM(Date.now()));    
     actions.initApp();
   };
+
+  window.v9 = v9;
+
 })();

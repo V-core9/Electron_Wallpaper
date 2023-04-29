@@ -1,9 +1,8 @@
 const config = require('../../config');
 const { dataCache } = require('../core/caches');
-const  NavMain = require('./NavMain');
+const { NavMain} = require('../components');
 
-module.exports = async () => {
-
+const Header = async () => {
   let currentPage = await dataCache.get('currentPage') || 'home';
 
   return `<group>
@@ -19,3 +18,5 @@ module.exports = async () => {
             <button action='exitApplication'>❌</button>
           </group>`;
 };
+
+module.exports = Header;

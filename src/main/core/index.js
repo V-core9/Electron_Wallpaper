@@ -1,14 +1,16 @@
 const { log } = require('../../helpers/logger');
 
-const { V_Watch } = require('v_core_timers');
-const V_Core_Cache = require('v_core_cache');
+const { V_Watch } = require("v_core_timers");
+const { V_Core_Cache } = require("v_core_cache");
 
 const cache = new V_Core_Cache();
 const watch = new V_Watch();
 
-watch.on('new', async (data) => log('New Task: ', data));
-watch.on('run', async (data) => log('Run Task: ', data));
-watch.on('stop', async (data) => log('Stop Task: ', data));
+const createLogItem = (name) => async (taskName) => log(`[t] ${name} : ${taskName} \\_ _ _ _ _ \n@ ${new Date().toUTCString()} \n`);
+
+watch.on("new", createLogItem("New"));
+watch.on("run", createLogItem("Run"));
+watch.on("stop", createLogItem("Stop"));
 
 module.exports = {
   cache: cache,

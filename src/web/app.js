@@ -1,24 +1,24 @@
-const { log, info, warn } = require("../helpers/logger");
+const logger = require("../helpers/logger");
 const caches = require("./core/caches");
 const actions = require("./core/actions");
 const renders = require("./core/renders");
 
-const v9 = {
-  actions,
-  caches,
-  renders,
-  components: require("./components"),
-}
+const components = require("./components");
+
+const { log, info, warn } = logger;
 
 const { dataCache, renderCache } = caches;
 
+const v9 = require("./utils/v9");
+
 // Run the whole thing
 (async () => {
-  await dataCache.set("currentPage", "home");
+  //await renders.currentPageChangeHandleRegister();
+  //await dataCache.set("currentPage", "loading");
 
   dataCache.on("purge", async () => {
     log("Cache Purged");
-    actions.openPage("home");
+    actions.openPage("Home_Page");
   });
 
   dataCache.on("purge_stats", async (data) => {
@@ -29,7 +29,8 @@ const { dataCache, renderCache } = caches;
     try {
       const action = event.target.getAttribute("action");
       if (!action) return;
-      if (!actions[action]) return log(`⚠ Action not found [ ${action} ]`, event);
+      if (!actions[action])
+        return log(`⚠ Action not found [ ${action} ]`, event);
       return actions[action](event);
     } catch (error) {
       warn(error, event);
@@ -55,10 +56,13 @@ const { dataCache, renderCache } = caches;
 
   window.onload = async () => {
     info("Window Loaded");
-    window.requestAnimationFrame(() => renders.renderDOM(Date.now()));    
-    actions.initApp();
+    window.requestAnimationFrame(
+      async () => await renders.renderDOM(Date.now())
+    );
+    await actions.initApp();
+
+    await dataCache.set("currentPage", "Home_Page");
   };
 
   window.v9 = v9;
-
 })();

@@ -34,14 +34,14 @@ const domParserParse = (str) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(str, "text/html");
   return doc.body;
-}
+};
 const domOldParse = (str) => {
   const dom = document.createElement("div");
   dom.innerHTML = str;
   return dom;
-}
+};
 
-const stringToHTML = (supportsDOMParser) ? domParserParse : domOldParse;
+const stringToHTML = supportsDOMParser ? domParserParse : domOldParse;
 
 const renderRemoveChildNodes = false;
 // Adding to dom function
@@ -102,12 +102,18 @@ const renderDOM = async (timestamp) => {
     elapsed >= minFrameTime &&
     queue_toDOM.length > 0
   ) {
+    const qApp = queue_toDOM.find((i) => i.selector === "v_app");
+    queue_toDOM = queue_toDOM
+      .sort((a, b) => a.$ts - b.$ts)
+      .filter((i) => i.selector !== "v_app");
 
-    const qApp = queue_toDOM.find(i => i.selector === 'v_app');
-    queue_toDOM = queue_toDOM.sort((a, b) => a.$ts - b.$ts).filter(i => i.selector !== 'v_app');
+    log(
+      `%cRAF >> queue_toDOM: [ ${
+        qApp !== undefined ? "v_app, " : ""
+      }${queue_toDOM?.map((i) => i.selector).join(", ")} ]`,
+      "color:cyan"
+    );
 
-    log(`%cRAF >> queue_toDOM: [ ${qApp !== undefined ? 'v_app, ' : '' }${queue_toDOM?.map((i) => i.selector).join(", ")} ]`,"color:cyan");
-    
     if (qApp !== undefined) await toDOM(qApp.selector, qApp.component);
 
     for (let i = 0; i < queue_toDOM.length; i++) {
@@ -182,11 +188,15 @@ const createTrackedRender = (
 
   component.name = componentName;
   component.render = component;
-  component.dataCache = async (data) =>  await component({ ...data, render: true, compName: componentName });
-  component.renderCache = async (data) => data.key === componentName ? await component({ ...data, render: false, compName: componentName }) : null;
+  component.dataCache = async (data) =>
+    await component({ ...data, render: true, compName: componentName });
+  component.renderCache = async (data) =>
+    data.key === componentName
+      ? await component({ ...data, render: false, compName: componentName })
+      : null;
 
-  dataCache.on("set", component.dataCache );
-  renderCache.on("set", component.renderCache );
+  dataCache.on("set", component.dataCache);
+  renderCache.on("set", component.renderCache);
 
   trackedComponents.push(component);
 
@@ -198,8 +208,6 @@ const createTrackedRender = (
 let defaultLayoutName = null;
 
 const layouts = {};
-
-window.layouts = () => layouts;
 
 const checkLayoutExistByName = (name) =>
   Object.keys(layouts).indexOf(name) !== -1;
@@ -250,21 +258,7 @@ const base_dashboard_layout = async () => `${await Header()}
                                           ${await Footer()}`;
 
 const base_dashboard_layout_trackedComponents = [
-  {
-    name: "header_render",
-    render: HeaderRender,
-    selector: "v_app header",
-  },
-  {
-    name: "content_render",
-    render: ContentRender,
-    selector: "v_app content",
-  },
-  {
-    name: "footer_render",
-    render: FooterRender,
-    selector: "v_app footer",
-  },
+  ...base_layout_001_trackedComponents,
   {
     name: "navigation_render",
     render: NavigationRender,
@@ -293,10 +287,10 @@ const renderPageLayout = async (layoutName = defaultLayoutName) => {
 
 const maybeTrackNewComponent = async (layoutName) => {
   const comps = layouts[layoutName].trackedComponents;
-  trackedComponents?.map(i => {
-    dataCache.removeListener('set', i.dataCache);
-    renderCache.removeListener('set', i.renderCache)
-  })
+  trackedComponents?.map((i) => {
+    dataCache.removeListener("set", i.dataCache);
+    renderCache.removeListener("set", i.renderCache);
+  });
 
   comps?.map((comp) => {
     if (trackedComponents.find((i) => i.name === comp.name)) return false;
@@ -306,13 +300,10 @@ const maybeTrackNewComponent = async (layoutName) => {
 
 //! Event check to maybe render different page layout
 
-const pageChange = async (data) => {
-  if (
-    data.key === "currentPage" &&
-    (await dataCache.get("lastPage")) !== data.value
-  ) {
-    log(`EVENT: Page Change`, data);
-    const maybeLayoutName = pages[data.value].layout || defaultLayoutName;
+const pageChange = async (value) => {
+  if ((await dataCache.get("lastPage")) !== value) {
+    log(`EVENT: Page Change >`, value);
+    const maybeLayoutName = pages[value].layout || defaultLayoutName;
     const layoutName = checkLayoutExistByName(maybeLayoutName)
       ? maybeLayoutName
       : defaultLayoutName;
@@ -321,12 +312,18 @@ const pageChange = async (data) => {
 
     await maybeTrackNewComponent(layoutName);
 
-    await dataCache.set("lastPage", data.value);
-  }
-}
+    await dataCache.set("lastPage", value);
 
-dataCache.on("set", pageChange);
+    log(`EVENT NAMES [dataCache] : ${dataCache.eventNames()}`);
+  }
+};
+
+(async () => {
+  await dataCache.on("set/currentPage", async (data) => await pageChange(data));
+  //await dataCache.on("set/currentPage", async(data) => await log('EVENT dataCache[set/currentPage]', data));
+})();
 
 module.exports = {
   renderDOM,
+  layouts,
 };

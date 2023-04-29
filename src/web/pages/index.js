@@ -3,22 +3,22 @@
  */
 const pages = {
   // Root App Page
-  home: require("./home"),
+  Home_Page: require("./Home_Page"),
 
   // Settings Page
-  settings: require("./settings"),
+  Settings_Page: require("./Settings_Page"),
 
   // App Debug Page
-  debug: require("./debug"),
+  Debug_Page: require("./Debug_Page"),
 
   // Prisma Demo Page
-  domains: require("./domains"),
+  Domains_Page: require("./Domains_Page"),
 
   // Example User-Config Page
-  account: require("./account"),
+  Account_Page: require("./Account_Page"),
 
   // Example Page
-  theme: async () => {
+  Theme_Page: async () => {
     return `Welcome, this is just a placeholder for a WALLPAPER THEME page.`;
   },
 };

@@ -1,4 +1,5 @@
 const { dataCache } = require("../core/caches");
+const { Button } = require("../components");
 
 module.exports = async () => {
   let backCache = (await dataCache.get("listBackendAllCache")) || new Map();
@@ -6,8 +7,14 @@ module.exports = async () => {
   return `<section>
             <header>
               <h2>Backend Cache Stats:</h2>
-              <button action='listBackendAllCache'>list Backend All Cache</button>
-              <button action='purgeBackendCache'>purgeBackendCache</button>
+              ${await Button({
+                label: `📃 List Backend Cache`,
+                options: { action: `listBackendAllCache` },
+              })}
+              ${await Button({
+                label: `🔥 Purge Backend Cache`,
+                options: { action: `purgeBackendCache` },
+              })}
             </header>
             <content>
               ${backCache

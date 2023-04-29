@@ -23,7 +23,7 @@ module.exports = async () => {
               </item>
               <item >
                 <h3>Open Ports:</h3>
-                <div class="flex-row" style="flex:1; display: flex; gap: 1em; justify-content: flex-end;}">
+                <div class="flex-row" >
                   ${data?.ports?.open
                     ?.map(
                       (port) =>
@@ -33,5 +33,17 @@ module.exports = async () => {
                 </div>
               </item>
             </content>
-          </section>`;
+          </section>
+          <style>
+          .check_local_ports>content>item>* {
+            max-width: 65%;
+          }
+          
+          .check_local_ports>content>item>.flex-row {
+              flex-wrap: wrap;
+              display: inline-flex;
+              gap: .5em;
+              justify-content: end;
+          }
+          </style>`;
 };

@@ -251,7 +251,7 @@ createPageLayout(
 );
 
 const base_dashboard_layout = async () => `${await Header()}
-                                          <div class='flex-row' style='flex: 1'>
+                                          <div class='flex-row' style='flex: 1; max-height: calc(100% - 3.75em);'>
                                             ${await Nav()}
                                             ${await Content()}
                                           </div>

@@ -3,13 +3,13 @@ const app_debug_toggle = require("../view/app_debug_toggle");
 const notifications_toggle = require("../view/notifications_toggle");
 const minimizeToTray_toggle = require("../view/option_minimizeToTray_toggle");
 
-const SettingsPage = async () => {
+const Settings_Page = async () => {
   return `${await change_title_form()}
           ${await minimizeToTray_toggle()}
           ${await notifications_toggle()}
           ${await app_debug_toggle()}`;
 };
 
-SettingsPage.layout = "base_dashboard_layout";
+Settings_Page.layout = "base_dashboard_layout";
 
-module.exports = SettingsPage;
+module.exports = Settings_Page;

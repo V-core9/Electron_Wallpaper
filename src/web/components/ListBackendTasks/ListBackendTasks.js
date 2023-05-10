@@ -1,5 +1,6 @@
 const { dataCache } = require("../../core/caches");
 const Button = require("../Button/Button");
+const Header = require("../Header/Header");
 const Section = require("../Section/Section");
 
 const newTaskFormModal = async () => {
@@ -50,19 +51,23 @@ const newTaskFormModal = async () => {
           </modal>`;
 };
 
-
 const listBackendTasks = async () => {
   let data = (await dataCache.get("listBackendTasks")) || {};
   let newTaskModalShown = (await dataCache.get("newTaskModalShown")) || false;
   log(data);
 
   let tasks = data.tasks || [];
-  
 
-  return `<header>
-              <h2>Watch Tasks:</h2>
-              ${await Button({label: `➕ New Task`, action: `toggleNewTaskForm`})}
-            </header>
+  const newTaskButton = {
+    label: `➕ New Task`,
+    options: { action: `toggleNewTaskForm` },
+  }
+
+  return `${await Header({
+              children: async () => `<h2>Watch Tasks:</h2>
+                                    ${await Button(newTaskButton)}`,
+              options: {},
+            })}
             <content>
               ${tasks
                 .map(
@@ -92,8 +97,16 @@ const listBackendTasks = async () => {
                 <h5>Disabled Tasks: ${data.disabledTasksCount}</h5>
               </group>
               <group class='flex-row'>
-              ${await Button({label: `Refresh List`,action: `listBackendTasks`})}
-              ${await Button({label: `End All`, action: `endAllTasks`})}
+              ${await Button({
+                label: `Refresh List`,
+                options: {
+                  action: `listBackendTasks`,
+                },
+              })}
+              ${await Button({
+                label: `End All`,
+                options: { action: `endAllTasks` },
+              })}
               </group>
             </footer>
           ${newTaskModalShown ? await newTaskFormModal() : ""}`;
@@ -113,4 +126,4 @@ const ListBackendTasks = async () => {
   return `${await Section(section)}`;
 };
 
-module.exports = ListBackendTasks
+module.exports = ListBackendTasks;

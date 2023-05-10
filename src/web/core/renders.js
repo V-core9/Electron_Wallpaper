@@ -1,16 +1,22 @@
 const { renderCache, dataCache } = require("./caches");
 const pages = require("../pages");
 
-const Header = require("../renders/Header");
-const Footer = require("../renders/Footer");
-const Navigation = require("../renders/Navigation");
+const HeaderRender = require("../renders/Header");
+const FooterRender = require("../renders/Footer");
+const NavigationRender = require("../renders/Navigation");
 
-const { LoadingOverlay } = require("../components");
+const {
+  LoadingOverlay,
+  Header,
+  Content,
+  Footer,
+  Nav,
+} = require("../components");
 
 // DOM Parser Validation
 const supportsDOMParser = (function () {
   if (!window.DOMParser) return false;
-  var parser = new DOMParser();
+  const parser = new DOMParser();
   try {
     parser.parseFromString("x", "text/html");
   } catch (err) {
@@ -19,20 +25,25 @@ const supportsDOMParser = (function () {
   return true;
 })();
 
-const stringToHTML = (str) => {
-  // If DOMParser is supported, use it
-  if (supportsDOMParser) {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(str, "text/html");
-    return doc.body;
+const removeAllChildNodes = (el) => {
+  while (el.firstChild) {
+    el.removeChild(el.firstChild);
   }
-
-  // Otherwise, fallback to old-school method
-  var dom = document.createElement("div");
+};
+const domParserParse = (str) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(str, "text/html");
+  return doc.body;
+};
+const domOldParse = (str) => {
+  const dom = document.createElement("div");
   dom.innerHTML = str;
   return dom;
 };
 
+const stringToHTML = supportsDOMParser ? domParserParse : domOldParse;
+
+const renderRemoveChildNodes = false;
 // Adding to dom function
 const toDOM = async (selector, component) => {
   try {
@@ -43,6 +54,9 @@ const toDOM = async (selector, component) => {
         `%cNo Parent Element Found, render not added to DOM: ${selector}`,
         "color:purple"
       );
+    if (String(parent.innerHTML) === String(component))
+      return log(`%cParent Element No Need to update`, "color:red");
+    if (renderRemoveChildNodes) removeAllChildNodes(parent);
     return (parent.innerHTML = component);
   } catch (error) {
     log(error);
@@ -88,13 +102,19 @@ const renderDOM = async (timestamp) => {
     elapsed >= minFrameTime &&
     queue_toDOM.length > 0
   ) {
+    const qApp = queue_toDOM.find((i) => i.selector === "v_app");
+    queue_toDOM = queue_toDOM
+      .sort((a, b) => a.$ts - b.$ts)
+      .filter((i) => i.selector !== "v_app");
+
     log(
-      `%cRAF >> queue_toDOM: [ ${queue_toDOM
-        ?.map((i) => i.selector)
-        .join(", ")} ]`,
+      `%cRAF >> queue_toDOM: [ ${
+        qApp !== undefined ? "v_app, " : ""
+      }${queue_toDOM?.map((i) => i.selector).join(", ")} ]`,
       "color:cyan"
     );
-    // queue_toDOM = queue_toDOM.sort((a, b) => a.$ts - b.$ts);
+
+    if (qApp !== undefined) await toDOM(qApp.selector, qApp.component);
 
     for (let i = 0; i < queue_toDOM.length; i++) {
       const item = queue_toDOM[i];
@@ -117,34 +137,21 @@ const renderDOM = async (timestamp) => {
 const renderCurrentPage = async (key) => await pages[key]();
 
 // Actual Page Content Render
-const Content = async () => {
+const ContentRender = async () => {
   return `${await renderCurrentPage(
     (await dataCache.get("currentPage")) || "home"
   )}
-          ${
-            (await dataCache.get("app_loaded")) !== true
-              ? await LoadingOverlay()
-              : ""
-          }`;
+            ${
+              !(await dataCache.get("app_loaded")) ? await LoadingOverlay() : ""
+            }`;
 };
-
-//*----------------------------------------------------------------
-//* UTILITY: Create Function/Component with custom name
-function nameFunction(name, body) {
-  return {
-    [name](...args) {
-      return body.apply(this, args);
-    },
-  }[name];
-}
-//* Example:
-//? const x = nameFunction("wonderful function", (p) => p*2)
-//*----------------------------------------------------------------
 
 const toCACHE = async (componentName, data, cacheFor) =>
   await renderCache.set(componentName, data, cacheFor);
 
-window = {};
+const trackedComponents = [];
+
+window.trackedComponents = () => trackedComponents;
 
 const createTrackedRender = (
   componentName,
@@ -152,7 +159,7 @@ const createTrackedRender = (
   domSelector,
   options = {}
 ) => {
-  const cacheFor = options.cacheFor || 33;
+  const cacheFor = options.cacheFor || 250;
 
   const component = async (data) => {
     if (data.compName === componentName) {
@@ -179,86 +186,144 @@ const createTrackedRender = (
     }
   };
 
-  dataCache.on(
-    "set",
-    async (data) =>
-      await component({ ...data, render: true, compName: componentName })
-  );
-  renderCache.on("set", async (data) =>
+  component.name = componentName;
+  component.render = component;
+  component.dataCache = async (data) =>
+    await component({ ...data, render: true, compName: componentName });
+  component.renderCache = async (data) =>
     data.key === componentName
       ? await component({ ...data, render: false, compName: componentName })
-      : null
-  );
+      : null;
+
+  dataCache.on("set", component.dataCache);
+  renderCache.on("set", component.renderCache);
+
+  trackedComponents.push(component);
 
   return component;
 };
 
 //*---------------------------
 //* Page Layouts
-const layouts = {
-  // Base Page Layout
-  base_layout_001: `<header></header>
-                      <content></content>
-                    <footer></footer>`,
-  // Base Dashboard Layout
-  base_dashboard_layout: `<header></header>
-                            <div class='flex-row' style='flex: 1'>
-                              <nav></nav>
-                              <content></content>
-                            </div>
-                          <footer></footer>`,
+let defaultLayoutName = null;
+
+const layouts = {};
+
+const checkLayoutExistByName = (name) =>
+  Object.keys(layouts).indexOf(name) !== -1;
+
+const createPageLayout = (layoutName, pageLayout, trackedComponents) => {
+  if (checkLayoutExistByName(layoutName)) {
+    warn(`Tracked Component Already Exists: ${layoutName}`);
+    return false;
+  }
+  if (!defaultLayoutName) defaultLayoutName = layoutName;
+  layouts[layoutName] = { pageLayout, trackedComponents };
+  return layouts[layoutName];
 };
+
+const base_layout_001 = async () => `${await Header()}
+                                    ${await Content()}
+                                    ${await Footer()}`;
+
+const base_layout_001_trackedComponents = [
+  {
+    name: "header_render",
+    render: HeaderRender,
+    selector: "v_app header",
+  },
+  {
+    name: "content_render",
+    render: ContentRender,
+    selector: "v_app content",
+  },
+  {
+    name: "footer_render",
+    render: FooterRender,
+    selector: "v_app footer",
+  },
+];
+
+createPageLayout(
+  "base_layout_001",
+  base_layout_001,
+  base_layout_001_trackedComponents
+);
+
+const base_dashboard_layout = async () => `${await Header()}
+                                          <div class='flex-row' style='flex: 1; max-height: calc(100% - 3.75em);'>
+                                            ${await Nav()}
+                                            ${await Content()}
+                                          </div>
+                                          ${await Footer()}`;
+
+const base_dashboard_layout_trackedComponents = [
+  ...base_layout_001_trackedComponents,
+  {
+    name: "navigation_render",
+    render: NavigationRender,
+    selector: "v_app nav",
+  },
+];
+
+createPageLayout(
+  "base_dashboard_layout",
+  base_dashboard_layout,
+  base_dashboard_layout_trackedComponents
+);
 
 //*-------------------------------
 //* RENDER PAGE LAYOUT BY NAME
 
-const checkLayoutExistByName = (name) => {
-  return Object.keys(layouts).indexOf(name) !== -1;
-};
-const defaultLayoutName = "base_layout_001";
 const renderPageLayout = async (layoutName = defaultLayoutName) => {
   log("Page Layout Render: ", layoutName);
+  if (checkLayoutExistByName(layoutName))
+    return await layouts[layoutName].pageLayout();
 
-  if (!checkLayoutExistByName(layoutName)) {
-    warn(`Layout ${layoutName} does not exist`);
-    return layouts[defaultLayoutName];
-  }
-
-  return layouts[layoutName];
+  warn(`Layout ${layoutName} does not exist`);
+  return await layouts[defaultLayoutName]();
 };
 //*-------------------------------
 
+const maybeTrackNewComponent = async (layoutName) => {
+  const comps = layouts[layoutName].trackedComponents;
+  trackedComponents?.map((i) => {
+    dataCache.removeListener("set", i.dataCache);
+    renderCache.removeListener("set", i.renderCache);
+  });
+
+  comps?.map((comp) => {
+    if (trackedComponents.find((i) => i.name === comp.name)) return false;
+    return createTrackedRender(comp.name, comp.render, comp.selector);
+  });
+};
+
 //! Event check to maybe render different page layout
-dataCache.on("set", async (data) => {
-  if (
-    data.key === "currentPage" &&
-    (await dataCache.get("lastPage")) !== data.value
-  ) {
-    log(`EVENT: Page Change`, data);
-    const maybeLayoutName = pages[data.value].layout;
+
+const pageChange = async (value) => {
+  if ((await dataCache.get("lastPage")) !== value) {
+    log(`EVENT: Page Change >`, value);
+    const maybeLayoutName = pages[value].layout || defaultLayoutName;
     const layoutName = checkLayoutExistByName(maybeLayoutName)
       ? maybeLayoutName
       : defaultLayoutName;
     await queryToDOM("v_app", await renderPageLayout(layoutName));
-    await dataCache.set("lastPage", data.value);
     document.querySelector("v_app").className = layoutName;
-  }
-});
 
-// Create actual components to track.
-const header = createTrackedRender("header_render", Header, "v_app header");
-const content = createTrackedRender("content_render", Content, "v_app content");
-const footer = createTrackedRender("footer_render", Footer, "v_app footer");
-const navigation = createTrackedRender(
-  "navigation_render",
-  Navigation,
-  "v_app nav"
-);
+    await maybeTrackNewComponent(layoutName);
+
+    await dataCache.set("lastPage", value);
+
+    log(`EVENT NAMES [dataCache] : ${dataCache.eventNames()}`);
+  }
+};
+
+(async () => {
+  await dataCache.on("set/currentPage", async (data) => await pageChange(data));
+  //await dataCache.on("set/currentPage", async(data) => await log('EVENT dataCache[set/currentPage]', data));
+})();
 
 module.exports = {
-  header,
-  footer,
-  content,
-  navigation,
   renderDOM,
+  layouts,
 };

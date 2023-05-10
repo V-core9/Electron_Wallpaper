@@ -126,9 +126,9 @@ const actions = {
     await config.set("debug", response);
     if (
       (await config.get("debug")) === false &&
-      (await dataCache.get("currentPage")) === "debug"
+      (await dataCache.get("currentPage")) === "Debug"
     )
-      await dataCache.set("currentPage", "home");
+      await dataCache.set("currentPage", "Home");
     await actions.listBackendTasks();
   },
 
@@ -151,6 +151,7 @@ const actions = {
   openPage: async (event) => {
     if (typeof event === "string") return dataCache.set("page", event);
     const page = event.target.getAttribute("page");
+    await dataCache.set("previousPage", await dataCache.get("currentPage"));
     await dataCache.set("currentPage", page);
   },
 
@@ -248,7 +249,7 @@ const actions = {
     const data = await ipcRenderer.invoke("checkLocalPorts");
     log(data);
     await dataCache.set("checkLocalPorts", data);
-  }
+  },
 };
 
 module.exports = actions;

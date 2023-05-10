@@ -3,8 +3,6 @@ const caches = require("./core/caches");
 const actions = require("./core/actions");
 const renders = require("./core/renders");
 
-const components = require("./components");
-
 const { log, info, warn } = logger;
 
 const { dataCache, renderCache } = caches;
@@ -13,12 +11,9 @@ const v9 = require("./utils/v9");
 
 // Run the whole thing
 (async () => {
-  //await renders.currentPageChangeHandleRegister();
-  //await dataCache.set("currentPage", "loading");
-
   dataCache.on("purge", async () => {
     log("Cache Purged");
-    actions.openPage("Home_Page");
+    actions.openPage("Home");
   });
 
   dataCache.on("purge_stats", async (data) => {
@@ -56,12 +51,9 @@ const v9 = require("./utils/v9");
 
   window.onload = async () => {
     info("Window Loaded");
-    window.requestAnimationFrame(
-      async () => await renders.renderDOM(Date.now())
-    );
     await actions.initApp();
-
-    await dataCache.set("currentPage", "Home_Page");
+    await dataCache.set("currentPage", "Home");
+    await renders.renderDOM(Date.now())
   };
 
   window.v9 = v9;

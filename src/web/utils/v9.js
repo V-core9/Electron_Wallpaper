@@ -7,18 +7,7 @@ const components = require("../components");
 
 const pages = require("../pages");
 
-const { BCC, base_component_create } = require("./base_component_create");
-const propsToAttribute = require("./propsToAttribute");
-const loadStyleCode = require("./loadStyleCode");
-const createNewPage = require("./createNewPage");
-
-const utils = {
-  BCC,
-  base_component_create,
-  propsToAttribute,
-  loadStyleCode,
-  createNewPage,
-};
+const utils = require(".");
 
 //?- - - - - - - - - - - - - -
 //? Window Object Attachment
@@ -36,4 +25,3 @@ const v9 = {
 //!- - - - - - - - - - - - - -
 
 module.exports = v9;
-

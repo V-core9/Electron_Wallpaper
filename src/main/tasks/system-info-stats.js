@@ -15,20 +15,11 @@ module.exports = async () => {
       totalmem: roundNumber(byteSizer.byteToGiga(v_os.totalmem())),
     },
 
-    deviceUserInfo:
-      process.env.USERNAME +
-      ' [ ' +
-      v_os.version() +
-      ' | ' +
-      v_os.platform() +
-      process.arch +
-      ' ]',
+    deviceUserInfo: process.env.USERNAME + ' [ ' + v_os.version() + ' | ' + v_os.platform() + process.arch + ' ]',
 
     cpu: {
       count: v_os.cpu.count(),
-      usage: await v_os.cpu.usage(
-        await vTime.seconds(await config.get('redrawTime'))
-      ),
+      usage: await v_os.cpu.usage(await vTime.seconds(await config.get('redrawTime'))),
     },
   }
 

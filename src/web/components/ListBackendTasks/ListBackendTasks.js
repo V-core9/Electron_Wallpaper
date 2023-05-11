@@ -78,12 +78,8 @@ const listBackendTasks = async () => {
                       <h5>➰ Interval: ${task.interval}ms</h5>
                     </header>
                     <actions>
-                      <button action='startSpecificTask' ${
-                        task.active ? 'disabled' : ''
-                      }>🚀 Start</button>
-                      <button action='stopSpecificTask' ${
-                        !task.active ? 'disabled' : ''
-                      }>🔻 Stop</button>
+                      <button action='startSpecificTask' ${task.active ? 'disabled' : ''}>🚀 Start</button>
+                      <button action='stopSpecificTask' ${!task.active ? 'disabled' : ''}>🔻 Stop</button>
                       <button action='deleteSpecificTask'>❌ Delete</button>
                     </actions>
                   </item>`

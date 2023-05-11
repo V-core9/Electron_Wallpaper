@@ -9,18 +9,12 @@ const Header = async () => {
             ${await NavMain()}
           </group>
           <info>
-            <h2>${
-              (await config.get('title')) || 'Missing Application Title'
-            }</h2>
+            <h2>${(await config.get('title')) || 'Missing Application Title'}</h2>
           </info>
           <group>
-            <button action='openPage' page='Settings' class='${
-              currentPage === 'Settings' ? 'active' : ''
-            }'>🔨</button>
+            <button action='openPage' page='Settings' class='${currentPage === 'Settings' ? 'active' : ''}'>🔨</button>
             <button action='minimizeAppToggle'>🔻</button>
-            <button action='maximizeAppToggle'>${
-              (await config.get('maximized')) ? '🔸' : '💢'
-            }</button>
+            <button action='maximizeAppToggle'>${(await config.get('maximized')) ? '🔸' : '💢'}</button>
             <button action='exitApplication'>❌</button>
           </group>`
 }

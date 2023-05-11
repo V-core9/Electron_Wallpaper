@@ -7,8 +7,7 @@ module.exports = clockUpdate = async () => {
   var seconds = date.getSeconds()
   var datePrint = String(date).split(' ')
 
-  datePrint =
-    datePrint[0] + ' ' + datePrint[1] + ' ' + datePrint[2] + ' ' + datePrint[3]
+  datePrint = datePrint[0] + ' ' + datePrint[1] + ' ' + datePrint[2] + ' ' + datePrint[3]
 
   hours = hours < 10 ? ' ' + hours : hours
   minutes = minutes < 10 ? '0' + minutes : minutes

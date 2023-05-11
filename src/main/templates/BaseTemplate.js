@@ -79,13 +79,9 @@ module.exports = function BaseTemplate(data = {}) {
       },
     }
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${
-      this.helperWidth
-    } ${this.helperHeight}"  height="${this.helperHeight}" width="${
-      this.helperWidth
-    }" class="${
-      this.name
-    }"  shape-rendering="geometricPrecision" font-family="monospace" >
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${this.helperWidth} ${this.helperHeight}"  height="${
+      this.helperHeight
+    }" width="${this.helperWidth}" class="${this.name}"  shape-rendering="geometricPrecision" font-family="monospace" >
               ${await this._render()}
             </svg>`
   }
@@ -173,9 +169,7 @@ module.exports = function BaseTemplate(data = {}) {
                    ${await draw.text(
                      this.helpDim.X840,
                      this.helpDim.Y + 330 + i * 22.5,
-                     `[ ${
-                       tasks[taskNames[i]].enabled ? '✔ Enabled' : '❌ Disabled'
-                     } ]`,
+                     `[ ${tasks[taskNames[i]].enabled ? '✔ Enabled' : '❌ Disabled'} ]`,
                      this.main,
                      8
                    )}
@@ -189,9 +183,7 @@ module.exports = function BaseTemplate(data = {}) {
                    ${await draw.text(
                      this.helpDim.X840,
                      this.helpDim.Y + 337.5 + i * 22.5,
-                     `[ Δ ${tasks[taskNames[i]].interval}ms | Σ ${
-                       tasks[taskNames[i]].runs
-                     } ]`,
+                     `[ Δ ${tasks[taskNames[i]].interval}ms | Σ ${tasks[taskNames[i]].runs} ]`,
                      this.main,
                      6
                    )}`
@@ -202,13 +194,7 @@ module.exports = function BaseTemplate(data = {}) {
     } l 460 0 10 10 0 230 -10 10 -460 0 -10 -10  0 -230 10 -10" stroke="${
       this.main
     }" stroke-width="1" fill="#203040" ></path>
-            ${await draw.text(
-              this.helpDim.X500,
-              this.helpDim.Y + 312.5,
-              'vWatch Tasks:',
-              this.main,
-              this.subFontSize
-            )}
+            ${await draw.text(this.helpDim.X500, this.helpDim.Y + 312.5, 'vWatch Tasks:', this.main, this.subFontSize)}
             ${taskVIEW}`
   }
 
@@ -243,13 +229,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y + 360,
-              'Active Tasks ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y + 360, 'Active Tasks ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y + 360,
@@ -258,13 +238,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y + 375,
-              'Disabled Tasks ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y + 375, 'Disabled Tasks ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y + 375,
@@ -290,50 +264,14 @@ module.exports = function BaseTemplate(data = {}) {
               this.subFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X500,
-              this.helpDim.Y60,
-              'Items in Cache',
-              this.white,
-              this.normalFontSize
-            )}
-            ${await draw.text(
-              this.helpDim.X840,
-              this.helpDim.Y60,
-              stats.count,
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X500, this.helpDim.Y60, 'Items in Cache', this.white, this.normalFontSize)}
+            ${await draw.text(this.helpDim.X840, this.helpDim.Y60, stats.count, this.white, this.normalFontSize)}
 
-            ${await draw.text(
-              this.helpDim.X500,
-              this.helpDim.Y75,
-              'Hits Count',
-              this.white,
-              this.normalFontSize
-            )}
-            ${await draw.text(
-              this.helpDim.X840,
-              this.helpDim.Y75,
-              stats.hits,
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X500, this.helpDim.Y75, 'Hits Count', this.white, this.normalFontSize)}
+            ${await draw.text(this.helpDim.X840, this.helpDim.Y75, stats.hits, this.white, this.normalFontSize)}
 
-            ${await draw.text(
-              this.helpDim.X500,
-              this.helpDim.Y90,
-              'Misses Count:',
-              this.white,
-              this.normalFontSize
-            )}
-            ${await draw.text(
-              this.helpDim.X840,
-              this.helpDim.Y90,
-              stats.misses,
-              this.white,
-              this.normalFontSize
-            )}`
+            ${await draw.text(this.helpDim.X500, this.helpDim.Y90, 'Misses Count:', this.white, this.normalFontSize)}
+            ${await draw.text(this.helpDim.X840, this.helpDim.Y90, stats.misses, this.white, this.normalFontSize)}`
   }
 
   this.wallGuiDBG = async () => {
@@ -342,21 +280,9 @@ module.exports = function BaseTemplate(data = {}) {
     } l 460 0 10 10 0 230 -10 10 -460 0 -10 -10  0 -230 10 -10" stroke="${
       this.main
     }" stroke-width="1" fill="#203040" ></path>
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y + 42.5,
-              'WallpaperGUI',
-              this.main,
-              this.subFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y + 42.5, 'WallpaperGUI', this.main, this.subFontSize)}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y60,
-              'Update TimeStamp',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y60, 'Update TimeStamp', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y60,
@@ -365,13 +291,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y75,
-              'Render Exec. Time ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y75, 'Render Exec. Time ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y75,
@@ -380,13 +300,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y90,
-              'TotalUpdates ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y90, 'TotalUpdates ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y90,
@@ -414,21 +328,9 @@ module.exports = function BaseTemplate(data = {}) {
 
 
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y140,
-              'SVG Template Info ',
-              this.main,
-              this.subFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y140, 'SVG Template Info ', this.main, this.subFontSize)}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y155,
-              'Name ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y155, 'Name ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y155,
@@ -437,13 +339,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y170,
-              'Random Colors ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y170, 'Random Colors ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y170,
@@ -452,13 +348,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y185,
-              'Render Height ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y185, 'Render Height ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y185,
@@ -467,13 +357,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y200,
-              'Render Width ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y200, 'Render Width ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y200,
@@ -497,13 +381,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y230,
-              'Scale ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y230, 'Scale ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y230,
@@ -512,13 +390,7 @@ module.exports = function BaseTemplate(data = {}) {
               this.normalFontSize
             )}
 
-            ${await draw.text(
-              this.helpDim.X,
-              this.helpDim.Y245,
-              'Quality ',
-              this.white,
-              this.normalFontSize
-            )}
+            ${await draw.text(this.helpDim.X, this.helpDim.Y245, 'Quality ', this.white, this.normalFontSize)}
             ${await draw.text(
               this.helpDim.X300,
               this.helpDim.Y245,
@@ -537,13 +409,7 @@ module.exports = function BaseTemplate(data = {}) {
                 <path d="M ${this.helpDim.X} ${
       this.debugY
     } l 960 0 20 20  -20 20 -960 0 -20 -20 20 -20" stroke="#203040" stroke-width="2" fill="#101520" ></path>
-                ${await draw.text(
-                  this.helpDim.X + 5,
-                  this.helpDim.Y,
-                  'Debug Panel:',
-                  this.white,
-                  this.mainFontSize
-                )}
+                ${await draw.text(this.helpDim.X + 5, this.helpDim.Y, 'Debug Panel:', this.white, this.mainFontSize)}
 
                 ${await this.wallGuiDBG()}
                 ${await this.cacheDBG()}
@@ -556,25 +422,13 @@ module.exports = function BaseTemplate(data = {}) {
               <path d="M 35 15 l 110 0  20 20   -130 130  -20 -20  0 -110  20 -20" stroke="${
                 this.main
               }" stroke-width="1" fill="#101520" ></path>
-              ${await draw.text(
-                35,
-                40,
-                '💻 EIP#1',
-                this.white,
-                this.subFontSize
-              )}
+              ${await draw.text(35, 40, '💻 EIP#1', this.white, this.subFontSize)}
 
 
               <path d="M 1135 15 l 110 0   20 20   0 110   -20 20   -130 -130  20 -20" stroke="${
                 this.main
               }" stroke-width="1" fill="#101520" ></path>
-              ${await draw.text(
-                1140,
-                40,
-                '💹 ' + (await cache.get('npmTotalDownloads')),
-                this.white,
-                this.subFontSize
-              )}
+              ${await draw.text(1140, 40, '💹 ' + (await cache.get('npmTotalDownloads')), this.white, this.subFontSize)}
 
 
               <path d="M 5 145 l   25 25   0 380   -25 25   0 -430  " stroke="${
@@ -585,20 +439,13 @@ module.exports = function BaseTemplate(data = {}) {
               <path d="M 1275 145 l   -25 25   0 380   25 25   0 -430  " stroke="${
                 this.main
               }" stroke-width="1" fill="#101520" ></path>
-              ${await draw.text(
-                1255,
-                545,
-                '🆓',
-                this.main,
-                this.normalFontSize
-              )}
+              ${await draw.text(1255, 545, '🆓', this.main, this.normalFontSize)}
 
         `
   }
 
   this.extendedInfoPanel = async (props) => {
-    if (await cache.has('ExtendedInfoPanel'))
-      return await cache.get('ExtendedInfoPanel')
+    if (await cache.has('ExtendedInfoPanel')) return await cache.get('ExtendedInfoPanel')
 
     item = await this.renderEIP(props)
     await cache.set('ExtendedInfoPanel', item, 10000)

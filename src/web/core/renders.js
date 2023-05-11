@@ -7,13 +7,7 @@ const HeaderRender = require('../renders/Header')
 const FooterRender = require('../renders/Footer')
 const NavigationRender = require('../renders/Navigation')
 
-const {
-  LoadingOverlay,
-  Header,
-  Content,
-  Footer,
-  Nav,
-} = require('../components')
+const { LoadingOverlay, Header, Content, Footer, Nav } = require('../components')
 
 // DOM Parser Validation
 const supportsDOMParser = (function () {
@@ -51,13 +45,8 @@ const toDOM = async (selector, component) => {
   try {
     if (!stringToHTML(component)) return Error('Invalid component HTML')
     const parent = document.querySelector(selector)
-    if (!parent)
-      return log(
-        `%cNo Parent Element Found, render not added to DOM: ${selector}`,
-        'color:purple'
-      )
-    if (String(parent.innerHTML) === String(component))
-      return log(`%cParent Element No Need to update`, 'color:red')
+    if (!parent) return log(`%cNo Parent Element Found, render not added to DOM: ${selector}`, 'color:purple')
+    if (String(parent.innerHTML) === String(component)) return log(`%cParent Element No Need to update`, 'color:red')
     if (renderRemoveChildNodes) removeAllChildNodes(parent)
     return (parent.innerHTML = component)
   } catch (error) {
@@ -71,8 +60,7 @@ let queue_toDOM = [] // To DOM query
 const queryToDOM = async (selector, component) => {
   try {
     const qtdItem = { selector, component, $ts: Date.now() }
-    if (!stringToHTML(component))
-      return Error('Failed to query DOM change: Invalid component HTML')
+    if (!stringToHTML(component)) return Error('Failed to query DOM change: Invalid component HTML')
 
     let i = 0
     let found = false
@@ -99,20 +87,14 @@ let useTimeout = true
 const renderDOM = async (timestamp) => {
   const elapsed = timestamp - previousTimeStamp
 
-  if (
-    previousTimeStamp !== timestamp &&
-    elapsed >= minFrameTime &&
-    queue_toDOM.length > 0
-  ) {
+  if (previousTimeStamp !== timestamp && elapsed >= minFrameTime && queue_toDOM.length > 0) {
     const qApp = queue_toDOM.find((i) => i.selector === 'v_app')
-    queue_toDOM = queue_toDOM
-      .sort((a, b) => a.$ts - b.$ts)
-      .filter((i) => i.selector !== 'v_app')
+    queue_toDOM = queue_toDOM.sort((a, b) => a.$ts - b.$ts).filter((i) => i.selector !== 'v_app')
 
     log(
-      `%cRAF >> queue_toDOM: [ ${
-        qApp !== undefined ? 'v_app, ' : ''
-      }${queue_toDOM?.map((i) => i.selector).join(', ')} ]`,
+      `%cRAF >> queue_toDOM: [ ${qApp !== undefined ? 'v_app, ' : ''}${queue_toDOM
+        ?.map((i) => i.selector)
+        .join(', ')} ]`,
       'color:cyan'
     )
 
@@ -140,38 +122,24 @@ const renderCurrentPage = async (key) => await pages[key]()
 
 // Actual Page Content Render
 const ContentRender = async () => {
-  return `${await renderCurrentPage(
-    (await dataCache.get('currentPage')) || 'home'
-  )}
-            ${
-              !(await dataCache.get('app_loaded')) ? await LoadingOverlay() : ''
-            }`
+  return `${await renderCurrentPage((await dataCache.get('currentPage')) || 'home')}
+            ${!(await dataCache.get('app_loaded')) ? await LoadingOverlay() : ''}`
 }
 
-const toCACHE = async (componentName, data, cacheFor) =>
-  await renderCache.set(componentName, data, cacheFor)
+const toCACHE = async (componentName, data, cacheFor) => await renderCache.set(componentName, data, cacheFor)
 
 const trackedComponents = []
 
 window.trackedComponents = () => trackedComponents
 
-const createTrackedRender = (
-  componentName,
-  componentFunction,
-  domSelector,
-  options = {}
-) => {
+const createTrackedRender = (componentName, componentFunction, domSelector, options = {}) => {
   const cacheFor = options.cacheFor || 250
 
   const component = async (data) => {
     if (data.compName === componentName) {
       if (data.render) {
         log(`%c${componentName} ▶ Cache.`, 'color:cyan')
-        return await toCACHE(
-          componentName,
-          await componentFunction(data),
-          cacheFor
-        )
+        return await toCACHE(componentName, await componentFunction(data), cacheFor)
       }
 
       log(`%c${componentName} ▶ queryToDOM.`, 'color:orange')
@@ -190,12 +158,9 @@ const createTrackedRender = (
 
   component.name = componentName
   component.render = component
-  component.dataCache = async (data) =>
-    await component({ ...data, render: true, compName: componentName })
+  component.dataCache = async (data) => await component({ ...data, render: true, compName: componentName })
   component.renderCache = async (data) =>
-    data.key === componentName
-      ? await component({ ...data, render: false, compName: componentName })
-      : null
+    data.key === componentName ? await component({ ...data, render: false, compName: componentName }) : null
 
   dataCache.on('set', component.dataCache)
   renderCache.on('set', component.renderCache)
@@ -211,8 +176,7 @@ let defaultLayoutName = null
 
 const layouts = {}
 
-const checkLayoutExistByName = (name) =>
-  Object.keys(layouts).indexOf(name) !== -1
+const checkLayoutExistByName = (name) => Object.keys(layouts).indexOf(name) !== -1
 
 const createPageLayout = (layoutName, pageLayout, trackedComponents) => {
   if (checkLayoutExistByName(layoutName)) {
@@ -246,11 +210,7 @@ const base_layout_001_trackedComponents = [
   },
 ]
 
-createPageLayout(
-  'base_layout_001',
-  base_layout_001,
-  base_layout_001_trackedComponents
-)
+createPageLayout('base_layout_001', base_layout_001, base_layout_001_trackedComponents)
 
 const base_dashboard_layout = async () => `${await Header()}
                                           <div class='flex-row' style='flex: 1; max-height: calc(100% - 3.75em);'>
@@ -268,19 +228,14 @@ const base_dashboard_layout_trackedComponents = [
   },
 ]
 
-createPageLayout(
-  'base_dashboard_layout',
-  base_dashboard_layout,
-  base_dashboard_layout_trackedComponents
-)
+createPageLayout('base_dashboard_layout', base_dashboard_layout, base_dashboard_layout_trackedComponents)
 
 //*-------------------------------
 //* RENDER PAGE LAYOUT BY NAME
 
 const renderPageLayout = async (layoutName = defaultLayoutName) => {
   log('Page Layout Render: ', layoutName)
-  if (checkLayoutExistByName(layoutName))
-    return await layouts[layoutName].pageLayout()
+  if (checkLayoutExistByName(layoutName)) return await layouts[layoutName].pageLayout()
 
   warn(`Layout ${layoutName} does not exist`)
   return await layouts[defaultLayoutName]()
@@ -306,9 +261,7 @@ const pageChange = async (value) => {
   if ((await dataCache.get('lastPage')) !== value) {
     log(`EVENT: Page Change >`, value)
     const maybeLayoutName = pages[value].layout || defaultLayoutName
-    const layoutName = checkLayoutExistByName(maybeLayoutName)
-      ? maybeLayoutName
-      : defaultLayoutName
+    const layoutName = checkLayoutExistByName(maybeLayoutName) ? maybeLayoutName : defaultLayoutName
     await queryToDOM('v_app', await renderPageLayout(layoutName))
     document.querySelector('v_app').className = layoutName
 

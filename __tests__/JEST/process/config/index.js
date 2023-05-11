@@ -39,13 +39,9 @@ test('Config -> weatherApiKey', async () => {
   //! BAD Set
   expect(await cfg.set('weatherApiKey', '1111')).toBe(false)
   //? Good Set
-  expect(
-    await cfg.set('weatherApiKey', '1111asdasdw1232121111asdasdw1232')
-  ).toBe(true)
+  expect(await cfg.set('weatherApiKey', '1111asdasdw1232121111asdasdw1232')).toBe(true)
   //* Get after
-  expect(await cfg.get('weatherApiKey')).toBe(
-    '1111asdasdw1232121111asdasdw1232'
-  )
+  expect(await cfg.get('weatherApiKey')).toBe('1111asdasdw1232121111asdasdw1232')
 })
 
 test('Config -> maximized', async () => {
@@ -68,9 +64,7 @@ test('Config -> mSet', async () => {
   expect(await cfg.get('debug')).toBe(true)
 
   //? Good Set
-  expect(
-    await cfg.mSet({ maximized: false, debug: false, title: 'Yea Title' })
-  ).toBe(undefined)
+  expect(await cfg.mSet({ maximized: false, debug: false, title: 'Yea Title' })).toBe(undefined)
   //* Get after
   expect(await cfg.get('maximized')).toBe(false)
   expect(await cfg.get('debug')).toBe(false)

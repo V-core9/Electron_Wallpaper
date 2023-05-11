@@ -36,35 +36,19 @@ module.exports = (ipcMain) => {
       return await config.get('title')
     })
 
-    ipcMain.handle(
-      'setAppVersion',
-      async (event, arg) => (config.version = arg)
-    )
+    ipcMain.handle('setAppVersion', async (event, arg) => (config.version = arg))
 
-    ipcMain.handle('listBackendAllCache', async () => [
-      ...(await cache.getAll()),
-    ])
+    ipcMain.handle('listBackendAllCache', async () => [...(await cache.getAll())])
 
     ipcMain.handle('purgeBackendCache', async () => await cache.purge())
 
-    ipcMain.handle('listBackendTasks', async (event, arg) =>
-      JSON.stringify(await watch.stats())
-    )
+    ipcMain.handle('listBackendTasks', async (event, arg) => JSON.stringify(await watch.stats()))
 
-    ipcMain.handle(
-      'startSpecificTask',
-      async (event, arg) => await watch.start(arg)
-    )
+    ipcMain.handle('startSpecificTask', async (event, arg) => await watch.start(arg))
 
-    ipcMain.handle(
-      'stopSpecificTask',
-      async (event, arg) => await watch.stop(arg)
-    )
+    ipcMain.handle('stopSpecificTask', async (event, arg) => await watch.stop(arg))
 
-    ipcMain.handle(
-      'deleteSpecificTask',
-      async (event, arg) => await watch.delete(arg)
-    )
+    ipcMain.handle('deleteSpecificTask', async (event, arg) => await watch.delete(arg))
 
     ipcMain.handle('endAllTasks', async () => await watch.end())
 
@@ -104,9 +88,7 @@ module.exports = (ipcMain) => {
       mainWindow.minimize()
     })
 
-    ipcMain.handle('isMaximized', async () =>
-      require('../mainWindow').isMaximized()
-    )
+    ipcMain.handle('isMaximized', async () => require('../mainWindow').isMaximized())
 
     //? Exit Application Handle
     ipcMain.handle('EXIT_APPLICATION', async () => {
@@ -160,10 +142,7 @@ module.exports = (ipcMain) => {
     })
 
     ipcMain.handle('ipAddress', generatedHandle('ipAddress', 'ipAddress'))
-    ipcMain.handle(
-      'checkLocalPorts',
-      generatedHandle('checkLocalPorts', 'checkLocalPorts')
-    )
+    ipcMain.handle('checkLocalPorts', generatedHandle('checkLocalPorts', 'checkLocalPorts'))
 
     return true
   } catch (error) {

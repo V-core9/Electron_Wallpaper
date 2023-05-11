@@ -16,9 +16,7 @@ let contextMenu = async () => {
       label: require('./mainWindow').isVisible() ? 'Hide App' : 'Show App',
       click: async () => {
         let mainWindow = require('./mainWindow')
-        console.log(
-          (mainWindow.isVisible() ? 'Hidding' : 'Showing') + ' App Window'
-        )
+        console.log((mainWindow.isVisible() ? 'Hidding' : 'Showing') + ' App Window')
         mainWindow[mainWindow.isVisible() ? 'hide' : 'show']()
         await recreateMainMenu()
       },

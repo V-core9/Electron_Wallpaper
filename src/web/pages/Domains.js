@@ -1,17 +1,17 @@
-const { dataCache } = require("../core/caches");
-const { domainList } = require("../core/actions");
+const { dataCache } = require('../core/caches')
+const { domainList } = require('../core/actions')
 
 const Domains = async () => {
-  if (!(await dataCache.get("domains/list/initLoad"))) {
-    await dataCache.set("domains/list/initLoad", true, 1000);
-    await domainList();
+  if (!(await dataCache.get('domains/list/initLoad'))) {
+    await dataCache.set('domains/list/initLoad', true, 1000)
+    await domainList()
   }
-  const domains = (await dataCache.get("domain/list")) || [];
+  const domains = (await dataCache.get('domain/list')) || []
   return `<h2>DOMAINS</h2>
-    ${domains.map((i) => `<p>${i.title}</p>`).join("")}
-    `;
-};
+    ${domains.map((i) => `<p>${i.title}</p>`).join('')}
+    `
+}
 
-Domains.layout = `base_dashboard_layout`;
+Domains.layout = `base_dashboard_layout`
 
-module.exports = Domains;
+module.exports = Domains

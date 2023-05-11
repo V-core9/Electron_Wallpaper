@@ -12,5 +12,5 @@ module.exports = async () => {
                 <button action='purgeCache'>Purge Cache</button>
               </actions>
             </content>
-          </section>`;
-};
+          </section>`
+}

@@ -7,4 +7,4 @@ module.exports = {
 
   // Basic OpenWeather Component
   BaseOpenWeather: require('./BaseOpenWeather'),
-};
+}

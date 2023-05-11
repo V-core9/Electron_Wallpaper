@@ -1,5 +1,5 @@
-const BaseTemplate = require('./BaseTemplate');
+const BaseTemplate = require('./BaseTemplate')
 
 module.exports = {
-  baseTemplate: new BaseTemplate()
-};
+  baseTemplate: new BaseTemplate(),
+}

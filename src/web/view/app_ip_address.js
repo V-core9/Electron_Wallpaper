@@ -1,13 +1,13 @@
-const { dataCache } = require("../core/caches");
-const { ipAddress } = require("../core/actions");
+const { dataCache } = require('../core/caches')
+const { ipAddress } = require('../core/actions')
 
 module.exports = async () => {
-  if (!(await dataCache.get("device_ip_address/initLoad"))) {
-    await dataCache.set("device_ip_address/initLoad", true, 1000);
-    await ipAddress();
+  if (!(await dataCache.get('device_ip_address/initLoad'))) {
+    await dataCache.set('device_ip_address/initLoad', true, 1000)
+    await ipAddress()
   }
 
-  const data = (await dataCache.get("device_ip_address")) || "undefined";
+  const data = (await dataCache.get('device_ip_address')) || 'undefined'
 
   return `<section class='device_ip_address'>
             <header>
@@ -23,5 +23,5 @@ module.exports = async () => {
                 <h3>${data?.public?.v4}</h3>
               </item>
             </content>
-          </section>`;
-};
+          </section>`
+}

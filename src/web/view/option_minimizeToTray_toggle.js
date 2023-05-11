@@ -1,7 +1,7 @@
-const config = require('../../config');
+const config = require('../../config')
 
 module.exports = async () => {
-  let minimizeToTray = await config.get('minimizeToTray');
+  let minimizeToTray = await config.get('minimizeToTray')
 
   return `<section class='app_minimizeToTray_toggle'>
             <header>
@@ -9,9 +9,13 @@ module.exports = async () => {
             </header>
             <content class='flex-row'>
               <item>
-                <h3>Status: ${minimizeToTray ? '✅ Enabled' : '🟥 Disabled'}</h3>
-                <button action='toggleMinimizeToTray'>${minimizeToTray ? '❌ Disable' : '🚀 Enable'}</button>
+                <h3>Status: ${
+                  minimizeToTray ? '✅ Enabled' : '🟥 Disabled'
+                }</h3>
+                <button action='toggleMinimizeToTray'>${
+                  minimizeToTray ? '❌ Disable' : '🚀 Enable'
+                }</button>
               </item>
             </content>
-          </section>`;
-};
+          </section>`
+}

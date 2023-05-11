@@ -1,13 +1,12 @@
-const { dataCache } = require('../core/caches');
+const { dataCache } = require('../core/caches')
 
 module.exports = async () => {
-  let tasksList = await dataCache.get('listAvailableTasks') || {};
+  let tasksList = (await dataCache.get('listAvailableTasks')) || {}
 
-  let response = '';
+  let response = ''
 
   for (let key in tasksList) {
-
-    response += `<item>${key}: ${JSON.stringify(tasksList[key])}</item>`;
+    response += `<item>${key}: ${JSON.stringify(tasksList[key])}</item>`
   }
 
   return `<section>
@@ -18,5 +17,5 @@ module.exports = async () => {
             <content>
               ${response}
             </content>
-          </section>`;
-};
+          </section>`
+}

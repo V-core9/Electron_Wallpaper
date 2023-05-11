@@ -1,4 +1,4 @@
-const config = require('../../config');
+const config = require('../../config')
 
 module.exports = async () => {
   return `<section>
@@ -11,7 +11,9 @@ module.exports = async () => {
                   <label>Title:</label>
                 </group>
                 <group>
-                  <input type='text' id='customTitle' placeholder='Change Title to Something' value='${await config.get('title')}' />
+                  <input type='text' id='customTitle' placeholder='Change Title to Something' value='${await config.get(
+                    'title'
+                  )}' />
                 </group>
               </item>
             </content>
@@ -21,5 +23,5 @@ module.exports = async () => {
                 <button action='resetTitle'>✖ Reset</button>
               </group>
             </footer>
-          </section>`;
-};
+          </section>`
+}

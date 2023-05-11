@@ -1,7 +1,7 @@
-const { NavMain } = require("../components");
+const { NavMain } = require('../components')
 
 const Navigation = async () => {
-  return `${await NavMain()}`;
-};
+  return `${await NavMain()}`
+}
 
-module.exports = Navigation;
+module.exports = Navigation

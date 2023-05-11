@@ -1,16 +1,16 @@
-const logger = require("../../helpers/logger");
-const caches = require("../core/caches");
-const actions = require("../core/actions");
-const renders = require("../core/renders");
+const logger = require('../../helpers/logger')
+const caches = require('../core/caches')
+const actions = require('../core/actions')
+const renders = require('../core/renders')
 
-const components = require("../components");
+const components = require('../components')
 
-const pages = require("../pages");
+const pages = require('../pages')
 
-const { BCC, base_component_create } = require("./base_component_create");
-const propsToAttribute = require("./propsToAttribute");
-const loadStyleCode = require("./loadStyleCode");
-const createNewPage = require("./createNewPage");
+const { BCC, base_component_create } = require('./base_component_create')
+const propsToAttribute = require('./propsToAttribute')
+const loadStyleCode = require('./loadStyleCode')
+const createNewPage = require('./createNewPage')
 
 const utils = {
   BCC,
@@ -18,7 +18,7 @@ const utils = {
   propsToAttribute,
   loadStyleCode,
   createNewPage,
-};
+}
 
 //?- - - - - - - - - - - - - -
 //? Window Object Attachment
@@ -32,8 +32,8 @@ const v9 = {
   logger,
   pages,
   utils,
-};
+}
 //!- - - - - - - - - - - - - -
 
-module.exports = v9;
-
+module = v9
+module.export = v9

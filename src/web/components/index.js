@@ -1,19 +1,18 @@
 module.exports = {
-  Button: require("./Button/Button"),
+  Button: require('./Button/Button'),
 
-  LoadingOverlay: require("./LoadingOverlay/LoadingOverlay"),
+  LoadingOverlay: require('./LoadingOverlay/LoadingOverlay'),
 
-  NavMain: require("./NavMain/NavMain"),
+  NavMain: require('./NavMain/NavMain'),
 
-  Section: require("./Section/Section"),
+  Section: require('./Section/Section'),
 
-  ListBackendTasks: require("./ListBackendTasks/ListBackendTasks"),
+  ListBackendTasks: require('./ListBackendTasks/ListBackendTasks'),
 
-  Header: require("./Header/Header"),
-  Content: require("./Content/Content"),
-  Footer: require("./Footer/Footer"),
-  Nav: require("./Nav/Nav"),
+  Header: require('./Header/Header'),
+  Content: require('./Content/Content'),
+  Footer: require('./Footer/Footer'),
+  Nav: require('./Nav/Nav'),
 
-  Style: require("./Style/Style"),
-};
-
+  Style: require('./Style/Style'),
+}

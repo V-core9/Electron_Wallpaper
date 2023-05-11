@@ -1,6 +1,6 @@
-const { BrowserWindow } = require('electron');
+const { BrowserWindow } = require('electron')
 
-const cfg = require('../config');
+const cfg = require('../config')
 
 const mainWindow = new BrowserWindow({
   title: cfg.title,
@@ -21,7 +21,7 @@ const mainWindow = new BrowserWindow({
   resizable: true,
   closable: true,
   frame: false,
-  titleBarStyle: "hidden",
+  titleBarStyle: 'hidden',
 
   fullScreen: false,
   width: 1280,
@@ -30,8 +30,7 @@ const mainWindow = new BrowserWindow({
   webPreferences: {
     nodeIntegration: true,
     contextIsolation: false,
-  }
+  },
+})
 
-});
-
-module.exports = mainWindow;
+module.exports = mainWindow

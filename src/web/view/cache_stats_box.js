@@ -1,5 +1,5 @@
 module.exports = async (title, vCache) => {
-  let stats = await vCache.stats();
+  let stats = await vCache.stats()
   return `<section>
             <header>
               <h3>${title}:</h3>
@@ -20,5 +20,5 @@ module.exports = async (title, vCache) => {
                 <p>${stats.size}</p>
               </div>
             </header>
-          </section>`;
-};
+          </section>`
+}

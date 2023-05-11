@@ -1,21 +1,21 @@
-const path = require("path");
+const path = require('path')
 
-const config = require("../../../config");
-const propsToAttribute = require("../../utils/propsToAttribute");
-const loadStyleCode = require("../../utils/loadStyleCode");
+const config = require('../../../config')
+const propsToAttribute = require('../../utils/propsToAttribute')
+const loadStyleCode = require('../../utils/loadStyleCode')
 
-const Style = require("../Style/Style");
-
+const Style = require('../Style/Style')
 
 const Footer = async (props = {}) => {
-  if (await config.get("debug")) log(`Component [Footer]: `, props);
+  if (await config.get('debug')) log(`Component [Footer]: `, props)
 
-  const { label, children, options } = props;
-  return `${await Style({ cssCode: loadStyleCode(path.resolve(__dirname, './footer.css')) })}
+  const { label, children, options } = props
+  return `${await Style({
+    cssCode: loadStyleCode(path.resolve(__dirname, './footer.css')),
+  })}
             <footer ${propsToAttribute(options)}>
             ${!label ? (!children ? `` : await children()) : label}
-          </footer>`;
-};
+          </footer>`
+}
 
-module.exports = Footer;
-
+module.exports = Footer

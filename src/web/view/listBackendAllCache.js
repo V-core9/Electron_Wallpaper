@@ -1,8 +1,8 @@
-const { dataCache } = require("../core/caches");
-const { Button } = require("../components");
+const { dataCache } = require('../core/caches')
+const { Button } = require('../components')
 
 module.exports = async () => {
-  let backCache = (await dataCache.get("listBackendAllCache")) || new Map();
+  let backCache = (await dataCache.get('listBackendAllCache')) || new Map()
 
   return `<section>
             <header>
@@ -24,7 +24,7 @@ module.exports = async () => {
                   <p>${JSON.stringify(value)}</p>
                 </item>`
                 )
-                .join("")}
+                .join('')}
             </content>
-          </section>`;
-};
+          </section>`
+}

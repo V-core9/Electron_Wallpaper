@@ -1,16 +1,16 @@
-const { dataCache } = require("../core/caches");
-const { checkLocalPorts } = require("../core/actions");
+const { dataCache } = require('../core/caches')
+const { checkLocalPorts } = require('../core/actions')
 
 module.exports = async () => {
-  if (!(await dataCache.get("checkLocalPorts/initLoad"))) {
-    await dataCache.set("checkLocalPorts/initLoad", true);
-    await checkLocalPorts();
+  if (!(await dataCache.get('checkLocalPorts/initLoad'))) {
+    await dataCache.set('checkLocalPorts/initLoad', true)
+    await checkLocalPorts()
   }
 
-  const data = (await dataCache.get("checkLocalPorts")) || {
+  const data = (await dataCache.get('checkLocalPorts')) || {
     host: null,
     ports: { open: [], close: [] },
-  };
+  }
 
   return `<section class='check_local_ports'>
             <header>
@@ -29,7 +29,7 @@ module.exports = async () => {
                       (port) =>
                         `<div style="border: 1px solid orange; padding: .25em .5em; color: orange;" >${port}</div>`
                     )
-                    .join("")}
+                    .join('')}
                 </div>
               </item>
             </content>
@@ -45,5 +45,5 @@ module.exports = async () => {
               gap: .5em;
               justify-content: end;
           }
-          </style>`;
-};
+          </style>`
+}

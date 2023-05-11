@@ -1,9 +1,9 @@
-const weather_api_form = require("../view/weather_api_form");
+const weather_api_form = require('../view/weather_api_form')
 
 const Account = async () => {
-  return `${await weather_api_form()}`;
-};
+  return `${await weather_api_form()}`
+}
 
-Account.layout = "UnknownLayoutName";
+Account.layout = 'UnknownLayoutName'
 
-module.exports = Account;
+module.exports = Account

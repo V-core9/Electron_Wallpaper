@@ -1,7 +1,7 @@
-const config = require('../../config');
+const config = require('../../config')
 
 module.exports = async () => {
-  const weatherUnits = await config.get('weatherUnits');
+  const weatherUnits = await config.get('weatherUnits')
 
   return `<section>
             <header>
@@ -13,7 +13,9 @@ module.exports = async () => {
                   <p>API Key:</p>
                 </group>
                 <group>
-                  <input type='text' id='weatherApiKey' placeholder='1a2s3d1f65f89wq98ed1sa5dda68d4aa' value='${await config.get('weatherApiKey')}' />
+                  <input type='text' id='weatherApiKey' placeholder='1a2s3d1f65f89wq98ed1sa5dda68d4aa' value='${await config.get(
+                    'weatherApiKey'
+                  )}' />
                 </group>
               </item>
               <item>
@@ -21,7 +23,9 @@ module.exports = async () => {
                   <p>City:</p>
                 </group>
                 <group>
-                  <input type='text' id='weatherCity' placeholder='Sombor' value='${await config.get('weatherCity')}' />
+                  <input type='text' id='weatherCity' placeholder='Sombor' value='${await config.get(
+                    'weatherCity'
+                  )}' />
                 </group>
               </item>
               <item>
@@ -30,8 +34,12 @@ module.exports = async () => {
                 </group>
                 <group>
                   <select id='weatherUnits'>
-                    <option value='metric' ${weatherUnits == 'metric' ? 'selected' : ''}>Metric</option>
-                    <option value='imperial' ${weatherUnits == 'imperial' ? 'selected' : ''}>Imperial</option>
+                    <option value='metric' ${
+                      weatherUnits == 'metric' ? 'selected' : ''
+                    }>Metric</option>
+                    <option value='imperial' ${
+                      weatherUnits == 'imperial' ? 'selected' : ''
+                    }>Imperial</option>
                   </select>
                 </group>
               </item>
@@ -42,5 +50,5 @@ module.exports = async () => {
                 <button action='resetOpenWeatherSettings'>✖ Reset</button>
               </group>
             </footer>
-          </section>`;
-};
+          </section>`
+}

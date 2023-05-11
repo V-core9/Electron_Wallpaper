@@ -1,15 +1,15 @@
-const { dataCache } = require("../../core/caches");
-const Button = require("../Button/Button");
-const Header = require("../Header/Header");
-const Section = require("../Section/Section");
+const { dataCache } = require('../../core/caches')
+const Button = require('../Button/Button')
+const Header = require('../Header/Header')
+const Section = require('../Section/Section')
 
 const newTaskFormModal = async () => {
-  const availableFunctions = await dataCache.get("listAvailableTasks");
+  const availableFunctions = await dataCache.get('listAvailableTasks')
 
-  let response = "";
+  let response = ''
   availableFunctions.forEach((item) => {
-    response += `<option value="${item}">${item}</option>`;
-  });
+    response += `<option value="${item}">${item}</option>`
+  })
 
   return `<modal class='newTaskForm'>
             <overlay></overlay>
@@ -48,15 +48,15 @@ const newTaskFormModal = async () => {
 
               </content>
             </inner>
-          </modal>`;
-};
+          </modal>`
+}
 
 const listBackendTasks = async () => {
-  let data = (await dataCache.get("listBackendTasks")) || {};
-  let newTaskModalShown = (await dataCache.get("newTaskModalShown")) || false;
-  log(data);
+  let data = (await dataCache.get('listBackendTasks')) || {}
+  let newTaskModalShown = (await dataCache.get('newTaskModalShown')) || false
+  log(data)
 
-  let tasks = data.tasks || [];
+  let tasks = data.tasks || []
 
   const newTaskButton = {
     label: `➕ New Task`,
@@ -64,31 +64,31 @@ const listBackendTasks = async () => {
   }
 
   return `${await Header({
-              children: async () => `<h2>Watch Tasks:</h2>
+    children: async () => `<h2>Watch Tasks:</h2>
                                     ${await Button(newTaskButton)}`,
-              options: {},
-            })}
+    options: {},
+  })}
             <content>
               ${tasks
                 .map(
                   (task) => `<item taskName='${task.name}'>
                     <header>
                       <h4>🆔 ${task.name}</h4>
-                      <h5>${task.active ? "🚀 Running" : "🟥 Disabled"}</h5>
+                      <h5>${task.active ? '🚀 Running' : '🟥 Disabled'}</h5>
                       <h5>➰ Interval: ${task.interval}ms</h5>
                     </header>
                     <actions>
                       <button action='startSpecificTask' ${
-                        task.active ? "disabled" : ""
+                        task.active ? 'disabled' : ''
                       }>🚀 Start</button>
                       <button action='stopSpecificTask' ${
-                        !task.active ? "disabled" : ""
+                        !task.active ? 'disabled' : ''
                       }>🔻 Stop</button>
                       <button action='deleteSpecificTask'>❌ Delete</button>
                     </actions>
                   </item>`
                 )
-                .join("")}
+                .join('')}
             </content>
             <footer>
               <group class='flex-row'>
@@ -109,21 +109,21 @@ const listBackendTasks = async () => {
               })}
               </group>
             </footer>
-          ${newTaskModalShown ? await newTaskFormModal() : ""}`;
-};
+          ${newTaskModalShown ? await newTaskFormModal() : ''}`
+}
 
 const section = {
   children: async () => {
-    return `${await listBackendTasks()}`;
+    return `${await listBackendTasks()}`
   },
   options: {
-    classes: ["listBackendTasks"],
-    style: "color: orange;",
+    classes: ['listBackendTasks'],
+    style: 'color: orange;',
   },
-};
+}
 
 const ListBackendTasks = async () => {
-  return `${await Section(section)}`;
-};
+  return `${await Section(section)}`
+}
 
-module.exports = ListBackendTasks;
+module.exports = ListBackendTasks

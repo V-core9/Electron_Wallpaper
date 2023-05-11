@@ -1,7 +1,7 @@
-const config = require('../../config');
+const config = require('../../config')
 
 module.exports = async () => {
-  let notify = await config.get('notify');
+  let notify = await config.get('notify')
 
   return `<section class='notifications_toggle'>
             <header>
@@ -9,9 +9,13 @@ module.exports = async () => {
             </header>
             <content class='flex-row'>
               <item>
-                <h3>Display OS Notifications: ${notify ? 'Enabled' : 'Disabled'}</h3>
-                <button action='toggleNotifications'>${notify ? 'Disable' : 'Enable'}</button>
+                <h3>Display OS Notifications: ${
+                  notify ? 'Enabled' : 'Disabled'
+                }</h3>
+                <button action='toggleNotifications'>${
+                  notify ? 'Disable' : 'Enable'
+                }</button>
               </item>
             </content>
-          </section>`;
-};
+          </section>`
+}

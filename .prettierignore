@@ -1,0 +1,7 @@
+# Ignore artifacts:
+build
+coverage
+.github
+.vscode
+.gitignore
+README.md

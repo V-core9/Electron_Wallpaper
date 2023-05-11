@@ -1,4 +1,4 @@
-const appInfo = require("../view/appInfo");
+const appInfo = require('../view/appInfo')
 
 const Footer = async () => {
   return `<group>
@@ -7,7 +7,7 @@ const Footer = async () => {
           <group>
             ${await appInfo()}
           </group>
-          `;
-};
+          `
+}
 
-module.exports = Footer;
+module.exports = Footer

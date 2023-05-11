@@ -1,7 +1,7 @@
-const config = require('../../config');
+const config = require('../../config')
 
 module.exports = async () => {
-  let debug = await config.get('debug');
+  let debug = await config.get('debug')
 
   return `<section class='app_debug_toggle'>
             <header>
@@ -10,8 +10,10 @@ module.exports = async () => {
             <content class='flex-row'>
               <item>
                 <h3>Debug Mode: ${debug ? '✅ Enabled' : '🟥 Disabled'}</h3>
-                <button action='toggleDebug'>${debug ? '❌ Disable' : '🚀 Enable'}</button>
+                <button action='toggleDebug'>${
+                  debug ? '❌ Disable' : '🚀 Enable'
+                }</button>
               </item>
             </content>
-          </section>`;
-};
+          </section>`
+}

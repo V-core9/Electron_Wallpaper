@@ -6,10 +6,10 @@ const { ListBackendTasks } = require("../components");
 
 
 // Create Page using PageRender and some config options
-const Home_Page = createNewPage({
+const Home = createNewPage({
   render: async () => `${await ListBackendTasks()}`,
   layout: "base_layout_001",
   description: "Root Page Example",
 });
 
-module.exports = Home_Page;
+module.exports = Home;

@@ -12,19 +12,19 @@ const simpleDeepCopy = (object) => JSON.parse(JSON.stringify(object));
 
 const navConfig = [
   {
-    page: 'Home_Page',
+    page: 'Home',
     label: '🚇 Dashboard'
   },
   {
-    page: 'Theme_Page',
+    page: 'Theme',
     label: '🎨 Theme'
   },
   {
-    page: 'Account_Page',
+    page: 'Account',
     label: '👷‍♂️ Account'
   },
   {
-    page: 'Domains_Page',
+    page: 'Domains',
     label: '📦 Domains'
   },
 ];
@@ -33,7 +33,7 @@ const NavMain = async () => {
   let currentPage = await dataCache.get('currentPage') || navConfig[0].page;
 
   const primaryNavigation = simpleDeepCopy(navConfig);
-  if (await config.get('debug')) primaryNavigation.push({page:'Debug_Page', label: '👨‍💻 Debug'})
+  if (await config.get('debug')) primaryNavigation.push({page:'Debug', label: '👨‍💻 Debug'})
 
   return primaryNavigation.map((i) => `<button action='openPage' page='${i.page}' class='${currentPage === i.page ? 'active' : ''}'>${i.label}</button>`).join('')
 }

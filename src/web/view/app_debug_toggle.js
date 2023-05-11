@@ -10,9 +10,7 @@ module.exports = async () => {
             <content class='flex-row'>
               <item>
                 <h3>Debug Mode: ${debug ? '✅ Enabled' : '🟥 Disabled'}</h3>
-                <button action='toggleDebug'>${
-                  debug ? '❌ Disable' : '🚀 Enable'
-                }</button>
+                <button action='toggleDebug'>${debug ? '❌ Disable' : '🚀 Enable'}</button>
               </item>
             </content>
           </section>`

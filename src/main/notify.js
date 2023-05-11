@@ -17,8 +17,7 @@ const notify = {
       body: 'Notification from the Main process',
     }),
 
-  minimizeToTray: async () =>
-    maybeNotify({ title: 'Application To Tray', body: 'Why did it not exit?' }),
+  minimizeToTray: async () => maybeNotify({ title: 'Application To Tray', body: 'Why did it not exit?' }),
 
   appExiting: async () =>
     maybeNotify({

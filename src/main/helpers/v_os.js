@@ -24,7 +24,6 @@ Object.keys(osu).forEach((key) => {
  */
 
 //? Method to calculate % of free ram
-v_os.freememproc = async () =>
-  Math.trunc((v_os.freemem() / v_os.totalmem()) * 100)
+v_os.freememproc = async () => Math.trunc((v_os.freemem() / v_os.totalmem()) * 100)
 
 module.exports = v_os

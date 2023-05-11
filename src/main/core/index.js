@@ -7,9 +7,7 @@ const cache = new V_Core_Cache()
 const watch = new V_Watch()
 
 const createLogItem = (name) => async (taskName) =>
-  log(
-    `[t] ${name} : ${taskName} \\_ _ _ _ _ \n@ ${new Date().toUTCString()} \n`
-  )
+  log(`[t] ${name} : ${taskName} \\_ _ _ _ _ \n@ ${new Date().toUTCString()} \n`)
 
 watch.on('new', createLogItem('New'))
 watch.on('run', createLogItem('Run'))

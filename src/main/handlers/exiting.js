@@ -21,14 +21,8 @@ module.exports = async () => {
   await wallpaper()
 
   log('Saving Config To File.')
-  await v_fs.write(
-    await config.get('configFilePath'),
-    JSON.stringify(await config.get(), null, 2)
-  )
-  await v_fs.write(
-    await config.get('tasksListFilePath'),
-    JSON.stringify(appTasks, null, 2)
-  )
+  await v_fs.write(await config.get('configFilePath'), JSON.stringify(await config.get(), null, 2))
+  await v_fs.write(await config.get('tasksListFilePath'), JSON.stringify(appTasks, null, 2))
 
   setTimeout(() => {
     info('Bye')

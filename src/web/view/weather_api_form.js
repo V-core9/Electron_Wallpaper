@@ -23,9 +23,7 @@ module.exports = async () => {
                   <p>City:</p>
                 </group>
                 <group>
-                  <input type='text' id='weatherCity' placeholder='Sombor' value='${await config.get(
-                    'weatherCity'
-                  )}' />
+                  <input type='text' id='weatherCity' placeholder='Sombor' value='${await config.get('weatherCity')}' />
                 </group>
               </item>
               <item>
@@ -34,12 +32,8 @@ module.exports = async () => {
                 </group>
                 <group>
                   <select id='weatherUnits'>
-                    <option value='metric' ${
-                      weatherUnits == 'metric' ? 'selected' : ''
-                    }>Metric</option>
-                    <option value='imperial' ${
-                      weatherUnits == 'imperial' ? 'selected' : ''
-                    }>Imperial</option>
+                    <option value='metric' ${weatherUnits == 'metric' ? 'selected' : ''}>Metric</option>
+                    <option value='imperial' ${weatherUnits == 'imperial' ? 'selected' : ''}>Imperial</option>
                   </select>
                 </group>
               </item>

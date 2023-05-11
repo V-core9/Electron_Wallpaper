@@ -33,15 +33,14 @@ const NavMain = async () => {
   let currentPage = (await dataCache.get('currentPage')) || navConfig[0].page
 
   const primaryNavigation = simpleDeepCopy(navConfig)
-  if (await config.get('debug'))
-    primaryNavigation.push({ page: 'Debug', label: '👨‍💻 Debug' })
+  if (await config.get('debug')) primaryNavigation.push({ page: 'Debug', label: '👨‍💻 Debug' })
 
   return primaryNavigation
     .map(
       (i) =>
-        `<button action='openPage' page='${i.page}' class='${
-          currentPage === i.page ? 'active' : ''
-        }'>${i.label}</button>`
+        `<button action='openPage' page='${i.page}' class='${currentPage === i.page ? 'active' : ''}'>${
+          i.label
+        }</button>`
     )
     .join('')
 }

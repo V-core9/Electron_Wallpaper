@@ -56,10 +56,7 @@ const actions = {
   },
 
   listAvailableTasks: async () =>
-    await dataCache.set(
-      'listAvailableTasks',
-      await ipcRenderer.invoke('listAvailableTasks')
-    ),
+    await dataCache.set('listAvailableTasks', await ipcRenderer.invoke('listAvailableTasks')),
 
   listBackendTasks: async () => {
     const data = JSON.parse(await ipcRenderer.invoke('listBackendTasks'))
@@ -74,16 +71,12 @@ const actions = {
   },
 
   purgeBackendCache: async () => {
-    await dataCache.set(
-      'purgeBackendCache',
-      JSON.parse(await ipcRenderer.invoke('purgeBackendCache'))
-    )
+    await dataCache.set('purgeBackendCache', JSON.parse(await ipcRenderer.invoke('purgeBackendCache')))
     await actions.listBackendAllCache()
   },
 
   startSpecificTask: async (event) => {
-    const taskName =
-      event.target.parentElement.parentElement.getAttribute('taskName')
+    const taskName = event.target.parentElement.parentElement.getAttribute('taskName')
 
     const response = await ipcRenderer.invoke('startSpecificTask', taskName)
     log(response)
@@ -93,8 +86,7 @@ const actions = {
   },
 
   stopSpecificTask: async (event) => {
-    const taskName =
-      event.target.parentElement.parentElement.getAttribute('taskName')
+    const taskName = event.target.parentElement.parentElement.getAttribute('taskName')
 
     const response = await ipcRenderer.invoke('stopSpecificTask', taskName)
     log(response)
@@ -104,8 +96,7 @@ const actions = {
   },
 
   deleteSpecificTask: async (event) => {
-    const taskName =
-      event.target.parentElement.parentElement.getAttribute('taskName')
+    const taskName = event.target.parentElement.parentElement.getAttribute('taskName')
 
     const response = await ipcRenderer.invoke('deleteSpecificTask', taskName)
     log(response)
@@ -124,10 +115,7 @@ const actions = {
     const response = await ipcRenderer.invoke('toggleDebug')
     log('toggleDebug', response)
     await config.set('debug', response)
-    if (
-      (await config.get('debug')) === false &&
-      (await dataCache.get('currentPage')) === 'debug'
-    )
+    if ((await config.get('debug')) === false && (await dataCache.get('currentPage')) === 'debug')
       await dataCache.set('currentPage', 'home')
     await actions.listBackendTasks()
   },
@@ -173,10 +161,7 @@ const actions = {
   },
 
   toggleNewTaskForm: async () => {
-    await dataCache.set(
-      'newTaskModalShown',
-      !(await dataCache.get('newTaskModalShown'))
-    )
+    await dataCache.set('newTaskModalShown', !(await dataCache.get('newTaskModalShown')))
   },
 
   setOpenWeatherSettings: async () => {

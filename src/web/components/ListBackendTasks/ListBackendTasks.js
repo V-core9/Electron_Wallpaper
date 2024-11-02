@@ -4,7 +4,7 @@ const Header = require('../Header/Header')
 const Section = require('../Section/Section')
 
 const newTaskFormModal = async () => {
-  const availableFunctions = await dataCache.get('listAvailableTasks')
+  const availableFunctions = await dataCache.get('tasks/available/list')
 
   let response = ''
   availableFunctions.forEach((item) => {
@@ -42,7 +42,7 @@ const newTaskFormModal = async () => {
                 </group>
 
                 <group class='flex-row'>
-                  <button action='createNewTask'>Create</button>
+                  <button action='tasks/new'>Create</button>
                   <button action='toggleNewTaskForm'>Cancel</button>
                 </group>
 
@@ -78,9 +78,9 @@ const listBackendTasks = async () => {
                       <h5>➰ Interval: ${task.interval}ms</h5>
                     </header>
                     <actions>
-                      <button action='startSpecificTask' ${task.active ? 'disabled' : ''}>🚀 Start</button>
-                      <button action='stopSpecificTask' ${!task.active ? 'disabled' : ''}>🔻 Stop</button>
-                      <button action='deleteSpecificTask'>❌ Delete</button>
+                      <button action='tasks/start' ${task.active ? 'disabled' : ''}>🚀 Start</button>
+                      <button action='tasks/stop' ${!task.active ? 'disabled' : ''}>🔻 Stop</button>
+                      <button action='tasks/delete'>❌ Delete</button>
                     </actions>
                   </item>`
                 )

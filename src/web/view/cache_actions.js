@@ -5,11 +5,11 @@ module.exports = async () => {
             </header>
             <content>
               <actions>
-                <button action='logUndefinedItem'>Log undefined Item</button>
-                <button action='logAllCache'>Log All Cache</button>
-                <button action='logStats'>Log Cache Stats</button>
-                <button action='purgeCacheStats'>Purge Stats</button>
-                <button action='purgeCache'>Purge Cache</button>
+                <button action='gui/cache/demo/log/undefined'>Log undefined Item</button>
+                <button action='gui/cache/all/log'>Log All Cache</button>
+                <button action='gui/cache/stats/log'>Log Cache Stats</button>
+                <button action='gui/cache/stats/purge'>Purge Stats</button>
+                <button action='gui/cache/purge'>Purge Cache</button>
               </actions>
             </content>
           </section>`

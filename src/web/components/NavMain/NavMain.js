@@ -1,5 +1,5 @@
 const config = require('../../../config')
-const { dataCache } = require('../../core/caches')
+const { dataCache, cPaths } = require('../../core/caches')
 
 //*--------------------------------------------
 //? Name: simpleDeepCopy
@@ -30,7 +30,7 @@ const navConfig = [
 ]
 
 const NavMain = async () => {
-  let currentPage = (await dataCache.get('currentPage')) || navConfig[0].page
+  let currentPage = (await dataCache.get(cPaths.currentPage)) || navConfig[0].page
 
   const primaryNavigation = simpleDeepCopy(navConfig)
   if (await config.get('debug')) primaryNavigation.push({ page: 'Debug', label: '👨‍💻 Debug' })

@@ -1,7 +1,6 @@
 const pages = require('../pages')
-
-const caches = require('./caches')
-const { renderCache, dataCache } = caches
+const { log } = require('../../helpers/logger')
+const { renderCache, dataCache, cPaths } = require('./caches')
 
 const HeaderRender = require('../renders/Header')
 const FooterRender = require('../renders/Footer')
@@ -84,7 +83,7 @@ let previousTimeStamp = 0
 let stopRender = false
 let minFrameTime = 1000 / 24
 let useTimeout = true
-const renderDOM = async (timestamp) => {
+const renderDOM = async (timestamp = Date.now()) => {
   const elapsed = timestamp - previousTimeStamp
 
   if (previousTimeStamp !== timestamp && elapsed >= minFrameTime && queue_toDOM.length > 0) {
@@ -110,9 +109,9 @@ const renderDOM = async (timestamp) => {
 
   if (!stopRender) {
     if (useTimeout) {
-      setTimeout(async () => await renderDOM(Date.now()), minFrameTime)
+      setTimeout(renderDOM, minFrameTime)
     } else {
-      window.requestAnimationFrame(async () => await renderDOM(Date.now()))
+      window.requestAnimationFrame(renderDOM)
     }
   }
 }
@@ -122,7 +121,7 @@ const renderCurrentPage = async (key) => await pages[key]()
 
 // Actual Page Content Render
 const ContentRender = async () => {
-  return `${await renderCurrentPage((await dataCache.get('currentPage')) || 'home')}
+  return `${await renderCurrentPage((await dataCache.get(cPaths.currentPage)) || 'home')}
             ${!(await dataCache.get('app_loaded')) ? await LoadingOverlay() : ''}`
 }
 
@@ -258,25 +257,30 @@ const maybeTrackNewComponent = async (layoutName) => {
 //! Event check to maybe render different page layout
 
 const pageChange = async (value) => {
-  if ((await dataCache.get('lastPage')) !== value) {
+  if ((await dataCache.get(cPaths.lastRender)) !== value) {
     log(`EVENT: Page Change >`, value)
-    const maybeLayoutName = pages[value].layout || defaultLayoutName
-    const layoutName = checkLayoutExistByName(maybeLayoutName) ? maybeLayoutName : defaultLayoutName
-    await queryToDOM('v_app', await renderPageLayout(layoutName))
-    document.querySelector('v_app').className = layoutName
+    const layoutName = checkLayoutExistByName(pages[value].layout) ? pages[value].layout : defaultLayoutName
 
-    await maybeTrackNewComponent(layoutName)
+    if ((await dataCache.get(cPaths.layoutName)) !== layoutName) {
+      await queryToDOM('v_app', await renderPageLayout(layoutName))
+      document.querySelector('v_app').className = layoutName
+      await maybeTrackNewComponent(layoutName)
+      await dataCache.set(cPaths.layoutName, layoutName)
+    }
 
-    await dataCache.set('lastPage', value)
-
+    await dataCache.set(cPaths.lastRender, value)
     log(`EVENT NAMES [dataCache] : ${dataCache.eventNames()}`)
   }
 }
 
-;(async () => {
-  await dataCache.on('set/currentPage', async (data) => await pageChange(data))
-  //await dataCache.on("set/currentPage", async(data) => await log('EVENT dataCache[set/currentPage]', data));
-})()
+//? [SOF | renderEventInit]
+// Add render event when 'set/current-page-render' triggers
+// And actually call the renderEventInit function
+async function renderEventInit() {
+  await dataCache.on(`set/${cPaths.currentPage}`, pageChange)
+}
+renderEventInit()
+//! [EOF |  renderEventInit]
 
 module.exports = {
   renderDOM,

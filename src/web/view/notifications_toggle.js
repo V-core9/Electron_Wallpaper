@@ -10,7 +10,7 @@ module.exports = async () => {
             <content class='flex-row'>
               <item>
                 <h3>Display OS Notifications: ${notify ? 'Enabled' : 'Disabled'}</h3>
-                <button action='toggleNotifications'>${notify ? 'Disable' : 'Enable'}</button>
+                <button action='notifications/toggle'>${notify ? 'Disable' : 'Enable'}</button>
               </item>
             </content>
           </section>`

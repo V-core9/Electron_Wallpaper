@@ -11,9 +11,7 @@ let appTasks = require('../core/app-tasks')
 watch.on('stop', async (key) => (appTasks[key].enabled = false))
 watch.on('start', async (key) => (appTasks[key].enabled = true))
 watch.on('delete', async (key) => delete appTasks[key])
-watch.on('end', async () => {
-  appTasks = {}
-})
+watch.on('end', async () => (appTasks = {}))
 
 const generatedHandle = (cacheName, taskName) => {
   return async (evn, arg) => {
@@ -25,125 +23,112 @@ const generatedHandle = (cacheName, taskName) => {
   }
 }
 
+const ipcMainHandlers = {
+  ping: async () => Date.now(),
+
+  'application/config/get': async () => await config.get(),
+
+  setAppTitle: async (event, arg) => {
+    await config.set('title', arg)
+    return await config.get('title')
+  },
+
+  setAppVersion: async (event, arg) => (config.version = arg),
+
+  'mtr/cache/list': async () => [...(await cache.getAll())],
+
+  'mtr/cache/purge': async () => await cache.purge(),
+
+  listBackendTasks: async (event, arg) => JSON.stringify(await watch.stats()),
+
+  endAllTasks: async () => await watch.end(),
+
+  toggleDebug: async () => {
+    const mainWindow = require('../mainWindow')
+    await config.set('debug', !(await config.get('debug')))
+    const status = await config.get('debug')
+    if (status) {
+      mainWindow.webContents.openDevTools()
+    } else {
+      mainWindow.webContents.closeDevTools()
+    }
+    return status
+  },
+
+  maximizeAppToggle: async () => {
+    const mainWindow = require('../mainWindow')
+    await config.set('maximized', !(await config.get('maximized')))
+
+    const status = await config.get('maximized')
+    if (status) {
+      mainWindow.maximize()
+    } else {
+      mainWindow.unmaximize()
+    }
+    return status
+  },
+
+  minimizeAppToggle: async () => {
+    const mainWindow = require('../mainWindow')
+    mainWindow.minimize()
+  },
+
+  isMaximized: async () => require('../mainWindow').isMaximized(),
+
+  windowBlur: async () => log('Event: windowBlur'),
+
+  windowFocus: async () => log('Event: windowFocus'),
+
+  setOpenWeatherSettings: async (event, arg) => {
+    await config.mSet(arg)
+    return await config.get()
+  },
+
+  'notifications/toggle': async () => {
+    await config.set('notify', !(await config.get('notify')))
+    log('notifications set to: ' + (await config.get('notify')))
+    return await config.get('notify')
+  },
+
+  'tasks/new': async (event, arg) => {
+    log('Create New Task: ', arg)
+    const { name, interval, callback, enabled, initRun } = JSON.parse(arg)
+    await watch.new(name, interval, tasks[callback], enabled)
+    if (initRun) watch.run(name)
+    appTasks[name] = { interval, callback, enabled, initRun }
+    return await watch.stats()
+  },
+  'tasks/start': async (event, arg) => await watch.start(arg),
+  'tasks/stop': async (event, arg) => await watch.stop(arg),
+  'tasks/delete': async (event, arg) => await watch.delete(arg),
+  'tasks/available/list': async () => Object.keys(tasks),
+
+  toggleMinimizeToTray: async () => {
+    await config.set('minimizeToTray', !(await config.get('minimizeToTray')))
+    log('minimize to tray set to: ' + (await config.get('minimizeToTray')))
+    return await config.get('minimizeToTray')
+  },
+
+  'domain/list': async () => await prisma.domain.findMany(),
+
+  ipAddress: generatedHandle('ipAddress', 'ipAddress'),
+
+  checkLocalPorts: generatedHandle('checkLocalPorts', 'checkLocalPorts'),
+
+  'application/command/exit': async () => {
+    if ((await config.get('minimizeToTray')) !== true) {
+      require('../handlers/exiting')()
+    } else {
+      require('../notify').minimizeToTray()
+      require('../mainWindow').hide()
+      require('../tray').recreateMainMenu()
+    }
+  },
+}
+
 module.exports = (ipcMain) => {
   try {
-    ipcMain.handle('ping', async () => Date.now())
-
-    ipcMain.handle('getConfig', async () => await config.get())
-
-    ipcMain.handle('setAppTitle', async (event, arg) => {
-      await config.set('title', arg)
-      return await config.get('title')
-    })
-
-    ipcMain.handle('setAppVersion', async (event, arg) => (config.version = arg))
-
-    ipcMain.handle('listBackendAllCache', async () => [...(await cache.getAll())])
-
-    ipcMain.handle('purgeBackendCache', async () => await cache.purge())
-
-    ipcMain.handle('listBackendTasks', async (event, arg) => JSON.stringify(await watch.stats()))
-
-    ipcMain.handle('startSpecificTask', async (event, arg) => await watch.start(arg))
-
-    ipcMain.handle('stopSpecificTask', async (event, arg) => await watch.stop(arg))
-
-    ipcMain.handle('deleteSpecificTask', async (event, arg) => await watch.delete(arg))
-
-    ipcMain.handle('endAllTasks', async () => await watch.end())
-
-    //? App Debug Toggle
-    ipcMain.handle('toggleDebug', async () => {
-      const mainWindow = require('../mainWindow')
-      await config.set('debug', !(await config.get('debug')))
-      const status = await config.get('debug')
-      if (status) {
-        mainWindow.webContents.openDevTools()
-      } else {
-        mainWindow.webContents.closeDevTools()
-      }
-      return status
-    })
-
-    //? Available Tasks
-    ipcMain.handle('listAvailableTasks', async () => Object.keys(tasks))
-
-    //? Window Maximize Toggle
-    ipcMain.handle('maximizeAppToggle', async () => {
-      const mainWindow = require('../mainWindow')
-      await config.set('maximized', !(await config.get('maximized')))
-
-      const status = await config.get('maximized')
-      if (status) {
-        mainWindow.maximize()
-      } else {
-        mainWindow.unmaximize()
-      }
-      return status
-    })
-
-    //? Window Minimize Toggle
-    ipcMain.handle('minimizeAppToggle', async () => {
-      const mainWindow = require('../mainWindow')
-      mainWindow.minimize()
-    })
-
-    ipcMain.handle('isMaximized', async () => require('../mainWindow').isMaximized())
-
-    //? Exit Application Handle
-    ipcMain.handle('EXIT_APPLICATION', async () => {
-      if ((await config.get('minimizeToTray')) !== true) {
-        require('../handlers/exiting')()
-      } else {
-        require('../notify').minimizeToTray()
-        require('../mainWindow').hide()
-        require('../tray').recreateMainMenu()
-      }
-    })
-
-    ipcMain.handle('windowBlur', async () => {
-      log('windowBlur Event')
-    })
-
-    ipcMain.handle('windowFocus', async () => {
-      log('windowFocus Event')
-    })
-
-    ipcMain.handle('setOpenWeatherSettings', async (event, arg) => {
-      await config.mSet(arg)
-      return await config.get()
-    })
-
-    ipcMain.handle('toggleNotifications', async () => {
-      await config.set('notify', !(await config.get('notify')))
-      log('notifications set to: ' + (await config.get('notify')))
-      return await config.get('notify')
-    })
-
-    ipcMain.handle('createNewTask', async (event, arg) => {
-      log('Create New Task: ', arg)
-      const { name, interval, callback, enabled, initRun } = JSON.parse(arg)
-      await watch.new(name, interval, tasks[callback], enabled)
-      if (initRun) watch.run(name)
-      appTasks[name] = { interval, callback, enabled, initRun }
-      return await watch.stats()
-    })
-
-    ipcMain.handle('toggleMinimizeToTray', async () => {
-      await config.set('minimizeToTray', !(await config.get('minimizeToTray')))
-      log('minimize to tray set to: ' + (await config.get('minimizeToTray')))
-      return await config.get('minimizeToTray')
-    })
-
-    ipcMain.handle('domain/list', async () => {
-      const data = await prisma.domain.findMany()
-      console.log('domain/list', data)
-      return data
-    })
-
-    ipcMain.handle('ipAddress', generatedHandle('ipAddress', 'ipAddress'))
-    ipcMain.handle('checkLocalPorts', generatedHandle('checkLocalPorts', 'checkLocalPorts'))
-
+    Object.keys(ipcMainHandlers).forEach((k) => ipcMain.handle(k, ipcMainHandlers[k]))
     return true
   } catch (error) {
     log(error)

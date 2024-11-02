@@ -1,7 +1,7 @@
-const { dataCache } = require('../core/caches')
+const { dataCache } = require('../../../core/caches')
 
 module.exports = async () => {
-  let tasksList = (await dataCache.get('listAvailableTasks')) || {}
+  let tasksList = (await dataCache.get('tasks/available/list')) || {}
 
   let response = ''
 
@@ -12,7 +12,7 @@ module.exports = async () => {
   return `<section>
             <header>
               <h2>Available Tasks List</h2>
-              <button action='listAvailableTasks'>Refresh List</button>
+              <button action='tasks/available/list'>Refresh List</button>
             </header>
             <content>
               ${response}

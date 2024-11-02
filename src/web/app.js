@@ -1,11 +1,7 @@
-const logger = require('../helpers/logger')
-const caches = require('./core/caches')
+const { log, info, warn } = require('../helpers/logger')
+const { dataCache, renderCache, cPaths } = require('./core/caches')
 const actions = require('./core/actions')
 const renders = require('./core/renders')
-
-const { log, info, warn } = logger
-
-const { dataCache, renderCache } = caches
 
 window.v9 = require('./utils/v9')
 
@@ -52,7 +48,7 @@ window.addEventListener('unload', async (event) => {
 window.onload = async () => {
   info('Window Loaded')
   window.requestAnimationFrame(async () => await renders.renderDOM(Date.now()))
-  await actions.initApp()
+  await actions['application/initialize']()
 
-  await dataCache.set('currentPage', 'Home')
+  await dataCache.set(cPaths.currentPage, 'Home')
 }

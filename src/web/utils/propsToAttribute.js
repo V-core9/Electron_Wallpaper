@@ -5,6 +5,7 @@ const propsToAttribute = (options = {}) => {
   const classes = options.classes || null
   const id = options.id || null
   const style = options.style || null
+  const custom_attr = options.custom_attr?.map((att) => `${att.key}='${att.val}'`).join(' ') || null
 
   const action_attr = isOk(action) ? `` : `action='${action}'`
 
@@ -14,7 +15,7 @@ const propsToAttribute = (options = {}) => {
 
   const style_attr = isOk(style) ? `` : `style='${style}'`
 
-  return `${action_attr} ${classes_attr} ${style_attr} ${id_attr}`
+  return `${action_attr} ${classes_attr} ${style_attr} ${id_attr} ${custom_attr || ''}`
 }
 
 module.exports = propsToAttribute
